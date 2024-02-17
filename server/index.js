@@ -18,7 +18,7 @@ async function asyncFunction() {
 	}
 }
 
-asyncFunction();
+// asyncFunction();
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 

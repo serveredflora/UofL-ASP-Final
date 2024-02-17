@@ -1,4 +1,5 @@
 public/bundle.js*
+public/style.css
 
 # Below is a template .gitignore from:
 # https://github.com/github/gitignore/blob/main/Node.gitignore

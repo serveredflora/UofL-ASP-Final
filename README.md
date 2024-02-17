@@ -4,9 +4,9 @@
 
 > Ensure MariaDB is installed!
 
-- `npm run build` - Run a production build of the client via webpack
-- `npm run serve` - Host the server
-- `npm run watch` - Launch webpack's file-watcher process (development only)
+- `npm run dev` - Host the server + file watchers
+- `npm run serve` - Host only the server
+- `npm run build` - Run a production build of the client
 - `npm run test` - Run all unit tests in the project
 
 ## Resources Used
@@ -18,3 +18,5 @@
   - [Jest - Getting Started](https://jestjs.io/docs/getting-started)
 - MariaDB Example
   - [MariaDB NodeJS Docs](https://github.com/mariadb-corporation/mariadb-connector-nodejs/blob/master/documentation/promise-api.md)
+- Setup Tailwind
+  - [Tailwind - Installation](https://tailwindcss.com/docs/installation)
