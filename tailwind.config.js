@@ -2,7 +2,13 @@
 module.exports = {
 	content: ["./client/**/*.{js,jsx}", "./public/**/*.{html,js}"],
 	theme: {
-		extend: {},
+		fontFamily: {
+			sans: ["Poppins", "system-ui", "sans-serif"],
+		},
+		colors: {
+			teal: "#154752",
+			"teal-light": "#DEEFEC",
+		},
 	},
 	plugins: [],
 };

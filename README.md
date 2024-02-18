@@ -20,3 +20,7 @@
   - [MariaDB NodeJS Docs](https://github.com/mariadb-corporation/mariadb-connector-nodejs/blob/master/documentation/promise-api.md)
 - Setup Tailwind
   - [Tailwind - Installation](https://tailwindcss.com/docs/installation)
+- React Learning + Usage
+  - [Defining + Using Components](https://www.react.express/react/components)
+  - [Component Styling](https://www.react.express/react/styling/css_and_class_names)
+  - [Rendering Lists](https://react.dev/learn/rendering-lists)
