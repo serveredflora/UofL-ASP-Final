@@ -28,6 +28,13 @@ const events = [
 	},
 ];
 
+const header = {
+	title: "Develop Sustainable Habits",
+	url: "/guide/",
+	linkText: "Start Today >>",
+	imgSrc: "https://placehold.co/400x400/154752/DEEFEC/svg",
+};
+
 const blogs = [
 	{
 		name: "Plant Pots",
@@ -53,38 +60,46 @@ const blogs = [
 ];
 
 const apps = {
-	ios: [
+	platforms: [
 		{
-			name: "ios-1",
-			iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
-			url: "/apps/ios-1/",
+			name: "iOS",
+			elements: [
+				{
+					name: "ios-1",
+					iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
+					url: "/apps/ios-1/",
+				},
+				{
+					name: "ios-2",
+					iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
+					url: "/apps/ios-2/",
+				},
+				{
+					name: "ios-3",
+					iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
+					url: "/apps/ios-3/",
+				},
+			],
 		},
 		{
-			name: "ios-2",
-			iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
-			url: "/apps/ios-2/",
-		},
-		{
-			name: "ios-3",
-			iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
-			url: "/apps/ios-3/",
-		},
-	],
-	android: [
-		{
-			name: "android-1",
-			iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
-			url: "/apps/android-1/",
-		},
-		{
-			name: "android-2",
-			iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
-			url: "/apps/android-2/",
-		},
-		{
-			name: "android-3",
-			iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
-			url: "/apps/android-3/",
+			name: "Android",
+			elements: [
+				{
+					name: "android-1",
+					iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
+					url: "/apps/android-1/",
+				},
+				{
+					name: "android-2",
+					iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
+					url: "/apps/android-2/",
+				},
+				{
+					name: "android-3",
+					iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
+					url: "/apps/android-3/",
+				},
+			],
 		},
 	],
 	url: "/apps/",
@@ -98,7 +113,6 @@ const about = {
 };
 
 const footer = [
-	// Column 1
 	{
 		text: "Column 1",
 		elements: [
@@ -112,7 +126,6 @@ const footer = [
 			},
 		],
 	},
-	// Column 2
 	{
 		text: "Column 2",
 		elements: [
@@ -136,32 +149,49 @@ function Navigation({ navigationData }) {
 	);
 }
 
+function Header({ headerData }) {
+	return (
+		<div className="flex flex-col-reverse md:flex-row justify-center space-y-8 space-y-reverse md:space-x-16 mx-16">
+			<div className="flex flex-col space-y-2 md:text-right my-auto">
+				<h1 className="text-4xl">{headerData.title}</h1>
+				<a href={headerData.url}>{headerData.linkText}</a>
+			</div>
+			<img src={headerData.imgSrc}></img>
+		</div>
+	);
+}
+
 function EventHighlights({ eventData }) {
 	return (
-		<div className="flex flex-col space-y-8">
-			{eventData.map((data, i) => (
-				<div
-					key={data.name}
-					className={
-						(i % 2 == 0
-							? "flex-row"
-							: "flex-row-reverse space-x-reverse") +
-						" flex justify-center space-x-8 mx-16"
-					}
-				>
+		<div className="flex flex-col space-y-8 mx-16">
+			<h3 className="text-2xl">Event Highlights</h3>
+			<div className="flex flex-col space-y-16">
+				{eventData.map((data, i) => (
 					<div
+						key={data.name}
 						className={
-							(i % 2 == 0 ? "text-right" : "text-left") +
-							" flex flex-col space-y-2 my-auto"
+							(i % 2 == 0
+								? "md:flex-row"
+								: "md:flex-row-reverse md:space-x-reverse") +
+							" flex-col-reverse flex space-y-8 space-y-reverse md:space-y-0 md:space-x-8"
 						}
 					>
-						<h1 className="text-2xl">{data.name}</h1>
-						<p>{data.summary}</p>
-						<a href={data.url}>View More >></a>
+						<div
+							className={
+								(i % 2 == 0
+									? "md:text-right"
+									: "md:text-left") +
+								" flex flex-col space-y-2 my-auto w-full"
+							}
+						>
+							<h1 className="text-2xl">{data.name}</h1>
+							<p>{data.summary}</p>
+							<a href={data.url}>View More >></a>
+						</div>
+						<img src={data.imgSrc}></img>
 					</div>
-					<img src={data.imgSrc}></img>
-				</div>
-			))}
+				))}
+			</div>
 		</div>
 	);
 }
@@ -169,14 +199,18 @@ function EventHighlights({ eventData }) {
 // TODO(noah): the scaling of the cards needs work
 function BlogPostCards({ blogData }) {
 	return (
-		<div className="flex flex-col space-y-4 mx-16">
+		<div className="flex flex-col space-y-8 mx-16">
 			<h3 className="text-2xl">Latest Blog Posts</h3>
-			<div className="grid grid-cols-3 justify-center gap-x-16">
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 content-center items-center place-content-center place-items-center md:mx-auto">
 				{blogData.map((data) => (
-					<div key={data.name} className="relative overflow-hidden">
+					<div
+						key={data.name}
+						className="relative overflow-hidden w-full h-96 md:min-w-72 md:max-w-72"
+					>
+						{/* TODO(noah): somehow center img */}
 						<img
 							src={data.imgSrc}
-							className="w-full object-cover"
+							className="w-full object-center object-cover"
 						></img>
 						<div className="absolute flex flex-col w-full h-1/2 top-1/2 left-0 p-4 space-y-2 justify-center text-center bg-teal bg-opacity-75 text-teal-light">
 							<h1 className="text-2xl">{data.name}</h1>
@@ -194,35 +228,28 @@ function AppsBanner({ appData }) {
 	return (
 		<div className="flex flex-col justify-center space-y-8 p-8 bg-teal text-teal-light">
 			<h3 className="text-2xl text-center">Our Recommended Apps</h3>
-			<div className="flex flex-row justify-center space-x-16">
-				<div className="flex flex-row space-x-4">
-					{appData["ios"].map((data) => (
-						<a
-							key={data.name}
-							href={data.url}
-							className="rounded-full"
-						>
-							<img
-								src={data.iconSrc}
-								className="rounded-full"
-							></img>
-						</a>
-					))}
-				</div>
-				<div className="flex flex-row space-x-4">
-					{appData["android"].map((data) => (
-						<a
-							key={data.name}
-							href={data.url}
-							className="rounded-full"
-						>
-							<img
-								src={data.iconSrc}
-								className="rounded-full"
-							></img>
-						</a>
-					))}
-				</div>
+			<div className="flex flex-col md:flex-row justify-center space-y-8 md:space-y-0 md:space-x-48">
+				{appData.platforms.map((platform) => (
+					<div className="flex flex-col space-y-2">
+						<h5 key={platform.name} className="text-xl text-center">
+							{platform.name}
+						</h5>
+						<div className="flex flex-row justify-center space-x-4">
+							{platform.elements.map((data) => (
+								<a
+									key={data.name}
+									href={data.url}
+									className="rounded-full"
+								>
+									<img
+										src={data.iconSrc}
+										className="rounded-full"
+									></img>
+								</a>
+							))}
+						</div>
+					</div>
+				))}
 			</div>
 			<a href={appData.url} className="ml-auto text-right">
 				More >>
@@ -269,21 +296,11 @@ function App() {
 	return (
 		<div className="flex flex-col space-y-16">
 			<Navigation navigationData={navigation}></Navigation>
-			{/* Header */}
-			{/* TODO: make this a react component */}
-			<div className="flex flex-row justify-center space-x-16 mx-16">
-				<div className="flex flex-col space-y-2 text-right my-auto">
-					<h1 className="text-4xl">Develop Sustainable Habits</h1>
-					<a href="/guide/">Start Today >></a>
-				</div>
-				<img src="https://placehold.co/400x400/154752/DEEFEC/svg"></img>
-			</div>
+			<Header headerData={header}></Header>
 			<EventHighlights eventData={events}></EventHighlights>
 			<BlogPostCards blogData={blogs}></BlogPostCards>
 			<AppsBanner appData={apps}></AppsBanner>
 			<AboutCard aboutData={about}></AboutCard>
-			{/* Footer */}
-			{/* TODO(noah): ... */}
 			<Footer footerData={footer}></Footer>
 		</div>
 	);
