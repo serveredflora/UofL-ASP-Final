@@ -4,10 +4,23 @@
 
 > Ensure MariaDB is installed!
 
-- `npm run dev` - Host the server + file watchers
-- `npm run serve` - Host only the server
-- `npm run build` - Run a production build of the client
-- `npm run test` - Run all unit tests in the project
+1. Ensure the database server is running and setup (the following are MariaDB queries):
+   1. `CREATE DATABASE uol_agile_db;`
+   2. `CREATE USER 'uol_admin'@'localhost' IDENTIFIED BY 'DCQ2vrc2zmx';`
+   3. `GRANT ALL PRIVILEGES ON uol_agile_db.* TO 'uol_admin'@'localhost';`
+2. Fill the following entries into the root `.env` file:
+  - ```DB_HOST='localhost'
+    DB_USER='uol_admin'
+    DB_PASS='DCQ2vrc2zmx'
+    DB_NAME='uol_agile_db'
+    ```
+3. Prepare the database with the correct structure + example data:
+   - `npm run prepare-db`
+4. Use one of the following npm scripts:
+   - `npm run dev` - Host the server + file watchers
+   - `npm run serve` - Host only the server
+   - `npm run build` - Run a production build of the client
+   - `npm run test` - Run all unit tests in the project
 
 ## Resources Used
 

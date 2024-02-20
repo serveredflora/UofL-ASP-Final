@@ -5,6 +5,7 @@
   "main": "server/index.js",
   "proxy": "http://localhost:8000",
   "scripts": {
+    "prepare-db": "cd server && npx knex migrate:rollback && npx knex migrate:latest && npx knex seed:run",
     "build": "npm-run-all --parallel build:*",
     "build:webpack": " webpack --mode=production",
     "build:tailwind": "npx tailwindcss -i ./client/style.css -o ./public/style.css --minify",
