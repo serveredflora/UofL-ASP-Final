@@ -29,4 +29,11 @@
   h6 {
     @apply opacity-75;
   }
+
+  .adaptive-margin {
+    @apply mx-8;
+    @apply md:mx-16;
+    @apply lg:mx-auto;
+    @apply lg:w-[60rem];
+  }
 }

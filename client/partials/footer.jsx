@@ -25,11 +25,11 @@ const footer = [
   },
 ];
 
-function FooterTemp({ footerData }) {
+function FooterTemplate({ footerData }) {
   return (
     // <div className="mt-auto">
     <div className="bg-teal text-teal-light mt-auto">
-      <div className="flex flex-row space-x-8 justify-center my-8 mx-16">
+      <div className="flex flex-row space-x-8 justify-center adaptive-margin my-8">
         {footerData.map((column) => (
           <div key={column.text} className="flex flex-col space-y-2">
             <h3>{column.text}</h3>
@@ -46,6 +46,6 @@ function FooterTemp({ footerData }) {
   );
 }
 
-export default function Footer({}) {
-  return <FooterTemp footerData={footer} />;
+export default function Footer() {
+  return <FooterTemplate footerData={footer} />;
 }

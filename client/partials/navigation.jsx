@@ -9,9 +9,10 @@ const navigation = [
   { name: "Account", url: "/account" },
 ];
 
-function NavigationTemp({ navigationData }) {
+// TODO(noah): add vertical dropdown list for mobile navigation
+function NavigationTemplate({ navigationData }) {
   return (
-    <div className="flex flex-row justify-end space-x-8 px-8 pt-8 -mb-8">
+    <div className="flex flex-grow flex-row justify-end space-x-8 adaptive-margin mt-8 -mb-8">
       {navigationData.map((option) => (
         <Link key={option.name} to={option.url}>
           {option.name}
@@ -21,6 +22,6 @@ function NavigationTemp({ navigationData }) {
   );
 }
 
-export default function Navigation({}) {
-  return <NavigationTemp navigationData={navigation} />;
+export default function Navigation() {
+  return <NavigationTemplate navigationData={navigation} />;
 }

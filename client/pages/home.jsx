@@ -95,8 +95,8 @@ const about = {
 
 function Header({ headerData }) {
   return (
-    <div className="flex flex-col-reverse md:flex-row justify-center space-y-8 space-y-reverse md:space-x-16 mx-16">
-      <div className="flex flex-col space-y-2 md:text-right my-auto">
+    <div className="flex flex-col-reverse md:flex-row md:justify-end space-y-8 space-y-reverse md:space-y-0 md:space-x-16 adaptive-margin">
+      <div className="flex flex-col justify-center space-y-2 md:text-right">
         <h1>{headerData.title}</h1>
         <a href={headerData.url}>{headerData.linkText}</a>
       </div>
@@ -107,20 +107,20 @@ function Header({ headerData }) {
 
 function EventHighlights({ eventData }) {
   return (
-    <div className="flex flex-col space-y-8 mx-16">
+    <div className="flex flex-col space-y-8 adaptive-margin">
       <h2>Event Highlights</h2>
       <div className="flex flex-col space-y-16">
         {eventData.map((data, i) => (
           <div
             key={data.name}
             className={
-              (i % 2 == 0 ? "md:flex-row" : "md:flex-row-reverse md:space-x-reverse") +
+              (i % 2 ? "md:flex-row" : "md:flex-row-reverse md:space-x-reverse") +
               " flex-col-reverse flex space-y-8 space-y-reverse md:space-y-0 md:space-x-8"
             }
           >
             <div
               className={
-                (i % 2 == 0 ? "md:text-right" : "md:text-left") +
+                (i % 2 ? "md:text-right" : "md:text-left") +
                 " flex flex-col space-y-2 my-auto w-full"
               }
             >
@@ -139,7 +139,7 @@ function EventHighlights({ eventData }) {
 // TODO(noah): the scaling of the cards needs work
 function BlogPostCards({ blogData }) {
   return (
-    <div className="flex flex-col space-y-8 mx-16">
+    <div className="flex flex-col space-y-8 adaptive-margin">
       <h2>Latest Blog Posts</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 content-center items-center place-content-center place-items-center md:mx-auto">
         {blogData.map((data) => (
@@ -196,12 +196,12 @@ function AppsBanner({ appData }) {
 
 function AboutCard({ aboutData }) {
   return (
-    <div className="flex flex-col space-y-4 mx-16">
+    <div className="flex flex-col space-y-4 adaptive-margin">
       <h2>About Us</h2>
       <div className="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-8">
         <img src={aboutData.imgSrc}></img>
         <div className="flex flex-col space-y-2 justify-center">
-          <h3>{aboutData.summary}</h3>
+          <p>{aboutData.summary}</p>
           <a href={aboutData.url}>Read More >></a>
         </div>
       </div>
