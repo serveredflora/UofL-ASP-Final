@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
@@ -33,7 +33,7 @@ function Account() {
 
   // Check if the user is already logged in
   useEffect(() => {
-    const token = localStorage.getItem('userToken');
+    const token = localStorage.getItem("userToken");
     setIsLoggedIn(!!token);
   }, []);
 
@@ -55,7 +55,7 @@ function Account() {
       const data = await response.json();
       if (response.ok) {
         console.log("Login successful", data);
-        localStorage.setItem('userToken', data.token); // Save token to localStorage
+        localStorage.setItem("userToken", data.token); // Save token to localStorage
         setIsLoggedIn(true);
         setError("");
       } else {
@@ -69,7 +69,7 @@ function Account() {
 
   // Handle logout
   const handleLogout = () => {
-    localStorage.removeItem('userToken');
+    localStorage.removeItem("userToken");
     setIsLoggedIn(false);
     setUsername("");
     setPassword("");
@@ -81,7 +81,10 @@ function Account() {
     return (
       <div className="flex flex-col items-center space-y-8">
         <h2 className="text-2xl font-bold">You are logged in!</h2>
-        <button onClick={handleLogout} className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+        <button
+          onClick={handleLogout}
+          className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+        >
           Logout
         </button>
       </div>
@@ -93,7 +96,9 @@ function Account() {
       <h2 className="text-2xl font-bold">Account Login</h2>
       {error && <p className="text-red-500">{error}</p>}
       <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
-        <label htmlFor="username" className="text-lg">Username:</label>
+        <label htmlFor="username" className="text-lg">
+          Username:
+        </label>
         <input
           type="text"
           id="username"
@@ -103,7 +108,9 @@ function Account() {
           value={username}
           onChange={handleUsernameChange}
         />
-        <label htmlFor="password" className="text-lg">Password:</label>
+        <label htmlFor="password" className="text-lg">
+          Password:
+        </label>
         <input
           type="password"
           id="password"
@@ -120,7 +127,9 @@ function Account() {
           Login
         </button>
       </form>
-      <Link to="/register" className="text-blue-500 hover:underline">Register</Link>
+      <Link to="/register" className="text-blue-500 hover:underline">
+        Register
+      </Link>
     </div>
   );
 }
@@ -285,7 +294,10 @@ function EventHighlights({ eventData }) {
             }
           >
             <div
-              className={(i % 2 == 0 ? "md:text-right" : "md:text-left") + " flex flex-col space-y-2 my-auto w-full"}
+              className={
+                (i % 2 == 0 ? "md:text-right" : "md:text-left") +
+                " flex flex-col space-y-2 my-auto w-full"
+              }
             >
               <h1 className="text-2xl">{data.name}</h1>
               <p>{data.summary}</p>
@@ -306,7 +318,10 @@ function BlogPostCards({ blogData }) {
       <h3 className="text-2xl">Latest Blog Posts</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 content-center items-center place-content-center place-items-center md:mx-auto">
         {blogData.map((data) => (
-          <div key={data.name} className="relative overflow-hidden w-full h-96 md:min-w-72 md:max-w-72">
+          <div
+            key={data.name}
+            className="relative overflow-hidden w-full h-96 md:min-w-72 md:max-w-72"
+          >
             {/* TODO(noah): somehow center img */}
             <img src={data.imgSrc} className="w-full object-center object-cover"></img>
             <div className="absolute flex flex-col w-full h-1/2 top-1/2 left-0 p-4 space-y-2 justify-center text-center bg-teal bg-opacity-75 text-teal-light">
@@ -331,8 +346,16 @@ function AppsBanner({ appData }) {
             <h5 className="text-xl text-center">{platform.name}</h5>
             <div className="flex flex-row justify-center space-x-4">
               {platform.elements.map((data) => (
-                <a key={`${platform.name}-${data.name}`} href={data.url} className="rounded-full">
-                  <img src={data.iconSrc} className="rounded-full" alt={`App icon for ${data.name}`} />
+                <a
+                  key={`${platform.name}-${data.name}`}
+                  href={data.url}
+                  className="rounded-full"
+                >
+                  <img
+                    src={data.iconSrc}
+                    className="rounded-full"
+                    alt={`App icon for ${data.name}`}
+                  />
                 </a>
               ))}
             </div>
