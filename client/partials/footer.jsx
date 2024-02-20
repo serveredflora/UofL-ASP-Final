@@ -2,25 +2,19 @@ import { Link } from "react-router-dom";
 
 const footer = [
   {
-    text: "Column 1",
+    name: "Column 1",
     elements: [
-      {
-        text: "Home",
-        url: "/",
-      },
-      {
-        text: "About",
-        url: "/about/",
-      },
+      { name: "Home", url: "/" },
+      { name: "Events", url: "/events/" },
+      { name: "Blogs", url: "/blogs/" },
+      { name: "Apps", url: "/apps/" },
     ],
   },
   {
-    text: "Column 2",
+    name: "Column 2",
     elements: [
-      {
-        text: "Contact",
-        url: "/contact/",
-      },
+      { name: "About", url: "/about/" },
+      { name: "Contact", url: "/contact/" },
     ],
   },
 ];
@@ -31,11 +25,11 @@ function FooterTemplate({ footerData }) {
     <div className="bg-teal text-teal-light mt-auto">
       <div className="flex flex-row space-x-8 justify-center adaptive-margin my-8">
         {footerData.map((column) => (
-          <div key={column.text} className="flex flex-col space-y-2">
-            <h3>{column.text}</h3>
+          <div key={column.name} className="flex flex-col space-y-2">
+            <h3>{column.name}</h3>
             {column.elements.map((element) => (
-              <Link key={element.text} to={element.url}>
-                {element.text}
+              <Link key={element.name} to={element.url}>
+                {element.name}
               </Link>
             ))}
           </div>

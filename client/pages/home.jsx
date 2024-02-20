@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const events = [
   {
     name: "Recycling Bins",
@@ -14,7 +16,7 @@ const events = [
 ];
 
 const header = {
-  title: "Develop Sustainable Habits",
+  title: "Environmental Living Guide",
   url: "/guide/",
   linkText: "Start Today >>",
   imgSrc: "https://placehold.co/400x400/154752/DEEFEC/svg",
@@ -93,24 +95,26 @@ const about = {
   imgSrc: "https://placehold.co/250x150/154752/DEEFEC/svg",
 };
 
-function Header({ headerData }) {
+function Header({ data }) {
   return (
     <div className="flex flex-col-reverse md:flex-row md:justify-end space-y-8 space-y-reverse md:space-y-0 md:space-x-16 adaptive-margin">
-      <div className="flex flex-col justify-center space-y-2 md:text-right">
-        <h1>{headerData.title}</h1>
-        <a href={headerData.url}>{headerData.linkText}</a>
+      <div className="flex flex-col justify-center md:items-end space-y-2 md:text-right">
+        <h1>{data.title}</h1>
+        <Link to={data.url} className="w-max">
+          {data.linkText}
+        </Link>
       </div>
-      <img src={headerData.imgSrc}></img>
+      <img src={data.imgSrc} className="rounded-2xl"></img>
     </div>
   );
 }
 
-function EventHighlights({ eventData }) {
+function EventHighlights({ data }) {
   return (
     <div className="flex flex-col space-y-8 adaptive-margin">
       <h2>Event Highlights</h2>
       <div className="flex flex-col space-y-16">
-        {eventData.map((data, i) => (
+        {data.map((data, i) => (
           <div
             key={data.name}
             className={
@@ -120,15 +124,17 @@ function EventHighlights({ eventData }) {
           >
             <div
               className={
-                (i % 2 ? "md:text-right" : "md:text-left") +
+                (i % 2 ? "md:items-end md:text-right" : "md:text-left") +
                 " flex flex-col space-y-2 my-auto w-full"
               }
             >
               <h1>{data.name}</h1>
               <p>{data.summary}</p>
-              <a href={data.url}>View More >></a>
+              <Link to={data.url} className="w-max">
+                View More >>
+              </Link>
             </div>
-            <img src={data.imgSrc}></img>
+            <img src={data.imgSrc} className="rounded-2xl"></img>
           </div>
         ))}
       </div>
@@ -137,22 +143,24 @@ function EventHighlights({ eventData }) {
 }
 
 // TODO(noah): the scaling of the cards needs work
-function BlogPostCards({ blogData }) {
+function BlogPostCards({ data }) {
   return (
     <div className="flex flex-col space-y-8 adaptive-margin">
       <h2>Latest Blog Posts</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 content-center items-center place-content-center place-items-center md:mx-auto">
-        {blogData.map((data) => (
+        {data.map((data) => (
           <div
             key={data.name}
-            className="relative overflow-hidden w-full h-96 md:min-w-72 md:max-w-72"
+            className="relative overflow-hidden w-full h-96 md:w-72 md:h-[32rem] rounded-2xl"
           >
             {/* TODO(noah): somehow center img */}
             <img src={data.imgSrc} className="w-full object-center object-cover"></img>
-            <div className="absolute flex flex-col w-full h-1/2 top-1/2 left-0 p-4 space-y-2 justify-center text-center bg-teal bg-opacity-75 text-teal-light">
-              <h1>{data.name}</h1>
+            <div className="absolute flex flex-col w-full h-1/2 top-1/2 left-0 p-4 space-y-2 justify-around items-center text-center bg-teal bg-opacity-75 text-teal-light">
+              <h2>{data.name}</h2>
               <p>{data.summary}</p>
-              <a href={data.url}>View More >></a>
+              <Link to={data.url} className="button w-max">
+                View More
+              </Link>
             </div>
           </div>
         ))}
@@ -161,19 +169,19 @@ function BlogPostCards({ blogData }) {
   );
 }
 
-function AppsBanner({ appData }) {
+function AppsBanner({ data }) {
   return (
     <div className="flex flex-col justify-center space-y-8 p-8 bg-teal text-teal-light">
       <h2 className="text-center">Our Recommended Apps</h2>
       <div className="flex flex-col md:flex-row justify-center space-y-8 md:space-y-0 md:space-x-48">
-        {appData.platforms.map((platform) => (
+        {data.platforms.map((platform) => (
           <div key={platform.name} className="flex flex-col space-y-4">
             <h3 className="text-center">{platform.name}</h3>
             <div className="flex flex-row justify-center space-x-4">
               {platform.elements.map((data) => (
-                <a
+                <Link
                   key={`${platform.name}-${data.name}`}
-                  href={data.url}
+                  to={data.url}
                   className="rounded-full"
                 >
                   <img
@@ -181,28 +189,30 @@ function AppsBanner({ appData }) {
                     className="rounded-full"
                     alt={`App icon for ${data.name}`}
                   />
-                </a>
+                </Link>
               ))}
             </div>
           </div>
         ))}
       </div>
-      <a href={appData.url} className="ml-auto text-right">
-        More >>
-      </a>
+      <Link to={data.url} className="ml-auto text-right w-max">
+        View More >>
+      </Link>
     </div>
   );
 }
 
-function AboutCard({ aboutData }) {
+function AboutCard({ data }) {
   return (
     <div className="flex flex-col space-y-4 adaptive-margin">
       <h2>About Us</h2>
       <div className="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-8">
-        <img src={aboutData.imgSrc}></img>
+        <img src={data.imgSrc} className="rounded-2xl"></img>
         <div className="flex flex-col space-y-2 justify-center">
-          <p>{aboutData.summary}</p>
-          <a href={aboutData.url}>Read More >></a>
+          <p>{data.summary}</p>
+          <Link to={data.url} className="w-max">
+            Read More >>
+          </Link>
         </div>
       </div>
     </div>
@@ -212,11 +222,11 @@ function AboutCard({ aboutData }) {
 export default function Home() {
   return (
     <div className="flex flex-col space-y-16">
-      <Header headerData={header} />
-      <EventHighlights eventData={events} />
-      <BlogPostCards blogData={blogs} />
-      <AppsBanner appData={apps} />
-      <AboutCard aboutData={about} />
+      <Header data={header} />
+      <EventHighlights data={events} />
+      <BlogPostCards data={blogs} />
+      <AppsBanner data={apps} />
+      <AboutCard data={about} />
     </div>
   );
 }

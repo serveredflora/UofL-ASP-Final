@@ -36,4 +36,18 @@
     @apply lg:mx-auto;
     @apply lg:w-[60rem];
   }
+
+  .button {
+    @apply block;
+    @apply rounded-lg;
+    @apply bg-teal;
+    @apply text-teal-light;
+    @apply px-4;
+    @apply py-2;
+    @apply text-center;
+    @apply transition;
+    @apply hover:bg-teal-subtle;
+    @apply focus:outline-none;
+    @apply focus:ring;
+  }
 }

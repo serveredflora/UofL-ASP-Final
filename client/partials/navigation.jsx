@@ -2,22 +2,34 @@ import { Link } from "react-router-dom";
 
 const navigation = [
   { name: "Home", url: "/" },
-  { name: "Guides", url: "/guides/" },
-  { name: "Blogs", url: "/blogs/" },
   { name: "Events", url: "/events/" },
-  { name: "Contact", url: "/contact/" },
+  { name: "Blogs", url: "/blogs/" },
+  { name: "Apps", url: "/apps/" },
+  { name: "About", url: "/about/" },
+  // TODO(noah): make this show an icon instead of text
   { name: "Account", url: "/account" },
 ];
 
-// TODO(noah): add vertical dropdown list for mobile navigation
 function NavigationTemplate({ navigationData }) {
   return (
     <div className="flex flex-row justify-end space-x-8 adaptive-margin mt-8 -mb-8">
+      {/* TODO(noah): replace placeholder with logo */}
+      <Link to="/" className="mr-auto -mt-3 rounded-2xl">
+        <img src="https://placehold.co/144x48/DEEFEC/154752/svg" className="rounded-2xl"></img>
+      </Link>
       {navigationData.map((option) => (
-        <Link key={option.name} to={option.url}>
+        <Link key={option.name} to={option.url} className="h-6 hidden md:block">
           {option.name}
         </Link>
       ))}
+      <button
+        onClick={() => {
+          // TODO(noah): toggle vertical dropdown list for mobile navigation
+        }}
+        className="button w-12 h-12 -mt-3 md:hidden"
+      >
+        ::
+      </button>
     </div>
   );
 }
