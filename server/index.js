@@ -1,66 +1,16 @@
-// require("dotenv").config();
-
-// const express = require("express");
-// const path = require("path");
-// const mariadb = require("mariadb");
-
-// const app = express();
-// const port = 8000;
-
-// async function asyncFunction() {
-//   let conn;
-//   try {
-//     conn = await mariadb.createConnection({
-//       host: process.env.DB_HOST,
-//       user: process.env.DB_USER,
-//       password: process.env.DB_PASS,
-//       database: process.env.DB_NAME,
-//     });
-//     console.log("Successfully connected to the MariaDB database");
-//     // DB QUERY
-//   } catch (err) {
-//     console.error("Failed to connect to the MariaDB database", err);
-//     throw err;
-//   } finally {
-//     if (conn) {
-//       try {
-//         await conn.end();
-//       } catch (endError) {
-//         console.error("Failed to close the database connection", endError);
-//       }
-//     }
-//   }
-// }
-
-// app.use(express.static(path.join(__dirname, "..", "public")));
-
-// app.get("/test", (req, res) => {
-//   res.send({
-//     data: "example data being sent via express",
-//   });
-// });
-
-// app.listen(port, async () => {
-//   console.log(`Server listening on port ${port}`);
-//   try {
-//     await asyncFunction(); // Debug db connect
-//   } catch (err) {
-//     console.error("Error during database connection test", err);
-//   }
-// });
-
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
-// });
-
 require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
 const mariadb = require("mariadb");
+const authRouter = require("./auth/auth");
 
 const app = express();
 const port = 8000;
+app.use(express.json());
+
+// Use authRouter for authentication routes
+app.use("/auth", authRouter);
 
 async function asyncFunction() {
   let conn;
@@ -89,11 +39,11 @@ async function asyncFunction() {
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-app.get("/test", (req, res) => {
-  res.send({
-    data: "example data being sent via express",
-  });
-});
+// app.get("/test", (req, res) => {
+//   res.send({
+//     data: "example data being sent via express",
+//   });
+// });
 
 // Route all other requests to React app
 app.get("*", (req, res) => {
