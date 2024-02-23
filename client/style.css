@@ -30,6 +30,10 @@
     @apply opacity-75;
   }
 
+  .nav-active {
+    @apply underline;
+  }
+
   .adaptive-margin {
     @apply mx-8;
     @apply md:mx-16;

@@ -118,14 +118,14 @@ function EventHighlights({ data }) {
           <div
             key={data.name}
             className={
-              (i % 2 ? "md:flex-row" : "md:flex-row-reverse md:space-x-reverse") +
-              " flex-col-reverse flex space-y-8 space-y-reverse md:space-y-0 md:space-x-8"
+              (i % 2 ? "md:flex-row " : "md:flex-row-reverse md:space-x-reverse ") +
+              "flex-col-reverse flex space-y-8 space-y-reverse md:space-y-0 md:space-x-8"
             }
           >
             <div
               className={
-                (i % 2 ? "md:items-end md:text-right" : "md:text-left") +
-                " flex flex-col space-y-2 my-auto w-full"
+                (i % 2 ? "md:items-end md:text-right " : "md:text-left ") +
+                "flex flex-col space-y-2 my-auto w-full"
               }
             >
               <h1>{data.name}</h1>

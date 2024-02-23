@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const navigation = [
   { name: "Home", url: "/" },
@@ -19,9 +19,13 @@ function NavigationTemplate({ navigationData }) {
         <img src="https://placehold.co/144x48/DEEFEC/154752/svg" className="rounded-2xl"></img>
       </Link>
       {navigationData.map((option) => (
-        <Link key={option.name} to={option.url} className="h-6 hidden md:block">
+        <NavLink
+          key={option.name}
+          to={option.url}
+          className={({ isActive }) => "h-6 hidden md:block" + (isActive ? " nav-active" : "")}
+        >
           {option.name}
-        </Link>
+        </NavLink>
       ))}
       <button
         onClick={() => {
