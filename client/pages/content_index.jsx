@@ -3,57 +3,27 @@ import Dropdown from "../components/dropdown.jsx";
 
 let filterDropdowns = [
   {
-    key: "content_type",
-    text: "Type of Content",
-    allowMultiple: true,
+    key: "type",
+    text: "Content Type",
+    allowMultipleSelections: true,
+    selection: ["app", "article"],
     options: [
-      {
-        key: "app",
-        text: "App",
-        checked: true,
-      },
-      {
-        key: "article",
-        text: "Articles/Blog Posts",
-        checked: true,
-      },
-      {
-        key: "event",
-        text: "Event",
-        checked: false,
-      },
+      { key: "app", text: "App" },
+      { key: "article", text: "Articles" },
+      { key: "event", text: "Event" },
     ],
   },
   {
     key: "publish_age",
     text: "Published Date",
-    allowMultiple: false,
+    allowMultipleSelections: false,
+    selection: "last_3_months",
     options: [
-      {
-        key: "last_week",
-        text: "Last Week",
-        checked: false,
-      },
-      {
-        key: "last_month",
-        text: "Last Month",
-        checked: false,
-      },
-      {
-        key: "last_3_months",
-        text: "Last 3 Months",
-        checked: true,
-      },
-      {
-        key: "last_year",
-        text: "Last Year",
-        checked: false,
-      },
-      {
-        key: "all",
-        text: "Everything",
-        checked: false,
-      },
+      { key: "last_week", text: "Last Week" },
+      { key: "last_month", text: "Last Month" },
+      { key: "last_3_months", text: "Last 3 Months" },
+      { key: "last_year", text: "Last Year" },
+      { key: "all", text: "Everything" },
     ],
   },
 ];
