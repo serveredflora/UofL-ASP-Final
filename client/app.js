@@ -6,7 +6,9 @@ import Navigation from "./partials/navigation.jsx";
 import Footer from "./partials/footer.jsx";
 // Pages
 import Home from "./pages/home.jsx";
+import ContentIndex from "./pages/content_index.jsx";
 import Account from "./pages/account.jsx";
+import PageNotFound from "./pages/page_not_found.jsx";
 
 function App() {
   return (
@@ -16,7 +18,9 @@ function App() {
         <div className="flex flex-col space-y-16 my-16">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/account" element={<Account />} />
+            <Route path="/content/" element={<ContentIndex />} />
+            <Route path="/account/" element={<Account />} />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </div>
         <Footer />

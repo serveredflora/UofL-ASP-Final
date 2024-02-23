@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 
 const navigation = [
   { name: "Home", url: "/" },
-  { name: "Events", url: "/events/" },
-  { name: "Blogs", url: "/blogs/" },
-  { name: "Apps", url: "/apps/" },
+  { name: "Content Index", url: "/content/" },
+  // { name: "Events", url: "/events/" },
+  // { name: "Blogs", url: "/blogs/" },
+  // { name: "Apps", url: "/apps/" },
   { name: "About", url: "/about/" },
   // TODO(noah): make this show an icon instead of text
   { name: "Account", url: "/account" },
