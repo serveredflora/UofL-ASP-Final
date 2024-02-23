@@ -20,15 +20,16 @@ export default function Dropdown({ data }) {
       </div>
       <div className="flex flex-col space-y-2 border-teal border-2 px-4 py-2 rounded-2xl">
         {data.options.map((option) => (
-          <div className="flex flex-row space-x-2">
-            {/* TODO(noah): allow the input to be pre-selected... */}
+          <div key={option.key} className="flex flex-row space-x-2">
             <input
               type={data.allowMultiple ? "checkbox" : "radio"}
+              id={option.key}
               name={data.key}
               value={option.key}
               className="my-auto"
+              defaultChecked={option.checked}
             />
-            <label>{option.text}</label>
+            <label htmlFor={option.key}>{option.text}</label>
           </div>
         ))}
       </div>

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Dropdown from "../components/dropdown.jsx";
 
-const filtersDropdowns = [
+let filterDropdowns = [
   {
     key: "content_type",
     text: "Type of Content",
@@ -10,23 +10,17 @@ const filtersDropdowns = [
       {
         key: "app",
         text: "App",
-        onClick: () => {
-          console.log("...");
-        },
+        checked: true,
       },
       {
         key: "article",
         text: "Articles/Blog Posts",
-        onClick: () => {
-          console.log("...");
-        },
+        checked: true,
       },
       {
         key: "event",
         text: "Event",
-        onClick: () => {
-          console.log("...");
-        },
+        checked: false,
       },
     ],
   },
@@ -38,37 +32,27 @@ const filtersDropdowns = [
       {
         key: "last_week",
         text: "Last Week",
-        onClick: () => {
-          console.log("...");
-        },
+        checked: false,
       },
       {
         key: "last_month",
         text: "Last Month",
-        onClick: () => {
-          console.log("...");
-        },
+        checked: false,
       },
       {
         key: "last_3_months",
         text: "Last 3 Months",
-        onClick: () => {
-          console.log("...");
-        },
+        checked: true,
       },
       {
         key: "last_year",
         text: "Last Year",
-        onClick: () => {
-          console.log("...");
-        },
+        checked: false,
       },
       {
         key: "all",
         text: "Everything",
-        onClick: () => {
-          console.log("...");
-        },
+        checked: false,
       },
     ],
   },
@@ -79,7 +63,7 @@ function Filters({}) {
     <div className="flex flex-col space-y-8 adaptive-margin">
       <h2>Filters</h2>
       <div className="flex flex-row space-x-4">
-        {filtersDropdowns.map((data) => (
+        {filterDropdowns.map((data) => (
           <Dropdown key={data.key} data={data} />
         ))}
       </div>
