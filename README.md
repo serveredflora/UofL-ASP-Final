@@ -9,7 +9,8 @@
    2. `CREATE USER 'uol_admin'@'localhost' IDENTIFIED BY 'DCQ2vrc2zmx';`
    3. `GRANT ALL PRIVILEGES ON uol_agile_db.* TO 'uol_admin'@'localhost';`
 2. Fill the following entries into the root `.env` file:
-  - ```DB_HOST='localhost'
+    ```
+    DB_HOST='localhost'
     DB_USER='uol_admin'
     DB_PASS='DCQ2vrc2zmx'
     DB_NAME='uol_agile_db'
