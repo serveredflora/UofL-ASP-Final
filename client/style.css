@@ -5,6 +5,8 @@
 @layer base {
   html {
     @apply text-teal;
+    @apply selection:bg-teal-mid;
+    @apply selection:bg-opacity-60;
   }
 
   h1 {
