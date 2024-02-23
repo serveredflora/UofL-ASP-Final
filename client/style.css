@@ -30,6 +30,27 @@
     @apply opacity-75;
   }
 
+  input {
+    @apply !text-teal;
+    @apply !border-teal;
+    @apply !border-2;
+    @apply !rounded-2xl;
+  }
+
+  [type="checkbox"] {
+    @apply !rounded;
+  }
+
+  [type="radio"] {
+    @apply !rounded-full;
+  }
+
+  [type="text"],
+  [type="password"] {
+    @apply px-4;
+    @apply py-2;
+  }
+
   .nav-active {
     @apply underline;
   }

@@ -8,7 +8,7 @@ const navigation = [
   // { name: "Apps", url: "/apps/" },
   { name: "About", url: "/about/" },
   // TODO(noah): make this show an icon instead of text
-  { name: "Account", url: "/account" },
+  { name: "Account", url: "/account/" },
 ];
 
 function NavigationTemplate({ navigationData }) {

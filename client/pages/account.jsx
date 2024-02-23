@@ -104,7 +104,7 @@ export default function Account() {
           Login
         </button>
       </form>
-      <Link to="/register" className="text-blue-500 hover:underline">
+      <Link to="/register/" className="text-blue-500 hover:underline">
         Register
       </Link>
     </div>
