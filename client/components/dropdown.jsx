@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Dropdown({ data }) {
+export default function Dropdown({ data, onChangeEvent }) {
   // TODO(noah): try using 'FormData' instead of this funky react state mess...
 
   // Triggered when both a check or radio box is updated
@@ -20,6 +20,10 @@ export default function Dropdown({ data }) {
       data.selection = e.target.value;
     }
 
+    if (!data.allowMultipleSelections) {
+      onChangeEvent(e);
+    }
+
     // Update the component value
     setSelection(data.selection);
   };
@@ -34,6 +38,7 @@ export default function Dropdown({ data }) {
     const updateChecked = (e) => {
       updateSelection(e);
       setChecked(getChecked());
+      onChangeEvent(e);
     };
 
     return (
@@ -42,7 +47,7 @@ export default function Dropdown({ data }) {
         <input
           type={data.allowMultipleSelections ? "checkbox" : "radio"}
           id={option.key}
-          name={data.key}
+          name={option.key}
           value={option.key}
           checked={data.allowMultipleSelections ? checked : selection == option.key}
           onChange={data.allowMultipleSelections ? updateChecked : updateSelection}
