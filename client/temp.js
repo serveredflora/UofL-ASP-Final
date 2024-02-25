@@ -9,8 +9,7 @@ export function randIntRange(min, max) {
 }
 
 function prefixPad(str, char, targetLength) {
-  let c = targetLength - str.length;
-  for (let i = 0; i < c; i++) {
+  for (let i = str.length; i < targetLength; i++) {
     str = char + str;
   }
 
@@ -29,15 +28,27 @@ function randomExclusiveSelection(arr, count) {
   return results;
 }
 
+function dateToString(date) {
+  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+}
+
 function generateFakeDate() {
-  return (
-    "20" +
-    prefixPad(String(randIntRange(2, 23)), "0", 2) +
-    "-" +
-    prefixPad(String(randIntRange(1, 12)), "0", 2) +
-    "-" +
-    prefixPad(String(randIntRange(0, 28)), "0", 2)
+  // Source: https://stackoverflow.com/a/9035732
+  var earliestDate = new Date(2020, 0, 1);
+  return dateToString(
+    new Date(
+      earliestDate.getTime() + Math.random() * (new Date().getTime() - earliestDate.getTime())
+    )
   );
+}
+
+export function dateStringInDays(str) {
+  let parts = str.split("-").map((e) => Number(e));
+  let date = new Date(parts[0], parts[1], parts[2]);
+
+  const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+  // Source: https://stackoverflow.com/a/2627493
+  return Math.round((date - new Date(1970, 0, 1)) / ONE_DAY_IN_MS);
 }
 
 export function generateFakeDatabaseResults(amount) {

@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from "react-router-dom";
 import Dropdown from "../components/dropdown.jsx";
-import { generateFakeDatabaseResults, randIntRange } from "../temp.js";
+import { generateFakeDatabaseResults, randIntRange, dateStringInDays } from "../temp.js";
 
 let filterDropdowns = {
   type: {
@@ -27,11 +27,20 @@ let filterDropdowns = {
       { key: "last_month", text: "Last Month" },
       { key: "last_3_months", text: "Last 3 Months" },
       { key: "last_year", text: "Last Year" },
+      { key: "last_2_years", text: "Last 2 Years" },
       { key: "all", text: "Everything" },
     ],
     applyToEntry: (entry, selection) => {
-      // TODO(noah): do this filter...
-      return true;
+      const SELECTION_RANGES = {
+        last_week: 7,
+        last_month: 30,
+        last_3_months: 90,
+        last_year: 365,
+        last_2_years: 730,
+        all: 999999,
+      };
+
+      return todayInDays - dateStringInDays(entry.publishDate) <= SELECTION_RANGES[selection];
     },
   },
 };
@@ -40,6 +49,11 @@ let fakeDatabaseResults = generateFakeDatabaseResults(randIntRange(5, 12));
 
 let searchParams;
 let setSearchParams;
+
+let todayDate = new Date();
+let todayInDays = dateStringInDays(
+  `${todayDate.getFullYear()}-${todayDate.getMonth()}-${todayDate.getDate()}`
+);
 
 function submitFilters(_e) {
   let params = {};
@@ -88,6 +102,7 @@ function CardGrid({ data }) {
               </div>
               <h2 className="capitalize">{entry.name}</h2>
               <p>{entry.summary}</p>
+              <p>Published: {entry.publishDate}</p>
               <div className="flex flex-row flex-wrap justify-center space-x-2 text-teal-light text-opacity-75">
                 <p>Tags: </p>
                 {entry.tags.map((tag, index) => (
