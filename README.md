@@ -39,3 +39,6 @@
   - [Defining + Using Components](https://www.react.express/react/components)
   - [Component Styling](https://www.react.express/react/styling/css_and_class_names)
   - [Rendering Lists](https://react.dev/learn/rendering-lists)
+  - [Input Values + State](https://react.dev/reference/react-dom/components/input#providing-an-initial-value-for-an-input)
+- React Router
+  - [SearchParams Docs](https://reactrouter.com/en/main/hooks/use-search-params#usesearchparams)

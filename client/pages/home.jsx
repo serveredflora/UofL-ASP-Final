@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import CardGrid from "../components/card_grid.jsx";
 
 const events = [
   {
@@ -142,30 +143,22 @@ function EventHighlights({ data }) {
   );
 }
 
+function BlogPostCardDetail({ data }) {
+  return (
+    <div className="flex flex-col space-y-2 w-full h-full">
+      <h2>{data.name}</h2>
+      <p>{data.summary}</p>
+      <Link to={data.url} className="self-center button button-light w-max !mt-auto">
+        View More
+      </Link>
+    </div>
+  );
+}
+
 // TODO(noah): the scaling of the cards needs work
 function BlogPostCards({ data }) {
   return (
-    <div className="flex flex-col space-y-8 adaptive-margin">
-      <h2>Latest Blog Posts</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 content-center items-center place-content-center place-items-center md:mx-auto">
-        {data.map((data) => (
-          <div
-            key={data.name}
-            className="relative overflow-hidden w-full h-96 md:w-72 md:h-[32rem] rounded-2xl"
-          >
-            {/* TODO(noah): somehow center img */}
-            <img src={data.imgSrc} className="w-full object-center object-cover"></img>
-            <div className="absolute flex flex-col w-full h-1/2 top-1/2 left-0 p-4 space-y-2 justify-around items-center text-center bg-teal bg-opacity-75 text-teal-light">
-              <h2>{data.name}</h2>
-              <p>{data.summary}</p>
-              <Link to={data.url} className="button w-max">
-                View More
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    <CardGrid title="Latest Blog Posts" data={data} DetailComponent={BlogPostCardDetail} />
   );
 }
 

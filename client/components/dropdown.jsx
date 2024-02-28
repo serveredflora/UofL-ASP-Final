@@ -58,6 +58,9 @@ export default function Dropdown({ data, onChangeEvent }) {
     );
   });
 
+  // TODO(noah): make this container not change the page layout (like an overlay?)
+  // TODO(noah): make the dropdown collapse if a click/point event occurs outside
+  //             the container bounds (maybe?)
   let optionsContainer = (
     <div className="flex flex-col space-y-2 border-teal border-2 px-4 py-2 rounded-2xl">
       {options}
@@ -87,7 +90,7 @@ export default function Dropdown({ data, onChangeEvent }) {
         </svg>
       );
     } else {
-      // Icon 'chevron-down' from: https://heroicons.com/mini
+      // Icon 'chevron-up' from: https://heroicons.com/mini
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"

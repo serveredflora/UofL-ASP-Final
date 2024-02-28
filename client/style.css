@@ -77,4 +77,10 @@
     @apply focus:outline-none;
     @apply focus:ring;
   }
+
+  .button-light {
+    @apply bg-teal-light;
+    @apply text-teal;
+    @apply hover:bg-teal-mid;
+  }
 }

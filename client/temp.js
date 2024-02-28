@@ -29,7 +29,11 @@ function randomExclusiveSelection(arr, count) {
 }
 
 function dateToString(date) {
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  return `${date.getFullYear()}-${prefixPad(String(date.getMonth()), "0", 2)}-${prefixPad(
+    String(date.getDate()),
+    "0",
+    2
+  )}`;
 }
 
 function generateFakeDate() {
