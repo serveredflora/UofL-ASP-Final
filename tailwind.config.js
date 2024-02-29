@@ -6,6 +6,7 @@ module.exports = {
       sans: ["Poppins", "system-ui", "sans-serif"],
     },
     colors: {
+      white: "#fff",
       teal: "#154752",
       "teal-subtle": "#2C5963",
       "teal-mid": "#8AA3A8",
