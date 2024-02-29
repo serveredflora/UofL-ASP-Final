@@ -39,11 +39,13 @@ function dateToString(date) {
 function generateFakeDate() {
   // Source: https://stackoverflow.com/a/9035732
   var earliestDate = new Date(2020, 0, 1);
-  return dateToString(
-    new Date(
-      earliestDate.getTime() + Math.random() * (new Date().getTime() - earliestDate.getTime())
-    )
+  return new Date(
+    earliestDate.getTime() + Math.random() * (new Date().getTime() - earliestDate.getTime())
   );
+}
+
+function generateFakeDateString() {
+  return dateToString(generateFakeDate());
 }
 
 export function dateStringInDays(str) {
@@ -53,6 +55,10 @@ export function dateStringInDays(str) {
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   // Source: https://stackoverflow.com/a/2627493
   return Math.round((date - new Date(1970, 0, 1)) / ONE_DAY_IN_MS);
+}
+
+function pickRandomInArray(arr) {
+  return arr[randIntRange(0, arr.length - 1)];
 }
 
 export function generateFakeDatabaseResults(amount) {
@@ -101,16 +107,87 @@ export function generateFakeDatabaseResults(amount) {
   for (let i = 0; i < amount; i++) {
     let result = {};
     result.key = i;
-    result.type = types[randIntRange(0, types.length - 1)];
+    result.type = pickRandomInArray(types);
 
-    result.publishDate = generateFakeDate();
+    result.publishDate = generateFakeDateString();
     result.tags = randomExclusiveSelection(tags, randIntRange(2, 4));
 
     result.name = randomExclusiveSelection(nameWords, randIntRange(2, 4)).join(" ");
     result.summary = 'crazy "hot of the press" info right here!';
 
     result.url = "/content/";
-    result.imgSrc = "https://placehold.co/150x250/DEEFEC/154752/svg";
+    result.imgSrc = "https://placehold.co/300x150/DEEFEC/154752/svg";
+
+    result.typeData = {};
+    switch (result.type) {
+      case "app":
+        const appPlatforms = ["android", "ios", "web"];
+        const appPricingModels = ["free", "one-time fee", "subscription"];
+
+        result.typeData.platforms = randomExclusiveSelection(appPlatforms, randIntRange(1, 3));
+        result.typeData.pricingModel = pickRandomInArray(appPricingModels);
+        result.typeData.price =
+          result.typeData.pricingModel != "free" ? randIntRange(1, 4) + 0.99 : 0.0;
+        break;
+
+      case "article":
+        const articlePublisherType = [
+          "Personal Blog",
+          "Media Company",
+          "Non-Profit",
+          "Government Funded",
+        ];
+        const articleAuthor = ["Sir Tony Herbert", "Vuk the Gardener", "Marcia24"];
+
+        result.typeData.publisherType = pickRandomInArray(articlePublisherType);
+        result.typeData.author = pickRandomInArray(articleAuthor);
+        result.typeData.readingTimeInMinutes = randIntRange(5, 25);
+        break;
+
+      case "event":
+        // TODO(noah): find what sort of location info we need to provide to be able to include a Google Maps/Open Street Maps link/embed
+        // TODO(noah): also need info to allow for user-defined distance filtering (eg. <50km within selected location)
+        const eventLocations = [
+          { countryCode: "gb", city: "London", address: "", lat: -1, lon: -1 },
+        ];
+        const eventFormat = ["online-only", "hybrid", "in-person"];
+        const eventTypes = ["volunteering", "educational", "networking"];
+
+        let startDate = generateFakeDate();
+        let endDate = new Date(startDate);
+        let durationInDays = randIntRange(1, 7);
+        endDate.setDate(endDate.getDate() + durationInDays - 1);
+
+        result.typeData.startDate = dateToString(startDate);
+        result.typeData.endDate = dateToString(endDate);
+        result.typeData.durationInDays = durationInDays;
+        result.typeData.format = pickRandomInArray(eventFormat);
+        result.typeData.type = pickRandomInArray(eventTypes);
+        result.typeData.participantLimit =
+          result.typeData.eventType != "online-only" ? randIntRange(10, 3000) : -1;
+        result.typeData.location =
+          result.typeData.eventType != "online-only" ? pickRandomInArray(eventLocations) : null;
+        break;
+
+      case "video":
+        const videoPlatforms = [
+          "youtube",
+          "netflix",
+          "amazon prime",
+          "apple tv",
+          "tiktok",
+          "instagram",
+        ];
+        const videoTypes = ["documentary", "informational", "guide"];
+        const videoPricingModels = ["free", "purchase", "rental", "subscription"];
+
+        result.typeData.platform = pickRandomInArray(videoPlatforms);
+        result.typeData.types = pickRandomInArray(videoTypes);
+        result.typeData.pricingModel = pickRandomInArray(videoPricingModels);
+        result.typeData.episodeCount = randIntRange(1, 25);
+        result.typeData.episodeWatchTime = randIntRange(1, 150);
+        break;
+    }
 
     results.push(result);
   }

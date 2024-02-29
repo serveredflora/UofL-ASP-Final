@@ -3,6 +3,8 @@ import Dropdown from "../components/dropdown.jsx";
 import CardGrid from "../components/card_grid.jsx";
 import { generateFakeDatabaseResults, randIntRange, dateStringInDays } from "../temp.js";
 
+// TODO(noah): add more filters!
+
 let filterDropdowns = {
   type: {
     text: "Content Type",
@@ -86,6 +88,8 @@ function Filters({}) {
 }
 
 function ContentDetail({ data }) {
+  // TODO(noah): change card details based on content type
+
   return (
     <div className="flex flex-col space-y-2 w-full h-full">
       <div className="flex flex-row justify-between">
@@ -141,6 +145,8 @@ export default function ContentIndex({}) {
     }
     return true;
   });
+
+  // TODO(noah): somehow apply filter to search params in URL on first page load/render
 
   return (
     <div className="flex flex-col space-y-16">

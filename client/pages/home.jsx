@@ -28,19 +28,19 @@ const blogs = [
     name: "Plant Pots",
     summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     url: "/blog/plant-plots/",
-    imgSrc: "https://placehold.co/150x250/DEEFEC/154752/svg",
+    imgSrc: "https://placehold.co/300x150/DEEFEC/154752/svg",
   },
   {
     name: "Rent a Plot",
     summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     url: "/blog/rent-a-plot/",
-    imgSrc: "https://placehold.co/150x250/DEEFEC/154752/svg",
+    imgSrc: "https://placehold.co/300x150/DEEFEC/154752/svg",
   },
   {
     name: "Plastic Fashion",
     summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     url: "/events/plastic-fashion/",
-    imgSrc: "https://placehold.co/150x250/DEEFEC/154752/svg",
+    imgSrc: "https://placehold.co/300x150/DEEFEC/154752/svg",
   },
 ];
 
