@@ -53,7 +53,7 @@ let filterDropdowns = {
 };
 
 let paginationData = {
-  currentPage: 7,
+  currentPage: 1,
   maxPages: 15,
   optionsRange: 2,
 };
@@ -71,7 +71,7 @@ let todayInDays = dateStringInDays(
 function submitFilters(_e) {
   let params = {};
 
-  params.page = paginationData.currentPage;
+  params["page"] = paginationData.currentPage;
 
   Object.keys(filterDropdowns).forEach((key) => {
     let filter = filterDropdowns[key];
@@ -158,13 +158,12 @@ export default function ContentIndex({}) {
   });
 
   let pageValueFromSearchParams = searchParams.get("page");
-  if (searchParams.pageValueFromSearchParams == null) {
-    pageValueFromSearchParams = 1;
+  if (pageValueFromSearchParams != null) {
+    paginationData.currentPage = Number(pageValueFromSearchParams);
   }
 
-  paginationData.currentPage = pageValueFromSearchParams;
-
   // TODO(noah): somehow apply filter to search params in URL on first page load/render
+  //             this might help: https://stackoverflow.com/a/71913925
 
   return (
     <div className="flex flex-col space-y-16">
