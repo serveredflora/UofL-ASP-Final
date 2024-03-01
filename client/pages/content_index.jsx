@@ -4,12 +4,13 @@ import CardGrid from "../components/card_grid.jsx";
 import { generateFakeDatabaseResults, randIntRange, dateStringInDays } from "../temp.js";
 
 // TODO(noah): add more filters!
+// TODO(noah): add different dropdown options
 
 let filterDropdowns = {
   type: {
     text: "Content Type",
-    allowMultipleSelections: true,
-    selection: ["app", "article", "video", "event"],
+    allowMultipleSelections: true, // wether to use a radio-button (allowing on one selection)
+    selection: ["app", "article", "video", "event"], // holds current selection of the filter (changes based on UI + URL search params)
     options: [
       { key: "app", text: "App" },
       { key: "article", text: "Articles" },

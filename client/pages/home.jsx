@@ -155,7 +155,8 @@ function BlogPostCardDetail({ data }) {
   );
 }
 
-// TODO(noah): the scaling of the cards needs work
+// TODO(noah): Instead of blog posts, this should be the first 3
+//             un-filtered entries of the content index
 function BlogPostCards({ data }) {
   return (
     <CardGrid title="Latest Blog Posts" data={data} DetailComponent={BlogPostCardDetail} />
