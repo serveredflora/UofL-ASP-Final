@@ -157,7 +157,12 @@ export default function ContentIndex({}) {
     return true;
   });
 
-  paginationData.currentPage = searchParams.get("page");
+  let pageValueFromSearchParams = searchParams.get("page");
+  if (searchParams.pageValueFromSearchParams == null) {
+    pageValueFromSearchParams = 1;
+  }
+
+  paginationData.currentPage = pageValueFromSearchParams;
 
   // TODO(noah): somehow apply filter to search params in URL on first page load/render
 
