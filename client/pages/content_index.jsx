@@ -3,6 +3,13 @@ import Dropdown from "../components/dropdown.jsx";
 import CardGrid from "../components/card_grid.jsx";
 import Pagination from "../components/pagination.jsx";
 import { generateFakeDatabaseResults, randIntRange, dateStringInDays } from "../temp.js";
+import {
+  DevicePhoneMobileIcon,
+  NewspaperIcon,
+  VideoCameraIcon,
+  CalendarIcon,
+} from "@heroicons/react/20/solid";
+import IconText from "../components/icon_text.jsx";
 
 // TODO(noah): add more filters!
 // TODO(noah): add different dropdown options
@@ -10,13 +17,29 @@ import { generateFakeDatabaseResults, randIntRange, dateStringInDays } from "../
 let filterDropdowns = {
   type: {
     text: "Content Type",
-    allowMultipleSelections: true, // wether to use a radio-button (allowing on one selection)
+    allowMultipleSelections: true, // whether to use a radio-button (allowing on one selection)
     selection: ["app", "article", "video", "event"], // holds current selection of the filter (changes based on UI + URL search params)
     options: [
-      { key: "app", text: "App" },
-      { key: "article", text: "Articles" },
-      { key: "video", text: "Video" },
-      { key: "event", text: "Event" },
+      {
+        key: "app",
+        text: "App",
+        icon: { Component: DevicePhoneMobileIcon, includeText: true },
+      },
+      {
+        key: "article",
+        text: "Articles",
+        icon: { Component: NewspaperIcon, includeText: true },
+      },
+      {
+        key: "video",
+        text: "Video",
+        icon: { Component: VideoCameraIcon, includeText: true },
+      },
+      {
+        key: "event",
+        text: "Event",
+        icon: { Component: CalendarIcon, includeText: true },
+      },
     ],
     applyToEntry: (entry, selection) => {
       return selection.includes(entry.type);
@@ -50,6 +73,21 @@ let filterDropdowns = {
       );
     },
   },
+  // [type-agnostic] language
+  // [type-agnostic] pricing
+  // [app] platforms
+  // [app] pricing models
+  // [article] publisher type
+  // [article] reading time
+  // [event] entry price
+  // [event] start date
+  // [event] participant limit
+  // [event] location distance
+  // [event] format
+  // [event] type
+  // [video] platforms
+  // [video] types
+  // [video] pricing models
 };
 
 let paginationData = {
@@ -68,7 +106,7 @@ let todayInDays = dateStringInDays(
   `${todayDate.getFullYear()}-${todayDate.getMonth()}-${todayDate.getDate()}`
 );
 
-function submitFilters(_e) {
+function updateSearchParams(_e) {
   let params = {};
 
   params["page"] = paginationData.currentPage;
@@ -91,7 +129,7 @@ function Filters({}) {
       <h2>Filters</h2>
       <form className="flex flex-row space-x-4" onSubmit={(e) => e.preventDefault()}>
         {Object.keys(filterDropdowns).map((key) => (
-          <Dropdown key={key} data={filterDropdowns[key]} onChangeEvent={submitFilters} />
+          <Dropdown key={key} data={filterDropdowns[key]} onChangeEvent={updateSearchParams} />
         ))}
       </form>
     </div>
@@ -100,27 +138,73 @@ function Filters({}) {
 
 function ContentDetail({ data }) {
   // TODO(noah): change card details based on content type
+  let typeIcon;
+  let typeSpecific;
+  switch (data.type) {
+    case "app":
+      typeIcon = (
+        <IconText
+          data={{ text: "App", icon: { Component: DevicePhoneMobileIcon, includeText: true } }}
+        />
+      );
+      typeSpecific = (
+        <div className="flex flex-col !my-4">
+          <p className="capitalize">Platforms: {data.typeData.platforms.join(", ")}</p>
+        </div>
+      );
+      break;
+    case "article":
+      typeIcon = (
+        <IconText
+          data={{ text: "Article", icon: { Component: NewspaperIcon, includeText: true } }}
+        />
+      );
+      break;
+    case "event":
+      typeIcon = (
+        <IconText
+          data={{ text: "Event", icon: { Component: CalendarIcon, includeText: true } }}
+        />
+      );
+      break;
+    case "video":
+      typeIcon = (
+        <IconText
+          data={{ text: "Video", icon: { Component: VideoCameraIcon, includeText: true } }}
+        />
+      );
+      break;
+  }
 
   return (
     <div className="flex flex-col space-y-2 w-full h-full">
       <div className="flex flex-row justify-between">
-        <div className="bg-teal-light w-16 px-2 py-1 rounded-full capitalize text-teal">
-          {data.type}
+        <div className="bg-teal-light px-2 py-1 rounded-full capitalize text-teal">
+          {typeIcon}
         </div>
         <p className="my-auto text-teal-mid">Published: {data.publishDate}</p>
       </div>
       <h3 className="capitalize">{data.name}</h3>
       <p>{data.summary}</p>
+      {typeSpecific}
       <div className="flex flex-col space-y-2 !mt-auto">
-        <div className="flex flex-row flex-wrap justify-center space-x-2 text-teal-mid">
-          <p>Tags: </p>
+        <div className="flex flex-row flex-wrap justify-center space-x-2">
+          <p className="text-teal-mid">Tags: </p>
           {data.tags.map((tag, index) => (
-            <p key={tag}>#{index != data.tags.length - 1 ? tag + "," : tag}</p>
+            // TODO(noah): make clickable to (append or set) tag as a filter option...
+            <p key={tag} className="underline">
+              #{index != data.tags.length - 1 ? tag + "," : tag}
+            </p>
           ))}
         </div>
-        <Link to={data.url} className="self-center button button-light w-max">
-          Visit
-        </Link>
+        <div className="flex flex-row space-x-4 self-center">
+          <Link to={`/content/${data.id}/`} className="button button-subtle w-max">
+            View Details
+          </Link>
+          <Link to={data.url} className="self-center button button-light w-max">
+            Visit
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -173,7 +257,7 @@ export default function ContentIndex({}) {
         data={filtersData}
         DetailComponent={ContentDetail}
       />
-      <Pagination data={paginationData} onChangeEvent={submitFilters}></Pagination>
+      <Pagination data={paginationData} onChangeEvent={updateSearchParams}></Pagination>
     </div>
   );
 }

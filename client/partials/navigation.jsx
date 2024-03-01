@@ -1,14 +1,17 @@
 import { Link, NavLink } from "react-router-dom";
 import { UserIcon } from "@heroicons/react/20/solid";
+import IconText from "../components/icon_text.jsx";
 
 const navigation = [
-  { name: "Home", url: "/" },
-  { name: "Content Index", url: "/content/" },
-  // { name: "Events", url: "/events/" },
-  // { name: "Blogs", url: "/blogs/" },
-  // { name: "Apps", url: "/apps/" },
-  { name: "About", url: "/about/" },
-  { name: "Account", url: "/account/", Icon: UserIcon },
+  { key: "home", text: "Home", url: "/" },
+  { key: "content_index", text: "Content Index", url: "/content/" },
+  { key: "about", text: "About", url: "/about/" },
+  {
+    key: "account",
+    text: "Account",
+    url: "/account/",
+    icon: { Component: UserIcon, includeText: false },
+  },
 ];
 
 // TODO(noah): make the navigation bar sticky to the viewport
@@ -22,18 +25,11 @@ function NavigationTemplate({ navigationData }) {
       </Link>
       {navigationData.map((option) => (
         <NavLink
-          key={option.name}
+          key={option.key}
           to={option.url}
           className={({ isActive }) => "h-6 hidden md:block" + (isActive ? " nav-active" : "")}
         >
-          {() => {
-            if ("Icon" in option) {
-              let Icon = option.Icon;
-              return <Icon className="w-5 h-5 mt-0.5"></Icon>;
-            } else {
-              return option.name;
-            }
-          }}
+          <IconText data={option} />
         </NavLink>
       ))}
       <button

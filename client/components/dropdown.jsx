@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
+import IconText from "../components/icon_text.jsx";
 
 export default function Dropdown({ data, onChangeEvent }) {
   // TODO(noah): try using 'FormData' instead of this funky react state mess...
@@ -54,7 +55,8 @@ export default function Dropdown({ data, onChangeEvent }) {
           onChange={data.allowMultipleSelections ? updateChecked : updateSelection}
           className="my-auto"
         />
-        <label htmlFor={option.key}>{option.text}</label>
+        {/* <label htmlFor={option.key}>{option.text}</label> */}
+        <IconText data={option} />
       </div>
     );
   });

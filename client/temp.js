@@ -29,7 +29,7 @@ function randomExclusiveSelection(arr, count) {
 }
 
 function dateToString(date) {
-  return `${date.getFullYear()}-${prefixPad(String(date.getMonth()), "0", 2)}-${prefixPad(
+  return `${date.getFullYear()}-${prefixPad(String(date.getMonth() + 1), "0", 2)}-${prefixPad(
     String(date.getDate()),
     "0",
     2
@@ -118,7 +118,7 @@ export function generateFakeDatabaseResults(amount) {
     result.name = randomExclusiveSelection(nameWords, randIntRange(2, 4)).join(" ");
     result.summary = 'crazy "hot of the press" info right here!'; // brief info about the content
 
-    result.url = "/content/"; // link to content externally
+    result.url = "/"; // link to content externally, for now just the homepage...
     result.imgSrc = "https://placehold.co/300x150/DEEFEC/154752/svg"; // cover image
 
     // holds unique data depending on content type
@@ -166,6 +166,7 @@ export function generateFakeDatabaseResults(amount) {
         result.typeData.durationInDays = durationInDays;
         result.typeData.format = pickRandomInArray(eventFormat);
         result.typeData.type = pickRandomInArray(eventTypes);
+        result.typeData.entryPrice = randIntRange(0, 2) == 0 ? randIntRange(5, 100) : 0;
         result.typeData.participantLimit = result.typeData.eventType != "online-only" ? randIntRange(10, 3000) : -1;
         result.typeData.location = result.typeData.eventType != "online-only" ? pickRandomInArray(eventLocations) : null;
         break;
