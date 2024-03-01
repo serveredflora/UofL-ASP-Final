@@ -39,10 +39,9 @@ export default function Pagination({ data, onChangeEvent }) {
       <button
         key={i}
         onClick={(e) => updatePageIndex(e, i)}
-        className={
-          "button w-12 h-12 leading-8 " +
-          (i == data.currentPage ? "button-subtle" : "button-light")
-        }
+        className={`button w-12 h-12 leading-8 ${
+          i == data.currentPage ? "button-subtle" : "button-light"
+        } ${Math.abs(i - data.currentPage) >= 2 ? "hidden md:block" : ""}`}
       >
         {i}
       </button>
