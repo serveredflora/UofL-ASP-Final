@@ -62,7 +62,9 @@ function pickRandomInArray(arr) {
 }
 
 export function generateFakeDatabaseResults(amount) {
-  const types = ["app", "article", "event", "video"];
+  const contentTypes = ["app", "article", "event", "video"];
+
+  // Fake tags that are randomly selected
   const tags = [
     "informative",
     "research",
@@ -79,6 +81,7 @@ export function generateFakeDatabaseResults(amount) {
     "lifestyle",
     "advice",
   ];
+  // Used to generate fake titles by stringing some elements randomly together
   const nameWords = [
     "health",
     "energy",
@@ -106,18 +109,19 @@ export function generateFakeDatabaseResults(amount) {
   let results = [];
   for (let i = 0; i < amount; i++) {
     let result = {};
-    result.key = i;
-    result.type = pickRandomInArray(types);
+    result.id = i;
+    result.type = pickRandomInArray(contentTypes);
 
-    result.publishDate = generateFakeDateString();
-    result.tags = randomExclusiveSelection(tags, randIntRange(2, 4));
+    result.publishDate = generateFakeDateString(); // when the content was added to the DB
+    result.tags = randomExclusiveSelection(tags, randIntRange(2, 4)); // tags for filtering
 
     result.name = randomExclusiveSelection(nameWords, randIntRange(2, 4)).join(" ");
-    result.summary = 'crazy "hot of the press" info right here!';
+    result.summary = 'crazy "hot of the press" info right here!'; // brief info about the content
 
-    result.url = "/content/";
-    result.imgSrc = "https://placehold.co/300x150/DEEFEC/154752/svg";
+    result.url = "/content/"; // link to content externally
+    result.imgSrc = "https://placehold.co/300x150/DEEFEC/154752/svg"; // cover image
 
+    // holds unique data depending on content type
     result.typeData = {};
     switch (result.type) {
       case "app":
@@ -126,8 +130,7 @@ export function generateFakeDatabaseResults(amount) {
 
         result.typeData.platforms = randomExclusiveSelection(appPlatforms, randIntRange(1, 3));
         result.typeData.pricingModel = pickRandomInArray(appPricingModels);
-        result.typeData.price =
-          result.typeData.pricingModel != "free" ? randIntRange(1, 4) + 0.99 : 0.0;
+        result.typeData.price = result.typeData.pricingModel != "free" ? randIntRange(1, 4) + 0.99 : 0.0;
         break;
 
       case "article":
@@ -163,10 +166,8 @@ export function generateFakeDatabaseResults(amount) {
         result.typeData.durationInDays = durationInDays;
         result.typeData.format = pickRandomInArray(eventFormat);
         result.typeData.type = pickRandomInArray(eventTypes);
-        result.typeData.participantLimit =
-          result.typeData.eventType != "online-only" ? randIntRange(10, 3000) : -1;
-        result.typeData.location =
-          result.typeData.eventType != "online-only" ? pickRandomInArray(eventLocations) : null;
+        result.typeData.participantLimit = result.typeData.eventType != "online-only" ? randIntRange(10, 3000) : -1;
+        result.typeData.location = result.typeData.eventType != "online-only" ? pickRandomInArray(eventLocations) : null;
         break;
 
       case "video":
@@ -192,6 +193,7 @@ export function generateFakeDatabaseResults(amount) {
     results.push(result);
   }
 
+  // Preview content (since not all info is presented via UI)
   console.log(results);
   return results;
 }
