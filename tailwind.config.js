@@ -8,8 +8,8 @@ module.exports = {
     colors: {
       white: "#fff",
       teal: "#154752",
-      "teal-subtle": "#2C5963",
-      "teal-mid": "#8AA3A8",
+      "teal-subtle": "#34707E",
+      "teal-mid": "#769fa8",
       "teal-light": "#DEEFEC",
     },
   },

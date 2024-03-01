@@ -1,6 +1,7 @@
 import { Link, useSearchParams } from "react-router-dom";
 import Dropdown from "../components/dropdown.jsx";
 import CardGrid from "../components/card_grid.jsx";
+import Pagination from "../components/pagination.jsx";
 import { generateFakeDatabaseResults, randIntRange, dateStringInDays } from "../temp.js";
 
 // TODO(noah): add more filters!
@@ -51,6 +52,12 @@ let filterDropdowns = {
   },
 };
 
+let paginationData = {
+  currentPage: 7,
+  maxPages: 15,
+  optionsRange: 2,
+};
+
 let fakeDatabaseResults = generateFakeDatabaseResults(randIntRange(5, 12));
 
 let searchParams;
@@ -63,6 +70,9 @@ let todayInDays = dateStringInDays(
 
 function submitFilters(_e) {
   let params = {};
+
+  params.page = paginationData.currentPage;
+
   Object.keys(filterDropdowns).forEach((key) => {
     let filter = filterDropdowns[key];
     if (filter.allowMultipleSelections) {
@@ -147,12 +157,19 @@ export default function ContentIndex({}) {
     return true;
   });
 
+  paginationData.currentPage = searchParams.get("page");
+
   // TODO(noah): somehow apply filter to search params in URL on first page load/render
 
   return (
     <div className="flex flex-col space-y-16">
       <Filters />
-      <CardGrid title="Found Entries" data={filtersData} DetailComponent={ContentDetail} />
+      <CardGrid
+        title={`Found Entries (Page ${paginationData.currentPage})`}
+        data={filtersData}
+        DetailComponent={ContentDetail}
+      />
+      <Pagination data={paginationData} onChangeEvent={submitFilters}></Pagination>
     </div>
   );
 }

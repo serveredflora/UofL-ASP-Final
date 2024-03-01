@@ -84,8 +84,13 @@
     @apply text-center;
     @apply transition;
     @apply hover:bg-teal-subtle;
-    @apply focus:outline-none;
-    @apply focus:ring;
+  }
+
+  .button-subtle {
+    @apply bg-teal-subtle;
+    @apply text-teal-light;
+    @apply hover:bg-teal-mid;
+    @apply hover:text-teal;
   }
 
   .button-light {

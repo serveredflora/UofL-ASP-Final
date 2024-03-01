@@ -19,6 +19,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/content/" element={<ContentIndex />} />
+            {/* TODO: below should be used for viewing specific content entry in more detail */}
+            {/*       `pageId` is what data should be grabbed from server */}
+            {/*       doc info: https://reactrouter.com/en/main/route/route#path */}
+            {/* <Route path="/content/:pageId/" element={<ContentDetail />} /> */}
             <Route path="/account/" element={<Account />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
