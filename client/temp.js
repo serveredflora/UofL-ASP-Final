@@ -106,11 +106,15 @@ export function generateFakeDatabaseResults(amount) {
     "impact",
   ];
 
+  const language = ["english", "spanish", "mandarin", "french", "german", "italian"];
+
   let results = [];
   for (let i = 0; i < amount; i++) {
     let result = {};
     result.id = i;
     result.type = pickRandomInArray(contentTypes);
+
+    result.language = randomExclusiveSelection(language, randIntRange(1, 4));
 
     result.publishDate = generateFakeDateString(); // when the content was added to the DB
     result.tags = randomExclusiveSelection(tags, randIntRange(2, 4)); // tags for filtering

@@ -10,85 +10,7 @@ import {
   CalendarIcon,
 } from "@heroicons/react/20/solid";
 import IconText from "../components/icon_text.jsx";
-
-// TODO(noah): add more filters!
-// TODO(noah): add different dropdown options
-
-let filterDropdowns = {
-  type: {
-    text: "Content Type",
-    allowMultipleSelections: true, // whether to use a radio-button (allowing on one selection)
-    selection: ["app", "article", "video", "event"], // holds current selection of the filter (changes based on UI + URL search params)
-    options: [
-      {
-        key: "app",
-        text: "App",
-        icon: { Component: DevicePhoneMobileIcon, includeText: true },
-      },
-      {
-        key: "article",
-        text: "Articles",
-        icon: { Component: NewspaperIcon, includeText: true },
-      },
-      {
-        key: "video",
-        text: "Video",
-        icon: { Component: VideoCameraIcon, includeText: true },
-      },
-      {
-        key: "event",
-        text: "Event",
-        icon: { Component: CalendarIcon, includeText: true },
-      },
-    ],
-    applyToEntry: (entry, selection) => {
-      return selection.includes(entry.type);
-    },
-  },
-  publish_age: {
-    key: "publish_age",
-    text: "Published Date",
-    allowMultipleSelections: false,
-    selection: "all",
-    options: [
-      { key: "last_week", text: "Last Week" },
-      { key: "last_month", text: "Last Month" },
-      { key: "last_3_months", text: "Last 3 Months" },
-      { key: "last_year", text: "Last Year" },
-      { key: "last_2_years", text: "Last 2 Years" },
-      { key: "all", text: "Everything" },
-    ],
-    applyToEntry: (entry, selection) => {
-      const SELECTION_RANGES_IN_DAYS = {
-        last_week: 7,
-        last_month: 30,
-        last_3_months: 90,
-        last_year: 365,
-        last_2_years: 730,
-        all: 999999,
-      };
-
-      return (
-        todayInDays - dateStringInDays(entry.publishDate) <= SELECTION_RANGES_IN_DAYS[selection]
-      );
-    },
-  },
-  // [type-agnostic] language
-  // [type-agnostic] pricing
-  // [app] platforms
-  // [app] pricing models
-  // [article] publisher type
-  // [article] reading time
-  // [event] entry price
-  // [event] start date
-  // [event] participant limit
-  // [event] location distance
-  // [event] format
-  // [event] type
-  // [video] platforms
-  // [video] types
-  // [video] pricing models
-};
+import { filters } from "../config/content_index_filters.jsx";
 
 let paginationData = {
   currentPage: 1,
@@ -102,7 +24,7 @@ let searchParams;
 let setSearchParams;
 
 let todayDate = new Date();
-let todayInDays = dateStringInDays(
+export let todayInDays = dateStringInDays(
   `${todayDate.getFullYear()}-${todayDate.getMonth()}-${todayDate.getDate()}`
 );
 
@@ -111,8 +33,8 @@ function updateSearchParams(_e) {
 
   params["page"] = paginationData.currentPage;
 
-  Object.keys(filterDropdowns).forEach((key) => {
-    let filter = filterDropdowns[key];
+  Object.keys(filters).forEach((key) => {
+    let filter = filters[key];
     if (filter.allowMultipleSelections) {
       params[key] = filter.selection.join(",");
     } else {
@@ -124,13 +46,19 @@ function updateSearchParams(_e) {
 }
 
 function Filters({}) {
+  // TODO(noah): only allow one dropdown to be open at a time?
   return (
     <div className="flex flex-col space-y-8 adaptive-margin">
       <h2>Filters</h2>
-      <form className="flex flex-row space-x-4" onSubmit={(e) => e.preventDefault()}>
-        {Object.keys(filterDropdowns).map((key) => (
-          <Dropdown key={key} data={filterDropdowns[key]} onChangeEvent={updateSearchParams} />
-        ))}
+      <form className="flex flex-row flex-wrap gap-4" onSubmit={(e) => e.preventDefault()}>
+        {Object.keys(filters).map((key) => {
+          let filter = filters[key];
+          if ("dependency" in filter && !filter.dependency(filters)) {
+            return;
+          }
+
+          return <Dropdown key={key} data={filters[key]} onChangeEvent={updateSearchParams} />;
+        })}
       </form>
     </div>
   );
@@ -214,9 +142,9 @@ export default function ContentIndex({}) {
   [searchParams, setSearchParams] = useSearchParams();
 
   // Load search params into filter
-  const filterKeys = Object.keys(filterDropdowns);
+  const filterKeys = Object.keys(filters);
   filterKeys.forEach((key) => {
-    let filter = filterDropdowns[key];
+    let filter = filters[key];
     let value = searchParams.get(key);
 
     if (value == null) {
@@ -233,7 +161,7 @@ export default function ContentIndex({}) {
   let filtersData = fakeDatabaseResults.filter((entry) => {
     for (let i = 0; i < filterKeys.length; i++) {
       let key = filterKeys[i];
-      let filter = filterDropdowns[key];
+      let filter = filters[key];
       if (!filter.applyToEntry(entry, filter.selection)) {
         return false;
       }

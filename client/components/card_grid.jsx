@@ -11,7 +11,7 @@ export default function CardGrid({ title, data, DetailComponent }) {
               src={entry.imgSrc}
               className="w-full h-1/3 object-center object-cover rounded-t-2xl"
             />
-            <div className="p-4 text-center text-sm w-full h-2/3 bg-teal text-teal-light rounded-b-2xl">
+            <div className="p-4 text-center w-full h-2/3 bg-teal text-teal-light rounded-b-2xl">
               <DetailComponent data={entry} />
             </div>
           </div>

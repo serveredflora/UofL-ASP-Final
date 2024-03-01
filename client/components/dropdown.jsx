@@ -61,10 +61,8 @@ export default function Dropdown({ data, onChangeEvent }) {
     );
   });
 
-  // TODO(noah): make the dropdown collapse if a click/point event occurs outside
-  //             the container bounds (maybe?)
   let optionsContainer = (
-    <div className="absolute mt-2 flex flex-col space-y-2 bg-white bg-opacity-25 backdrop-blur w-full border-teal border-2 px-4 py-2 rounded-2xl">
+    <div className="absolute mt-2 flex flex-col space-y-2 z-10 bg-white bg-opacity-25 backdrop-blur w-full border-teal border-2 px-4 py-2 rounded-2xl">
       {options}
     </div>
   );
@@ -89,7 +87,7 @@ export default function Dropdown({ data, onChangeEvent }) {
         onClick={toggleOptionsVisibility}
         className="flex flex-row space-x-4 justify-between border-teal border-2 px-4 py-2 rounded-2xl"
       >
-        <p>{data.text}</p>
+        <IconText data={data} />
         <OptionsIcon />
       </button>
       {showOptions && optionsContainer}
