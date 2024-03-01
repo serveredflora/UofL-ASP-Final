@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
+import { UserIcon } from "@heroicons/react/20/solid";
 
 const navigation = [
   { name: "Home", url: "/" },
@@ -7,9 +8,10 @@ const navigation = [
   // { name: "Blogs", url: "/blogs/" },
   // { name: "Apps", url: "/apps/" },
   { name: "About", url: "/about/" },
-  // TODO(noah): make this show an icon instead of text
-  { name: "Account", url: "/account/" },
+  { name: "Account", url: "/account/", Icon: UserIcon },
 ];
+
+// TODO(noah): make the navigation bar sticky to the viewport
 
 function NavigationTemplate({ navigationData }) {
   return (
@@ -24,7 +26,14 @@ function NavigationTemplate({ navigationData }) {
           to={option.url}
           className={({ isActive }) => "h-6 hidden md:block" + (isActive ? " nav-active" : "")}
         >
-          {option.name}
+          {() => {
+            if ("Icon" in option) {
+              let Icon = option.Icon;
+              return <Icon className="w-5 h-5 mt-0.5"></Icon>;
+            } else {
+              return option.name;
+            }
+          }}
         </NavLink>
       ))}
       <button

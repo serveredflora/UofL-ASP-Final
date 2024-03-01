@@ -54,7 +54,17 @@
   }
 
   .nav-active {
-    @apply underline;
+    @apply box-content;
+    @apply bg-teal-light;
+    @apply rounded-2xl;
+    @apply px-4;
+    @apply py-2;
+    /* These values below are based on the assumption there is */
+    /* `space-x-8` present in the navigation. It's to compensate */
+    /* for the padding breaking the layout... */
+    @apply !-my-2;
+    @apply !-mr-4;
+    @apply !ml-4;
   }
 
   .adaptive-margin {
