@@ -25,16 +25,16 @@ export default function Pagination({ data, onChangeEvent }) {
   );
 
   // TODO(noah): this needs a refactor to be clearer what this is doing...
-  const maxDiff = data.maxPages - data.directRange;
-  const directPagesStart = Math.max(
+  const maxDiff = data.maxPages - data.optionsRange;
+  const optionsStartIndex = Math.max(
     maxDiff <= data.currentPage
-      ? data.currentPage - data.directRange - (data.currentPage - maxDiff)
-      : data.currentPage - data.directRange,
+      ? data.currentPage - data.optionsRange - (data.currentPage - maxDiff)
+      : data.currentPage - data.optionsRange,
     1
   );
-  const directPagesMax = Math.min(directPagesStart + data.directRange * 2, data.maxPages);
+  const optionsEndIndex = Math.min(optionsStartIndex + data.optionsRange * 2, data.maxPages);
 
-  for (let i = directPagesStart; i <= directPagesMax; i++) {
+  for (let i = optionsStartIndex; i <= optionsEndIndex; i++) {
     buttons.push(
       <button
         key={i}
