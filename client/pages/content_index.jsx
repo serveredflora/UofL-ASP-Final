@@ -53,7 +53,7 @@ function Filters({}) {
       <form className="flex flex-row flex-wrap gap-4" onSubmit={(e) => e.preventDefault()}>
         {Object.keys(filters).map((key) => {
           let filter = filters[key];
-          if ("dependency" in filter && !filter.dependency(filters)) {
+          if ("activeCheck" in filter && !filter.activeCheck(filters)) {
             return;
           }
 
