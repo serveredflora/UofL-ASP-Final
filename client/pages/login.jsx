@@ -45,6 +45,7 @@ export default function Account() {
       if (response.ok) {
         console.log("Login successful", data);
         localStorage.setItem("userToken", data.token); // Save token to localStorage
+        localStorage.setItem("username", data.user.username); // Save Username to localStorage
         setIsLoggedIn(true);
         setError("");
       } else {

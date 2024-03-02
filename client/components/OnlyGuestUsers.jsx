@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
 
 const OnlyGuestUsers = ({ children }) => {
-  const userToken = sessionStorage.getItem('userToken'); 
+  const userToken = localStorage.getItem('userToken'); 
 
   if (userToken) {
     // User is logged in, redirect them from the register page to the home page

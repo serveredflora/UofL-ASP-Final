@@ -2,21 +2,20 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 function Account() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const navigate = useNavigate();
 
-  // Simulate retrieving the username from somewhere, e.g., localStorage
+  const token = localStorage.getItem("userToken");
   const username = localStorage.getItem("username");
 
   useEffect(() => {
     // Redirect if not logged in
-    if (!isLoggedIn) {
+    if (!token) {
       navigate("/login");
     }
-  }, [isLoggedIn, navigate]);
+  }, [token, navigate]);
 
   const handleChangePasswordClick = () => {
     setShowChangePassword(true);
@@ -44,7 +43,7 @@ function Account() {
     setConfirmNewPassword("");
   };
 
-  if (!isLoggedIn) return null; // or a loading spinner
+  if (!token) return null; 
 
   return (
     <div className="account-page">
