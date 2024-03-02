@@ -61,7 +61,7 @@ export default function Account() {
         <h2 className="font-bold">You are logged in!</h2>
         <button
           onClick={handleLogout}
-          className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+          className="bg-black text-white px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
         >
           Logout
         </button>
@@ -100,7 +100,7 @@ export default function Account() {
         />
         <button
           type="submit"
-          className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+          className="bg-white text-black px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
         >
           Login
         </button>

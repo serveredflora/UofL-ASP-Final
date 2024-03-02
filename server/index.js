@@ -39,12 +39,6 @@ async function asyncFunction() {
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-// app.get("/test", (req, res) => {
-//   res.send({
-//     data: "example data being sent via express",
-//   });
-// });
-
 // Route all other requests to React app
 app.get("*", (req, res) => {
   console.log("Wildcard route hit:", req.url);

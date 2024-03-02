@@ -11,6 +11,7 @@ module.exports = {
       "teal-subtle": "#34707E",
       "teal-mid": "#769fa8",
       "teal-light": "#DEEFEC",
+      black: "#000000"
     },
   },
   plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],
