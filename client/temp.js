@@ -130,7 +130,7 @@ export function generateFakeDatabaseResults(amount) {
     switch (result.type) {
       case "app":
         const appPlatforms = ["android", "ios", "web"];
-        const appPricingModels = ["free", "one-time fee", "subscription"];
+        const appPricingModels = ["free", "one_time_fee", "subscription"];
 
         result.typeData.platforms = randomExclusiveSelection(appPlatforms, randIntRange(1, 3));
         result.typeData.pricingModel = pickRandomInArray(appPricingModels);
@@ -157,7 +157,7 @@ export function generateFakeDatabaseResults(amount) {
         const eventLocations = [
           { countryCode: "gb", city: "London", address: "", lat: -1, lon: -1 },
         ];
-        const eventFormat = ["online-only", "hybrid", "in-person"];
+        const eventFormat = ["online_only", "hybrid", "in_person"];
         const eventTypes = ["volunteering", "educational", "networking"];
 
         let startDate = generateFakeDate();
