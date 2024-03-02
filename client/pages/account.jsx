@@ -1,113 +1,121 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
-export default function Account() {
-  // State management
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [error, setError] = useState("");
+function Account() {
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const navigate = useNavigate();
 
-  // Check if the user is already logged in
   useEffect(() => {
-    const token = sessionStorage.getItem("userToken");
-    setIsLoggedIn(!!token);
-  }, []);
-  
+    const token = localStorage.getItem("userToken");
+    // Redirect if not logged in
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
-  // Handle input change
-  const handleUsernameChange = (e) => setUsername(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleChangePasswordClick = () => {
+    setShowChangePassword(true);
+  };
 
-  // Handle form submission for login
+  const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
+  const handleConfirmNewPasswordChange = (e) => setConfirmNewPassword(e.target.value);
+
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
+    if (newPassword !== confirmNewPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+  
+    // Assuming the username is stored in localStorage when the user logs in
+    const username = localStorage.getItem("username");
+  
     try {
-      const response = await fetch("/auth/login", {
+      const response = await fetch("/auth/change-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({
+          username, // Include the username in the request body
+          newPassword,
+        }),
       });
-      const data = await response.json();
-      if (response.ok) {
-        console.log("Login successful", data);
-        sessionStorage.setItem("userToken", data.token); // Save token to sessionStorage
-        setIsLoggedIn(true);
-        setError("");
-      } else {
-        setError(data.error || "An error occurred");
+  
+      if (!response.ok) {
+        throw new Error("Failed to update password");
       }
+  
+      const data = await response.json();
+      alert("Password changed successfully!");
+      setShowChangePassword(false);
+      setNewPassword("");
+      setConfirmNewPassword("");
     } catch (error) {
-      console.error("Login error:", error);
-      setError("Failed to connect to the server");
+      console.error("Error changing password:", error);
+      alert("Error changing password. Please try again.");
     }
   };
+  
 
-  // Handle logout
-  const handleLogout = () => {
-    sessionStorage.removeItem("userToken");
-    setIsLoggedIn(false);
-    setUsername("");
-    setPassword("");
-    setError("");
-  };
-
-  // Conditional rendering based on login status
-  if (isLoggedIn) {
-    return (
-      <div className="flex flex-col items-center space-y-8">
-        <h2 className="font-bold">You are logged in!</h2>
-        <button
-          onClick={handleLogout}
-          className="bg-black text-white px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-        >
-          Logout
-        </button>
-      </div>
-    );
-  }
+  const username = localStorage.getItem("username");
 
   return (
-    <div className="flex flex-col space-y-8 items-center">
-      <h2 className="font-bold">Account Login</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
-        <label htmlFor="username" className="text-lg">
-          Username:
-        </label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          placeholder="Enter your username"
-          className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:border-blue-500"
-          value={username}
-          onChange={handleUsernameChange}
-        />
-        <label htmlFor="password" className="text-lg">
-          Password:
-        </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Enter your password"
-          className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:border-blue-500"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-        <button
-          type="submit"
-          className="bg-white text-black px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-        >
-          Login
-        </button>
-      </form>
-      <Link to="/register/" className="text-blue-500 hover:underline">
-        Register
-      </Link>
+    <div className="account-page max-w-4xl mx-auto px-4 py-8">
+      <h2 className="text-2xl font-semibold text-gray-800">Account Settings</h2>
+      <div className="mt-4">
+        <span className="block text-lg text-gray-700">Username: </span>
+        <span className="text-lg text-gray-900 font-medium">{username}</span>
+      </div>
+      <button
+        onClick={handleChangePasswordClick}
+        className="mt-6 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"
+      >
+        Change Password
+      </button>
+
+      {showChangePassword && (
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          <div>
+            <label htmlFor="new-password" className="block text-sm font-medium text-gray-700">
+              New Password:
+            </label>
+            <input
+              type="password"
+              id="new-password"
+              value={newPassword}
+              onChange={handleNewPasswordChange}
+              className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="confirm-new-password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Confirm New Password:
+            </label>
+            <input
+              type="password"
+              id="confirm-new-password"
+              value={confirmNewPassword}
+              onChange={handleConfirmNewPasswordChange}
+              className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+            />
+          </div>
+          <button
+            type="submit"
+            className="py-2 px-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75"
+          >
+            Submit
+          </button>
+        </form>
+      )}
     </div>
   );
 }
+
+export default Account;

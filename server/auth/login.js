@@ -1,21 +1,8 @@
-// auth.js
-
 const express = require("express");
 const bcrypt = require("bcrypt");
-const knex = require("knex");
+const db = require('../db.js');
 
 const router = express.Router();
-
-// Initialize Knex connection
-const db = knex({
-  client: "mysql",
-  connection: {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-  },
-});
 
 // Login route
 router.post("/login", async (req, res) => {

@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { UserIcon } from "@heroicons/react/20/solid";
 import IconText from "../components/icon_text.jsx";
 
@@ -17,6 +17,15 @@ const navigation = [
 // TODO(noah): make the navigation bar sticky to the viewport
 
 function NavigationTemplate({ navigationData }) {
+  const navigate = useNavigate();
+
+  const isLoggedIn = Boolean(localStorage.getItem("userToken"));
+
+  const handleLogout = () => {
+    localStorage.removeItem("userToken");
+    navigate("/login");
+  };
+
   return (
     <div className="flex flex-row justify-end space-x-8 adaptive-margin mt-8 -mb-8">
       {/* TODO(noah): replace placeholder with logo */}
@@ -32,6 +41,11 @@ function NavigationTemplate({ navigationData }) {
           <IconText data={option} />
         </NavLink>
       ))}
+      {isLoggedIn && (
+        <button onClick={handleLogout} className="logout-button -mt-3 md:block">
+          Logout
+        </button>
+      )}
       <button
         onClick={() => {
           // TODO(noah): toggle vertical dropdown list for mobile navigation
