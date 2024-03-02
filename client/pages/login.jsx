@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 export default function Account() {
   // State management
@@ -8,6 +8,7 @@ export default function Account() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
 
   // Locate the location state
   const location = useLocation();
@@ -18,7 +19,7 @@ export default function Account() {
       setSuccessMessage(location.state.message);
     }
   }, [location]);
-  
+
   // Check if the user is already logged in
   useEffect(() => {
     const token = localStorage.getItem("userToken");
@@ -55,34 +56,18 @@ export default function Account() {
     }
   };
 
-  // Handle logout
-  const handleLogout = () => {
-    localStorage.removeItem("userToken");
-    setIsLoggedIn(false);
-    setUsername("");
-    setPassword("");
-    setError("");
-  };
-
   // Conditional rendering based on login status
   if (isLoggedIn) {
-    return (
-      <div className="flex flex-col items-center space-y-8">
-        <h2 className="font-bold">You are logged in!</h2>
-        <button
-          onClick={handleLogout}
-          className="bg-black text-white px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-        >
-          Logout
-        </button>
-      </div>
-    );
+    navigate("/");
   }
 
   return (
     <div className="flex flex-col space-y-8 items-center">
-       {successMessage && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+      {successMessage && (
+        <div
+          className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+          role="alert"
+        >
           <span className="block sm:inline">{successMessage}</span>
         </div>
       )}
