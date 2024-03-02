@@ -1,25 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 function Account() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const navigate = useNavigate();
 
   // Simulate retrieving the username from somewhere, e.g., localStorage
-  const username = localStorage.getItem('username');
+  const username = localStorage.getItem("username");
 
   useEffect(() => {
-    // Check if user is logged in
-    const token = localStorage.getItem('userToken');
-    setIsLoggedIn(!!token);
-
-    if (!token) {
-      navigate('/login');
+    // Redirect if not logged in
+    if (!isLoggedIn) {
+      navigate("/login");
     }
-  }, [navigate]);
+  }, [isLoggedIn, navigate]);
 
   const handleChangePasswordClick = () => {
     setShowChangePassword(true);
@@ -36,15 +33,15 @@ function Account() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (newPassword !== confirmNewPassword) {
-      alert('Passwords do not match!');
+      alert("Passwords do not match!");
       return;
     }
     // Implement your password change logic here
-    alert('Password changed successfully!');
+    alert("Password changed successfully!");
     // Reset state after change
     setShowChangePassword(false);
-    setNewPassword('');
-    setConfirmNewPassword('');
+    setNewPassword("");
+    setConfirmNewPassword("");
   };
 
   if (!isLoggedIn) return null; // or a loading spinner
@@ -54,7 +51,7 @@ function Account() {
       <h2>Account Settings</h2>
       <div>Username: {username}</div>
       <button onClick={handleChangePasswordClick}>Change Password</button>
-      
+
       {showChangePassword && (
         <form onSubmit={handleSubmit}>
           <div>

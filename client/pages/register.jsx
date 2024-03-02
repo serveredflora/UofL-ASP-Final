@@ -22,7 +22,7 @@ export default function Register() {
         body: JSON.stringify({ username, password, role: "member" }),
       });
       if (response.ok) {
-        navigate("/account", { state: { message: "Account created! Please login using your username and password." } });
+        navigate("/login", { state: { message: "Account created! Please login using your username and password." } });
       } else {
         const data = await response.json();
         setError(data.error || "An error occurred during registration");
