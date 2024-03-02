@@ -8,6 +8,7 @@ import Footer from "./partials/footer.jsx";
 import Home from "./pages/home.jsx";
 import ContentIndex from "./pages/content_index.jsx";
 import Account from "./pages/account.jsx";
+import Register from "./pages/register.jsx";
 import PageNotFound from "./pages/page_not_found.jsx";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
             {/*       doc info: https://reactrouter.com/en/main/route/route#path */}
             {/* <Route path="/content/:pageId/" element={<ContentDetail />} /> */}
             <Route path="/account/" element={<Account />} />
+            <Route path="/register/" element={<Register />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </div>

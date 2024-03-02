@@ -3,14 +3,16 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const mariadb = require("mariadb");
-const authRouter = require("./auth/auth");
+const loginRouter = require("./auth/login");
+const registerRouter = require("./auth/register"); 
 
 const app = express();
 const port = 8000;
 app.use(express.json());
 
 // Use authRouter for authentication routes
-app.use("/auth", authRouter);
+app.use("/auth", loginRouter);
+app.use("/auth", registerRouter);
 
 async function asyncFunction() {
   let conn;

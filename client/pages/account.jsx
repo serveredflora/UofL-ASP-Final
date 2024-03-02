@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
 export default function Account() {
   // State management
@@ -7,13 +7,23 @@ export default function Account() {
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
+  // Locate the location state
+  const location = useLocation();
+
+  // Display success notice if redirected from Register with a message
+  useEffect(() => {
+    if (location.state?.message) {
+      setSuccessMessage(location.state.message);
+    }
+  }, [location]);
+  
   // Check if the user is already logged in
   useEffect(() => {
     const token = sessionStorage.getItem("userToken");
     setIsLoggedIn(!!token);
   }, []);
-  
 
   // Handle input change
   const handleUsernameChange = (e) => setUsername(e.target.value);
@@ -71,6 +81,11 @@ export default function Account() {
 
   return (
     <div className="flex flex-col space-y-8 items-center">
+       {successMessage && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+          <span className="block sm:inline">{successMessage}</span>
+        </div>
+      )}
       <h2 className="font-bold">Account Login</h2>
       {error && <p className="text-red-500">{error}</p>}
       <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
