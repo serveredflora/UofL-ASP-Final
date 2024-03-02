@@ -10,9 +10,10 @@ export default function Account() {
 
   // Check if the user is already logged in
   useEffect(() => {
-    const token = localStorage.getItem("userToken");
+    const token = sessionStorage.getItem("userToken");
     setIsLoggedIn(!!token);
   }, []);
+  
 
   // Handle input change
   const handleUsernameChange = (e) => setUsername(e.target.value);
@@ -32,7 +33,7 @@ export default function Account() {
       const data = await response.json();
       if (response.ok) {
         console.log("Login successful", data);
-        localStorage.setItem("userToken", data.token); // Save token to localStorage
+        sessionStorage.setItem("userToken", data.token); // Save token to sessionStorage
         setIsLoggedIn(true);
         setError("");
       } else {
@@ -46,7 +47,7 @@ export default function Account() {
 
   // Handle logout
   const handleLogout = () => {
-    localStorage.removeItem("userToken");
+    sessionStorage.removeItem("userToken");
     setIsLoggedIn(false);
     setUsername("");
     setPassword("");
