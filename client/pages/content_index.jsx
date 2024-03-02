@@ -33,13 +33,15 @@ function updateSearchParams(_e) {
 
   params["page"] = paginationData.currentPage;
 
-  Object.keys(filters).forEach((key) => {
-    let filter = filters[key];
-    if (filter.allowMultipleSelections) {
-      params[key] = filter.selection.join(",");
-    } else {
-      params[key] = filter.selection;
-    }
+  Object.keys(filters).forEach((category_key) => {
+    Object.keys(filters[category_key].filters).forEach((key) => {
+      let filter = filters[category_key].filters[key];
+      if (filter.allowMultipleSelections) {
+        params[key] = filter.selection.join(",");
+      } else {
+        params[key] = filter.selection;
+      }
+    });
   });
 
   setSearchParams(params);
@@ -47,17 +49,34 @@ function updateSearchParams(_e) {
 
 function Filters({}) {
   // TODO(noah): only allow one dropdown to be open at a time?
+  // TODO(noah): By default hide type-specific dropdowns behind an expand area (not sure it's called...)
   return (
     <div className="flex flex-col space-y-8 adaptive-margin">
       <h2>Filters</h2>
-      <form className="flex flex-row flex-wrap gap-4" onSubmit={(e) => e.preventDefault()}>
-        {Object.keys(filters).map((key) => {
-          let filter = filters[key];
-          if ("activeCheck" in filter && !filter.activeCheck(filters)) {
+      <form className="flex flex-col space-y-4" onSubmit={(e) => e.preventDefault()}>
+        {Object.keys(filters).map((category_key) => {
+          let category = filters[category_key];
+          if ("activeCheck" in category && !category.activeCheck(filters)) {
             return;
           }
 
-          return <Dropdown key={key} data={filters[key]} onChangeEvent={updateSearchParams} />;
+          return (
+            <div key={category_key} className="flex flex-col space-y-2">
+              <IconText data={category} />
+              <div className="flex flex-row flex-wrap gap-4">
+                {Object.keys(category.filters).map((key) => {
+                  let filter = category.filters[key];
+                  if ("activeCheck" in filter && !filter.activeCheck(filters)) {
+                    return;
+                  }
+
+                  return (
+                    <Dropdown key={key} data={filter} onChangeEvent={updateSearchParams} />
+                  );
+                })}
+              </div>
+            </div>
+          );
         })}
       </form>
     </div>
@@ -65,7 +84,8 @@ function Filters({}) {
 }
 
 function ContentDetail({ data }) {
-  // TODO(noah): change card details based on content type
+  // TODO(noah): change card details based on content type (wip!)
+  // TODO(noah): split this part into some separate functions per type...
   let typeIcon;
   let typeSpecific;
   switch (data.type) {
@@ -77,7 +97,7 @@ function ContentDetail({ data }) {
       );
       typeSpecific = (
         <div className="flex flex-col !my-4">
-          <p className="capitalize">Platforms: {data.typeData.platforms.join(", ")}</p>
+          <p className="capitalize">Platforms: {data.typeData.platform.join(", ")}</p>
         </div>
       );
       break;
@@ -142,30 +162,37 @@ export default function ContentIndex({}) {
   [searchParams, setSearchParams] = useSearchParams();
 
   // Load search params into filter
-  const filterKeys = Object.keys(filters);
-  filterKeys.forEach((key) => {
-    let filter = filters[key];
-    let value = searchParams.get(key);
+  const filterCategories = Object.keys(filters);
+  filterCategories.forEach((category_key) => {
+    Object.keys(filters[category_key].filters).map((key) => {
+      let filter = filters[category_key].filters[key];
+      let value = searchParams.get(key);
 
-    if (value == null) {
-      return;
-    }
+      if (value == null) {
+        return;
+      }
 
-    if (filter.allowMultipleSelections) {
-      filter.selection = value.split(",");
-    } else {
-      filter.selection = value;
-    }
+      if (filter.allowMultipleSelections) {
+        filter.selection = value.split(",");
+      } else {
+        filter.selection = value;
+      }
+    });
   });
 
   let filtersData = fakeDatabaseResults.filter((entry) => {
-    for (let i = 0; i < filterKeys.length; i++) {
-      let key = filterKeys[i];
-      let filter = filters[key];
-      if (!filter.applyToEntry(entry, filter.selection)) {
-        return false;
+    for (let i = 0; i < filterCategories.length; i++) {
+      let filterCategory = filters[filterCategories[i]];
+      let filterKeys = Object.keys(filterCategory.filters);
+
+      for (let j = 0; j < filterKeys.length; j++) {
+        let filter = filterCategory.filters[filterKeys[j]];
+        if (!filter.applyToEntry(entry, filter.selection)) {
+          return false;
+        }
       }
     }
+
     return true;
   });
 

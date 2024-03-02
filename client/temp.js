@@ -132,7 +132,7 @@ export function generateFakeDatabaseResults(amount) {
         const appPlatforms = ["android", "ios", "web"];
         const appPricingModels = ["free", "one_time_fee", "subscription"];
 
-        result.typeData.platforms = randomExclusiveSelection(appPlatforms, randIntRange(1, 3));
+        result.typeData.platform = randomExclusiveSelection(appPlatforms, randIntRange(1, 3));
         result.typeData.pricingModel = pickRandomInArray(appPricingModels);
         result.typeData.price = result.typeData.pricingModel != "free" ? randIntRange(1, 4) + 0.99 : 0.0;
         break;
