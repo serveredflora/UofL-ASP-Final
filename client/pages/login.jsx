@@ -58,9 +58,11 @@ export default function Account() {
   };
 
   // Conditional rendering based on login status
-  if (isLoggedIn) {
-    navigate("/");
-  }
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn, navigate]);
 
   return (
     <div className="flex flex-col space-y-8 items-center">
