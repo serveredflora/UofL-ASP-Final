@@ -22,18 +22,44 @@ function Account() {
   const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
   const handleConfirmNewPasswordChange = (e) => setConfirmNewPassword(e.target.value);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmNewPassword) {
       alert("Passwords do not match!");
       return;
     }
-    // Implement  password change logic here
-    alert("Password changed successfully!");
-    setShowChangePassword(false);
-    setNewPassword("");
-    setConfirmNewPassword("");
+  
+    // Assuming the username is stored in localStorage when the user logs in
+    const username = localStorage.getItem("username");
+  
+    try {
+      const response = await fetch("/auth/change-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+        body: JSON.stringify({
+          username, // Include the username in the request body
+          newPassword,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to update password");
+      }
+  
+      const data = await response.json();
+      alert("Password changed successfully!");
+      setShowChangePassword(false);
+      setNewPassword("");
+      setConfirmNewPassword("");
+    } catch (error) {
+      console.error("Error changing password:", error);
+      alert("Error changing password. Please try again.");
+    }
   };
+  
 
   const username = localStorage.getItem("username");
 
