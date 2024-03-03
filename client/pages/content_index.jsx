@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Dropdown from "../components/dropdown.jsx";
 import CardGrid from "../components/card_grid.jsx";
@@ -8,9 +9,11 @@ import {
   NewspaperIcon,
   VideoCameraIcon,
   CalendarIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
 } from "@heroicons/react/20/solid";
 import IconText from "../components/icon_text.jsx";
-import { filters } from "../config/content_index_filters.jsx";
+import { filters } from "../config/content_index_filters.js";
 
 let paginationData = {
   currentPage: 1,
@@ -29,9 +32,9 @@ export let todayInDays = dateStringInDays(
 );
 
 function updateSearchParams(_e) {
-  let params = {};
-
-  params["page"] = paginationData.currentPage;
+  let params = {
+    page: paginationData.currentPage,
+  };
 
   Object.keys(filters).forEach((category_key) => {
     Object.keys(filters[category_key].filters).forEach((key) => {
@@ -49,7 +52,42 @@ function updateSearchParams(_e) {
 
 function Filters({}) {
   // TODO(noah): only allow one dropdown to be open at a time?
-  // TODO(noah): By default hide type-specific dropdowns behind an expand area (not sure it's called...)
+  let [categoriesExpand, setCategoriesExpand] = useState(false);
+
+  let expandDetail;
+  if (!categoriesExpand) {
+    expandDetail = (
+      <div className="flex flex-row space-x-2">
+        <ChevronDownIcon className="w-5 h-5" />
+        <p>Expand</p>
+        <ChevronDownIcon className="w-5 h-5" />
+      </div>
+    );
+  } else {
+    expandDetail = (
+      <div className="flex flex-row space-x-2">
+        <ChevronUpIcon className="w-5 h-5" />
+        <p>Collapse</p>
+        <ChevronUpIcon className="w-5 h-5" />
+      </div>
+    );
+  }
+
+  let expandDivider = (
+    <div className="flex flex-row space-x-4">
+      <div className="flex-grow h-0.5 my-auto bg-teal"></div>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          setCategoriesExpand(!categoriesExpand);
+        }}
+      >
+        {expandDetail}
+      </button>
+      <div className="flex-grow h-0.5 my-auto bg-teal"></div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col space-y-8 adaptive-margin">
       <h2>Filters</h2>
@@ -57,6 +95,11 @@ function Filters({}) {
         {Object.keys(filters).map((category_key) => {
           let category = filters[category_key];
           if ("activeCheck" in category && !category.activeCheck(filters)) {
+            return;
+          }
+
+          let isAgnosticCategory = category_key == "agnostic";
+          if (!isAgnosticCategory && !categoriesExpand) {
             return;
           }
 
@@ -79,6 +122,7 @@ function Filters({}) {
           );
         })}
       </form>
+      {expandDivider}
     </div>
   );
 }

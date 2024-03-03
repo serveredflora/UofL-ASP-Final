@@ -30,10 +30,10 @@ import { todayInDays } from "../pages/content_index.jsx";
 
 export let filters = {
   agnostic: {
-    // [type-agnostic] type
     text: "General",
     icon: { Component: CogIcon, includeText: true },
     filters: {
+      // [type-agnostic] type
       type: {
         text: "Content Type",
         icon: { Component: FunnelIcon, includeText: true },
