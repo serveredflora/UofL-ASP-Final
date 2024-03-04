@@ -1,5 +1,5 @@
-import { Suspense, useState } from "react";
-import { Link, useLoaderData, useSearchParams } from "react-router-dom";
+import { Suspense, useEffect, useState } from "react";
+import { Link, useLoaderData, useSearchParams, useNavigate } from "react-router-dom";
 import Dropdown from "../components/dropdown.jsx";
 import CardGrid from "../components/card_grid.jsx";
 import Pagination from "../components/pagination.jsx";
@@ -23,6 +23,8 @@ let paginationData = {
 
 let searchParams;
 let setSearchParams;
+
+let navigate;
 
 let todayDate = new Date();
 export let todayInDays = dateStringInDays(
@@ -193,10 +195,9 @@ function getRequest(url, response_func) {
 }
 
 export default function ContentIndex({}) {
+  const loaderData = useLoaderData();
   [searchParams, setSearchParams] = useSearchParams();
-
-  const data = useLoaderData();
-  console.log(data);
+  navigate = useNavigate();
 
   // Load search params into filter
   const filterCategories = Object.keys(filters);
@@ -217,13 +218,7 @@ export default function ContentIndex({}) {
     });
   });
 
-  // getRequest("/data/content/page/1/")
-  //   .then((response) => response.json())
-  //   .then((json) => {
-  //     console.log(json);
-  //   });
-
-  let filtersData = data.filter((entry) => {
+  let filteredData = loaderData.data.filter((entry) => {
     for (let i = 0; i < filterCategories.length; i++) {
       let filterCategory = filters[filterCategories[i]];
       if ("activeCheck" in filterCategory && !filterCategory.activeCheck(filters)) {
@@ -251,8 +246,20 @@ export default function ContentIndex({}) {
     paginationData.currentPage = Number(pageValueFromSearchParams);
   }
 
-  // TODO(noah): somehow apply filter to search params in URL on first page load/render
-  //             this might help: https://stackoverflow.com/a/71913925
+  paginationData.maxPages = loaderData.maxPages;
+
+  // Source: https://stackoverflow.com/a/71913925
+  // Ensure search params are applied if not yet present
+  let pageIndex = searchParams.get("page");
+  useEffect(() => {
+    if (!pageIndex) {
+      updateSearchParams(null);
+    }
+  }, [navigate, pageIndex]);
+
+  if (!pageIndex) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col space-y-16">
@@ -268,7 +275,7 @@ export default function ContentIndex({}) {
       >
         <CardGrid
           title={`Found Entries (Page ${paginationData.currentPage})`}
-          data={filtersData}
+          data={filteredData}
           DetailComponent={ContentDetail}
         />
         <Pagination data={paginationData} onChangeEvent={updateSearchParams} />

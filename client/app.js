@@ -42,9 +42,10 @@ function App({}) {
       <Route
         path="/content/"
         loader={({ request }) => {
-          // Load the content from the server before loading the page
-          // TODO(noah): get current page from search params in URL
-          return fetch("/data/content/page/1/");
+          let params = new URLSearchParams(document.location.search);
+
+          let pageIndex = params.has("page") ? params.get("page") : "1";
+          return fetch(`/data/content/page/${pageIndex}/`);
         }}
         element={<ContentIndex />}
       />

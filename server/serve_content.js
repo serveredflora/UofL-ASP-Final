@@ -5,26 +5,36 @@ const fs = require("fs");
 
 const router = express.Router();
 
+const MAX_PER_PAGE = 18;
+
 let contentData;
+let contentMaxPages;
 
 exports.setupContentData = () => {
   const data = fs.readFileSync("./server/fake_content.json");
   contentData = JSON.parse(data);
+  contentMaxPages = Math.ceil(contentData.length / MAX_PER_PAGE);
+};
+
+const clamp = (v, min, max) => {
+  return Math.min(Math.max(v, min), max);
 };
 
 router.get("/data/content/page/:id/", (req, res) => {
   // TODO: need to apply filters on server-side else the current page might be entirely filtered
-  const MAX_PER_PAGE = 18;
 
   let og_page = Number(req.params.id);
-  let page = Math.max(Math.min(og_page, Math.ceil(contentData.length / MAX_PER_PAGE)), 1);
+  let page = clamp(og_page, 1, contentMaxPages);
 
   if (og_page != page) {
     res.redirect(`/data/content/page/${page}/`);
     return;
   }
 
-  res.json(contentData.slice((page - 1) * MAX_PER_PAGE, page * MAX_PER_PAGE));
+  res.json({
+    maxPages: contentMaxPages,
+    data: contentData.slice((page - 1) * MAX_PER_PAGE, page * MAX_PER_PAGE),
+  });
 });
 
 router.get("/data/content/:id/", (req, res) => {
