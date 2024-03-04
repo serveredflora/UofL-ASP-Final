@@ -1,4 +1,30 @@
 import React, { useState } from 'react';
+import SelectOptions from './SelectOptions'; 
+
+// Example data 
+const contentTypes = {
+  app: 'App',
+  article: 'Article/Blog Post',
+  event: 'Event',
+  video: 'Video',
+};
+
+const languages = {
+  english: 'English',
+  spanish: 'Spanish',
+  mandarin: 'Mandarin',
+  french: 'French',
+  german: 'German',
+  italian: 'Italian',
+};
+
+// For multi-select, adjust as needed
+const tagsOptions = {
+  educational: 'Educational',
+  informative: 'Informative',
+  guide: 'Guide',
+  // Add more as needed
+};
 
 const ContentPostForm = () => {
   const [formData, setFormData] = useState({
@@ -21,7 +47,7 @@ const ContentPostForm = () => {
 
   const handleTagChange = (e) => {
     const options = e.target.options;
-    const value = [];
+    let value = [];
     for (let i = 0, l = options.length; i < l; i++) {
       if (options[i].selected) {
         value.push(options[i].value);
@@ -38,41 +64,24 @@ const ContentPostForm = () => {
 
   return (
     <form className="content-post-form" onSubmit={handleSubmit}>
+      {/* Title Input */}
       <label htmlFor="title">Title:</label>
       <input type="text" id="title" name="title" value={formData.title} onChange={handleInputChange} required />
-
+      
+      {/* Content Type Select */}
       <label htmlFor="contentType">Content Type:</label>
-      <select name="contentType" id="contentType" value={formData.contentType} onChange={handleInputChange} required>
-        <option value="">Select Type</option>
-        <option value="app">App</option>
-        <option value="article">Article/Blog Post</option>
-        <option value="event">Event</option>
-        <option value="video">Video</option>
-      </select>
+      <SelectOptions name="contentType" value={formData.contentType} onChange={handleInputChange} options={contentTypes} defaultOption="Select Type" />
 
-      <label htmlFor="tags">Tags:</label>
-      <select multiple name="tags" id="tags" value={formData.tags} onChange={handleTagChange} required>
-        <option value="educational">Educational</option>
-        <option value="informative">Informative</option>
-        <option value="guide">Guide</option>
-        {/* Add more tags as needed */}
-      </select>
-
+      {/* Tags Select - Adjust this in the way you like */}
+      {/* Language Select */}
       <label htmlFor="language">Language:</label>
-      <select name="language" id="language" value={formData.language} onChange={handleInputChange} required>
-        <option value="">Select Language</option>
-        <option value="english">English</option>
-        <option value="spanish">Spanish</option>
-        <option value="mandarin">Mandarin</option>
-        <option value="french">French</option>
-        <option value="german">German</option>
-        <option value="italian">Italian</option>
-        {/* Add more languages as needed */}
-      </select>
+      <SelectOptions name="language" value={formData.language} onChange={handleInputChange} options={languages} defaultOption="Select Language" />
 
+      {/* Cover Image Input */}
       <label htmlFor="coverImage">Cover Image:</label>
       <input type="file" id="coverImage" name="coverImage" onChange={handleFileChange} accept="image/*" />
 
+      {/* Description Textarea */}
       <label htmlFor="description">Description:</label>
       <textarea id="description" name="description" value={formData.description} onChange={handleInputChange} required></textarea>
 
@@ -82,4 +91,3 @@ const ContentPostForm = () => {
 };
 
 export default ContentPostForm;
-
