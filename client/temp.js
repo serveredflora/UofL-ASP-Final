@@ -138,17 +138,10 @@ export function generateFakeDatabaseResults(amount) {
         break;
 
       case "article":
-        const articlePublisherType = [
-          "Personal Blog",
-          "Media Company",
-          "Non-Profit",
-          "Government Funded",
-        ];
-        const articleAuthor = ["Sir Tony Herbert", "Vuk the Gardener", "Marcia24"];
+        const articlePublisherType = ["personal", "media", "non_profit", "government"];
 
         result.typeData.publisherType = pickRandomInArray(articlePublisherType);
-        result.typeData.author = pickRandomInArray(articleAuthor);
-        result.typeData.readingTimeInMinutes = randIntRange(5, 25);
+        result.typeData.readingTimeInMinutes = randIntRange(2, 25);
         break;
 
       case "event":
@@ -170,7 +163,7 @@ export function generateFakeDatabaseResults(amount) {
         result.typeData.durationInDays = durationInDays;
         result.typeData.format = pickRandomInArray(eventFormat);
         result.typeData.type = pickRandomInArray(eventTypes);
-        result.typeData.entryPrice = randIntRange(0, 2) == 0 ? randIntRange(5, 100) : 0;
+        result.typeData.price = randIntRange(0, 2) == 0 ? randIntRange(5, 100) : 0;
         result.typeData.participantLimit = result.typeData.eventType != "online-only" ? randIntRange(10, 3000) : -1;
         result.typeData.location = result.typeData.eventType != "online-only" ? pickRandomInArray(eventLocations) : null;
         break;
@@ -187,8 +180,8 @@ export function generateFakeDatabaseResults(amount) {
         const videoTypes = ["documentary", "informational", "guide"];
         const videoPricingModels = ["free", "purchase", "rental", "subscription"];
 
-        result.typeData.platform = pickRandomInArray(videoPlatforms);
-        result.typeData.types = pickRandomInArray(videoTypes);
+        result.typeData.platform = randomExclusiveSelection(videoPlatforms, randIntRange(1, 3));
+        result.typeData.type = randomExclusiveSelection(videoTypes, randIntRange(1, 2));
         result.typeData.pricingModel = pickRandomInArray(videoPricingModels);
         result.typeData.episodeCount = randIntRange(1, 25);
         result.typeData.episodeWatchTime = randIntRange(1, 150);

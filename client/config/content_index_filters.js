@@ -23,17 +23,16 @@ import { todayInDays } from "../pages/content_index.jsx";
 
 // TODO(noah): add some small info text before options for each dropdown to inform the user what
 //             the filter does
-// TODO(noah): group categories of filters (eg. all app ones in a row)
 // TODO(noah): add filter option types:
 //              - pickable location (for distance calculating)
 //              - dual slider (for min-max)
+//              - tag selection (actually should just be checkboxes populated by the server?)
 
 export let filters = {
   agnostic: {
     text: "General",
     icon: { Component: CogIcon, includeText: true },
     filters: {
-      // [type-agnostic] type
       type: {
         text: "Content Type",
         icon: { Component: FunnelIcon, includeText: true },
@@ -65,45 +64,34 @@ export let filters = {
           return selection.includes(entry.type);
         },
       },
-      // [type-agnostic] publish age
       publish_age: {
         text: "Published Age",
         icon: { Component: ClockIcon, includeText: true },
         allowMultipleSelections: false,
-        selection: "all",
+        selection: -1,
         options: [
-          { key: "last_week", text: "Last Week" },
-          { key: "last_month", text: "Last Month" },
-          { key: "last_3_months", text: "Last 3 Months" },
-          { key: "last_year", text: "Last Year" },
-          { key: "last_2_years", text: "Last 2 Years" },
-          { key: "all", text: "Everything" },
+          { key: 7, text: "Last Week" },
+          { key: 30, text: "Last Month" },
+          { key: 90, text: "Last 3 Months" },
+          { key: 365, text: "Last Year" },
+          { key: 730, text: "Last 2 Years" },
+          { key: -1, text: "Everything" },
         ],
         applyToEntry: (entry, selection) => {
-          const SELECTION_RANGES_IN_DAYS = {
-            last_week: 7,
-            last_month: 30,
-            last_3_months: 90,
-            last_year: 365,
-            last_2_years: 730,
-            all: 999999,
-          };
-
           return (
-            todayInDays - dateStringInDays(entry.publishDate) <=
-            SELECTION_RANGES_IN_DAYS[selection]
+            selection == -1 ||
+            todayInDays - dateStringInDays(entry.publishDate) <= Number(selection)
           );
         },
       },
       // [type-agnostic] tags
-      // TODO(noah): I think a new dropdown type is needed for this...
+      // TODO(noah): ...
 
-      // [type-agnostic] language
       language: {
         text: "Language",
         icon: { Component: LanguageIcon, includeText: true },
         allowMultipleSelections: true,
-        selection: ["english"],
+        selection: ["english", "spanish", "mandarin", "french", "german", "italian"],
         options: [
           { key: "english", text: "English" },
           { key: "spanish", text: "Spanish" },
@@ -113,28 +101,29 @@ export let filters = {
           { key: "italian", text: "Italian" },
         ],
         applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
+          return selection.some((s) => entry.language.includes(s));
         },
       },
-      // [type-agnostic] pricing range
       pricing_range: {
         text: "Pricing Range",
         icon: { Component: BanknotesIcon, includeText: true },
         allowMultipleSelections: false,
-        selection: "all",
+        selection: -1,
         options: [
-          { key: "free", text: "Free" },
-          { key: "less_equal_2", text: "<= $2" },
-          { key: "less_equal_5", text: "<= $5" },
-          { key: "less_equal_10", text: "<= $10" },
-          { key: "less_equal_30", text: "<= $30" },
-          { key: "less_equal_100", text: "<= $100" },
-          { key: "all", text: "Unlimited" },
+          { key: 0, text: "Free" },
+          { key: 2, text: "<= $2" },
+          { key: 5, text: "<= $5" },
+          { key: 10, text: "<= $10" },
+          { key: 30, text: "<= $30" },
+          { key: 100, text: "<= $100" },
+          { key: -1, text: "Unlimited" },
         ],
         applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
+          return (
+            selection == -1 ||
+            ["article", "video"].includes(entry.type) ||
+            entry.typeData.price <= Number(selection)
+          );
         },
       },
     },
@@ -146,7 +135,6 @@ export let filters = {
       return f.agnostic.filters.type.selection.includes("app");
     },
     filters: {
-      // [app] platform
       app_platform: {
         text: "App Platform",
         icon: { Component: DevicePhoneMobileIcon, includeText: true },
@@ -158,11 +146,11 @@ export let filters = {
           { key: "ios", text: "iOS" },
         ],
         applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
+          return (
+            entry.type != "app" || selection.some((s) => entry.typeData.platform.includes(s))
+          );
         },
       },
-      // [app] pricing models
       app_pricing_model: {
         text: "App Pricing Model",
         activeCheck: (f) => {
@@ -177,13 +165,11 @@ export let filters = {
           { key: "subscription", text: "Subscription" },
         ],
         applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
+          return entry.type != "app" || selection.includes(entry.typeData.pricingModel);
         },
       },
     },
   },
-  // [article] publisher type
   article: {
     text: "Article Specific",
     icon: { Component: NewspaperIcon, includeText: true },
@@ -203,27 +189,28 @@ export let filters = {
           { key: "government", text: "Government" },
         ],
         applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
+          return entry.type != "article" || selection.includes(entry.typeData.publisherType);
         },
       },
-      // [article] reading time
       article_reading_time: {
         text: "Article Reading Time",
         icon: { Component: BookOpenIcon, includeText: true },
         allowMultipleSelections: false,
-        selection: "all",
+        selection: -1,
         options: [
-          { key: "less_equal_2", text: "<= 2 Minutes" },
-          { key: "less_equal_5", text: "<= 5 Minutes" },
-          { key: "less_equal_10", text: "<= 10 Minutes" },
-          { key: "less_equal_30", text: "<= 30 Minutes" },
-          { key: "less_equal_100", text: "<= 100 Minutes" },
-          { key: "all", text: "Unlimited" },
+          { key: 5, text: "<= 5 Minutes" },
+          { key: 10, text: "<= 10 Minutes" },
+          { key: 25, text: "<= 25 Minutes" },
+          { key: 50, text: "<= 50 Minutes" },
+          { key: 100, text: "<= 100 Minutes" },
+          { key: -1, text: "Unlimited" },
         ],
         applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
+          return (
+            selection == -1 ||
+            entry.type != "article" ||
+            entry.typeData.readingTimeInMinutes <= Number(selection)
+          );
         },
       },
     },
@@ -235,68 +222,27 @@ export let filters = {
       return f.agnostic.filters.type.selection.includes("event");
     },
     filters: {
-      // [event] entry price
-      // TODO: this will be covered by the general pricing range option...
-
-      // [event] start date
       event_start_date: {
         text: "Event Start Date",
         icon: { Component: CalendarIcon, includeText: true },
         allowMultipleSelections: false,
-        selection: "all",
+        selection: -1,
         options: [
-          { key: "less_equal_day", text: "<= 1 Day" },
-          { key: "less_equal_week", text: "<= 1 Week" },
-          { key: "less_equal_month", text: "<= 1 Month" },
-          { key: "less_equal_3_months", text: "<= 3 Months" },
-          { key: "less_equal_1_year", text: "<= 1 Year" },
-          { key: "all", text: "Unlimited" },
+          { key: 1, text: "<= 1 Day" },
+          { key: 7, text: "<= 1 Week" },
+          { key: 30, text: "<= 1 Month" },
+          { key: 90, text: "<= 3 Months" },
+          { key: 365, text: "<= 1 Year" },
+          { key: -1, text: "Unlimited" },
         ],
         applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
+          return (
+            selection == -1 ||
+            entry.type != "event" ||
+            todayInDays - dateStringInDays(entry.typeData.startDate) <= Number(selection)
+          );
         },
       },
-      // [event] participant limit
-      event_participant_limit: {
-        text: "Event Participant Limit",
-        icon: { Component: UserIcon, includeText: true },
-        allowMultipleSelections: false,
-        selection: "all",
-        options: [
-          { key: "less_equal_10", text: "<= 10" },
-          { key: "less_equal_25", text: "<= 25" },
-          { key: "less_equal_50", text: "<= 50" },
-          { key: "less_equal_100", text: "<= 100" },
-          { key: "less_equal_300", text: "<= 300" },
-          { key: "less_equal_1000", text: "<= 1000" },
-          { key: "all", text: "Unlimited" },
-        ],
-        applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
-        },
-      },
-      // [event] location distance
-      event_location_distance: {
-        text: "Event Location Distance",
-        icon: { Component: MapIcon, includeText: true },
-        allowMultipleSelections: false,
-        selection: "all",
-        options: [
-          { key: "less_equal_3", text: "<= 3km" },
-          { key: "less_equal_10", text: "<= 10km" },
-          { key: "less_equal_25", text: "<= 25km" },
-          { key: "less_equal_50", text: "<= 50km" },
-          { key: "less_equal_100", text: "<= 100km" },
-          { key: "all", text: "Unlimited" },
-        ],
-        applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
-        },
-      },
-      // [event] format
       event_format: {
         text: "Event Format",
         icon: { Component: MegaphoneIcon, includeText: true },
@@ -307,11 +253,57 @@ export let filters = {
           { key: "in_person", text: "In-Person" },
         ],
         applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
+          return entry.type != "event" || selection.includes(entry.typeData.format);
         },
       },
-      // [event] type
+      event_location_distance: {
+        text: "Event Location Distance",
+        icon: { Component: MapIcon, includeText: true },
+        activeCheck: (f) => {
+          return f.event.filters.event_format.selection.includes("in_person");
+        },
+        allowMultipleSelections: false,
+        selection: -1,
+        options: [
+          { key: 3, text: "<= 3km" },
+          { key: 10, text: "<= 10km" },
+          { key: 25, text: "<= 25km" },
+          { key: 50, text: "<= 50km" },
+          { key: 100, text: "<= 100km" },
+          { key: -1, text: "Unlimited" },
+        ],
+        applyToEntry: (entry, selection) => {
+          return true;
+
+          // TODO: calculate location of client, calculate distance and BOOM
+          // let locationDistance = entry.typeData.location;
+          // return (
+          //   selection == -1 || entry.type != "event" || locationDistance <= Number(selection)
+          // );
+        },
+      },
+      event_participant_limit: {
+        text: "Event Participant Limit",
+        icon: { Component: UserIcon, includeText: true },
+        allowMultipleSelections: false,
+        selection: -1,
+        options: [
+          { key: 10, text: "<= 10" },
+          { key: 25, text: "<= 25" },
+          { key: 50, text: "<= 50" },
+          { key: 100, text: "<= 100" },
+          { key: 300, text: "<= 300" },
+          { key: 1000, text: "<= 1000" },
+          { key: -1, text: "Unlimited" },
+        ],
+        applyToEntry: (entry, selection) => {
+          return (
+            selection == -1 ||
+            entry.type != "event" ||
+            entry.typeData.participantLimit <= Number(selection)
+          );
+        },
+      },
       event_type: {
         text: "Event Type",
         icon: { Component: AcademicCapIcon, includeText: true },
@@ -323,8 +315,7 @@ export let filters = {
           { key: "networking", text: "Networking" },
         ],
         applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
+          return entry.type != "event" || selection.includes(entry.typeData.type);
         },
       },
     },
@@ -336,7 +327,6 @@ export let filters = {
       return f.agnostic.filters.type.selection.includes("video");
     },
     filters: {
-      // [video] platform
       video_platform: {
         text: "Video Platform",
         icon: { Component: TvIcon, includeText: true },
@@ -351,11 +341,11 @@ export let filters = {
           { key: "instagram", text: "Instagram" },
         ],
         applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
+          return (
+            entry.type != "video" || selection.some((s) => entry.typeData.platform.includes(s))
+          );
         },
       },
-      // [video] types
       video_type: {
         text: "Video Type",
         icon: { Component: VideoCameraIcon, includeText: true },
@@ -367,11 +357,11 @@ export let filters = {
           { key: "guide", text: "Guide" },
         ],
         applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
+          return (
+            entry.type != "video" || selection.some((s) => entry.typeData.type.includes(s))
+          );
         },
       },
-      // [video] pricing models
       video_pricing_model: {
         text: "Video Pricing Model",
         activeCheck: (f) => {
@@ -387,8 +377,7 @@ export let filters = {
           { key: "subscription", text: "Subscription" },
         ],
         applyToEntry: (entry, selection) => {
-          // TODO(noah): !!!
-          return true;
+          return entry.type != "video" || selection.includes(entry.typeData.pricingModel);
         },
       },
     },

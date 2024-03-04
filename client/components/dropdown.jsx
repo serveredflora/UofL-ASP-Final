@@ -32,6 +32,10 @@ export default function Dropdown({ data, onChangeEvent }) {
 
   let options = data.options.map((option) => {
     const getChecked = () => {
+      if (!data.allowMultipleSelections) {
+        return false;
+      }
+
       return data.selection.includes(option.key);
     };
 
@@ -62,7 +66,7 @@ export default function Dropdown({ data, onChangeEvent }) {
   });
 
   let optionsContainer = (
-    <div className="absolute mt-2 flex flex-col space-y-2 z-10 bg-white bg-opacity-25 backdrop-blur w-full border-teal border-2 px-4 py-2 rounded-2xl">
+    <div className="absolute mt-2 flex flex-col space-y-2 z-10 bg-white bg-opacity-50 backdrop-blur w-full border-teal border-2 px-4 py-2 rounded-2xl">
       {options}
     </div>
   );

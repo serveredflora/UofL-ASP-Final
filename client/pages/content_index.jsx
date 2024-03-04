@@ -37,8 +37,17 @@ function updateSearchParams(_e) {
   };
 
   Object.keys(filters).forEach((category_key) => {
-    Object.keys(filters[category_key].filters).forEach((key) => {
-      let filter = filters[category_key].filters[key];
+    let filterCategory = filters[category_key];
+    if ("activeCheck" in filterCategory && !filterCategory.activeCheck(filters)) {
+      return;
+    }
+
+    Object.keys(filterCategory.filters).forEach((key) => {
+      let filter = filterCategory.filters[key];
+      if ("activeCheck" in filter && !filter.activeCheck(filters)) {
+        return;
+      }
+
       if (filter.allowMultipleSelections) {
         params[key] = filter.selection.join(",");
       } else {
@@ -73,42 +82,46 @@ function Filters({}) {
     );
   }
 
-  let expandDivider = (
-    <div className="flex flex-row space-x-4">
-      <div className="flex-grow h-0.5 my-auto bg-teal"></div>
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          setCategoriesExpand(!categoriesExpand);
-        }}
-      >
-        {expandDetail}
-      </button>
-      <div className="flex-grow h-0.5 my-auto bg-teal"></div>
-    </div>
-  );
+  let expandDivider;
+  if (filters.agnostic.filters.type.selection.length > 1) {
+    expandDivider = (
+      <div className="flex flex-row space-x-4">
+        <div className="flex-grow h-0.5 my-auto bg-teal"></div>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            setCategoriesExpand(!categoriesExpand);
+          }}
+        >
+          {expandDetail}
+        </button>
+        <div className="flex-grow h-0.5 my-auto bg-teal"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col space-y-8 adaptive-margin">
       <h2>Filters</h2>
       <form className="flex flex-col space-y-4" onSubmit={(e) => e.preventDefault()}>
         {Object.keys(filters).map((category_key) => {
-          let category = filters[category_key];
-          if ("activeCheck" in category && !category.activeCheck(filters)) {
+          let isAgnosticCategory = category_key == "agnostic";
+          if (!isAgnosticCategory && !categoriesExpand) {
+            // Skip if not expanded...
             return;
           }
 
-          let isAgnosticCategory = category_key == "agnostic";
-          if (!isAgnosticCategory && !categoriesExpand) {
+          let filterCategory = filters[category_key];
+          if ("activeCheck" in filterCategory && !filterCategory.activeCheck(filters)) {
             return;
           }
 
           return (
             <div key={category_key} className="flex flex-col space-y-2">
-              <IconText data={category} />
+              <IconText data={filterCategory} />
               <div className="flex flex-row flex-wrap gap-4">
-                {Object.keys(category.filters).map((key) => {
-                  let filter = category.filters[key];
+                {Object.keys(filterCategory.filters).map((key) => {
+                  let filter = filterCategory.filters[key];
                   if ("activeCheck" in filter && !filter.activeCheck(filters)) {
                     return;
                   }
@@ -128,57 +141,29 @@ function Filters({}) {
 }
 
 function ContentDetail({ data }) {
-  // TODO(noah): change card details based on content type (wip!)
-  // TODO(noah): split this part into some separate functions per type...
-  let typeIcon;
-  let typeSpecific;
-  switch (data.type) {
-    case "app":
-      typeIcon = (
-        <IconText
-          data={{ text: "App", icon: { Component: DevicePhoneMobileIcon, includeText: true } }}
-        />
-      );
-      typeSpecific = (
-        <div className="flex flex-col !my-4">
-          <p className="capitalize">Platforms: {data.typeData.platform.join(", ")}</p>
-        </div>
-      );
-      break;
-    case "article":
-      typeIcon = (
-        <IconText
-          data={{ text: "Article", icon: { Component: NewspaperIcon, includeText: true } }}
-        />
-      );
-      break;
-    case "event":
-      typeIcon = (
-        <IconText
-          data={{ text: "Event", icon: { Component: CalendarIcon, includeText: true } }}
-        />
-      );
-      break;
-    case "video":
-      typeIcon = (
-        <IconText
-          data={{ text: "Video", icon: { Component: VideoCameraIcon, includeText: true } }}
-        />
-      );
-      break;
-  }
+  const iconData = {
+    app: { text: "App", icon: { Component: DevicePhoneMobileIcon, includeText: true } },
+    article: { text: "Article", icon: { Component: NewspaperIcon, includeText: true } },
+    event: { text: "Event", icon: { Component: CalendarIcon, includeText: true } },
+    video: { text: "Video", icon: { Component: VideoCameraIcon, includeText: true } },
+  };
 
   return (
     <div className="flex flex-col space-y-2 w-full h-full">
       <div className="flex flex-row justify-between">
         <div className="bg-teal-light px-2 py-1 rounded-full capitalize text-teal">
-          {typeIcon}
+          <IconText data={iconData[data.type]} />
         </div>
         <p className="my-auto text-teal-mid">Published: {data.publishDate}</p>
       </div>
       <h3 className="capitalize">{data.name}</h3>
       <p>{data.summary}</p>
-      {typeSpecific}
+      {/* TODO(noah): currently just listing the type data here, will eventually make this more pretty... */}
+      <div className="text-[12px]">
+        {Object.keys(data.typeData).map((key) => {
+          return <p key={key}>{`"${key}": "${data.typeData[key]}"`}</p>;
+        })}
+      </div>
       <div className="flex flex-col space-y-2 !mt-auto">
         <div className="flex flex-row flex-wrap justify-center space-x-2">
           <p className="text-teal-mid">Tags: </p>
@@ -227,10 +212,17 @@ export default function ContentIndex({}) {
   let filtersData = fakeDatabaseResults.filter((entry) => {
     for (let i = 0; i < filterCategories.length; i++) {
       let filterCategory = filters[filterCategories[i]];
-      let filterKeys = Object.keys(filterCategory.filters);
+      if ("activeCheck" in filterCategory && !filterCategory.activeCheck(filters)) {
+        continue;
+      }
 
+      let filterKeys = Object.keys(filterCategory.filters);
       for (let j = 0; j < filterKeys.length; j++) {
         let filter = filterCategory.filters[filterKeys[j]];
+        if ("activeCheck" in filter && !filter.activeCheck(filters)) {
+          continue;
+        }
+
         if (!filter.applyToEntry(entry, filter.selection)) {
           return false;
         }
