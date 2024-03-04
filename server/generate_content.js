@@ -1,14 +1,15 @@
-// TODO(noah): this file is just for generating some fake content to prototype the content index
-//             before setting up the database/server querying + storage. this will be removed
-//             once we don't need the fake data...
+const fs = require("fs");
+
+// This used to be client-side, now this is generated once as a JSON file before
+// running the server so the data is deterministic (instead of changing per page load).
 
 // Inclusive range
-export function randIntRange(min, max) {
+function randIntRange(min, max) {
   let diff = max - min + 1;
   return min + Math.floor(Math.random() * diff);
 }
 
-function prefixPad(str, char, targetLength) {
+function prefixPadString(str, char, targetLength) {
   for (let i = str.length; i < targetLength; i++) {
     str = char + str;
   }
@@ -29,11 +30,11 @@ function randomExclusiveSelection(arr, count) {
 }
 
 function dateToString(date) {
-  return `${date.getFullYear()}-${prefixPad(String(date.getMonth() + 1), "0", 2)}-${prefixPad(
-    String(date.getDate()),
+  return `${date.getFullYear()}-${prefixPadString(
+    String(date.getMonth() + 1),
     "0",
     2
-  )}`;
+  )}-${prefixPadString(String(date.getDate()), "0", 2)}`;
 }
 
 function generateFakeDate() {
@@ -48,7 +49,7 @@ function generateFakeDateString() {
   return dateToString(generateFakeDate());
 }
 
-export function dateStringInDays(str) {
+function dateStringInDays(str) {
   let parts = str.split("-").map((e) => Number(e));
   let date = new Date(parts[0], parts[1], parts[2]);
 
@@ -61,7 +62,7 @@ function pickRandomInArray(arr) {
   return arr[randIntRange(0, arr.length - 1)];
 }
 
-export function generateFakeDatabaseResults(amount) {
+function generateFakeContent(amount) {
   const contentTypes = ["app", "article", "event", "video"];
 
   // Fake tags that are randomly selected
@@ -134,7 +135,8 @@ export function generateFakeDatabaseResults(amount) {
 
         result.typeData.platform = randomExclusiveSelection(appPlatforms, randIntRange(1, 3));
         result.typeData.pricingModel = pickRandomInArray(appPricingModels);
-        result.typeData.price = result.typeData.pricingModel != "free" ? randIntRange(1, 4) + 0.99 : 0.0;
+        result.typeData.price =
+          result.typeData.pricingModel != "free" ? randIntRange(1, 4) + 0.99 : 0.0;
         break;
 
       case "article":
@@ -164,8 +166,10 @@ export function generateFakeDatabaseResults(amount) {
         result.typeData.format = pickRandomInArray(eventFormat);
         result.typeData.type = pickRandomInArray(eventTypes);
         result.typeData.price = randIntRange(0, 2) == 0 ? randIntRange(5, 100) : 0;
-        result.typeData.participantLimit = result.typeData.eventType != "online-only" ? randIntRange(10, 3000) : -1;
-        result.typeData.location = result.typeData.eventType != "online-only" ? pickRandomInArray(eventLocations) : null;
+        result.typeData.participantLimit =
+          result.typeData.eventType != "online-only" ? randIntRange(10, 3000) : -1;
+        result.typeData.location =
+          result.typeData.eventType != "online-only" ? pickRandomInArray(eventLocations) : null;
         break;
 
       case "video":
@@ -195,3 +199,7 @@ export function generateFakeDatabaseResults(amount) {
   console.log(results);
   return results;
 }
+
+let fakeContent = generateFakeContent(randIntRange(120, 240));
+
+fs.writeFileSync("./fake_content.json", JSON.stringify(fakeContent), "utf-8");

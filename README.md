@@ -42,3 +42,4 @@
   - [Input Values + State](https://react.dev/reference/react-dom/components/input#providing-an-initial-value-for-an-input)
 - React Router
   - [SearchParams Docs](https://reactrouter.com/en/main/hooks/use-search-params#usesearchparams)
+  - [Deferred Data Guide](https://reactrouter.com/en/main/guides/deferred)

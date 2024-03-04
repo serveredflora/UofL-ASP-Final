@@ -1,4 +1,3 @@
-import { dateStringInDays } from "../temp.js";
 import {
   DevicePhoneMobileIcon,
   NewspaperIcon,

@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Suspense, useState } from "react";
+import { Link, useLoaderData, useSearchParams } from "react-router-dom";
 import Dropdown from "../components/dropdown.jsx";
 import CardGrid from "../components/card_grid.jsx";
 import Pagination from "../components/pagination.jsx";
-import { generateFakeDatabaseResults, randIntRange, dateStringInDays } from "../temp.js";
 import {
   DevicePhoneMobileIcon,
   NewspaperIcon,
@@ -14,14 +13,13 @@ import {
 } from "@heroicons/react/20/solid";
 import IconText from "../components/icon_text.jsx";
 import { filters } from "../config/content_index_filters.js";
+import { dateStringInDays, dateToString } from "../utils.js";
 
 let paginationData = {
   currentPage: 1,
   maxPages: 15,
   optionsRange: 2,
 };
-
-let fakeDatabaseResults = generateFakeDatabaseResults(randIntRange(5, 12));
 
 let searchParams;
 let setSearchParams;
@@ -187,8 +185,18 @@ function ContentDetail({ data }) {
   );
 }
 
+function getRequest(url, response_func) {
+  return fetch(url, {
+    method: "get",
+    json: true,
+  });
+}
+
 export default function ContentIndex({}) {
   [searchParams, setSearchParams] = useSearchParams();
+
+  const data = useLoaderData();
+  console.log(data);
 
   // Load search params into filter
   const filterCategories = Object.keys(filters);
@@ -209,7 +217,13 @@ export default function ContentIndex({}) {
     });
   });
 
-  let filtersData = fakeDatabaseResults.filter((entry) => {
+  // getRequest("/data/content/page/1/")
+  //   .then((response) => response.json())
+  //   .then((json) => {
+  //     console.log(json);
+  //   });
+
+  let filtersData = data.filter((entry) => {
     for (let i = 0; i < filterCategories.length; i++) {
       let filterCategory = filters[filterCategories[i]];
       if ("activeCheck" in filterCategory && !filterCategory.activeCheck(filters)) {
@@ -243,12 +257,22 @@ export default function ContentIndex({}) {
   return (
     <div className="flex flex-col space-y-16">
       <Filters />
-      <CardGrid
-        title={`Found Entries (Page ${paginationData.currentPage})`}
-        data={filtersData}
-        DetailComponent={ContentDetail}
-      />
-      <Pagination data={paginationData} onChangeEvent={updateSearchParams}></Pagination>
+      <Suspense
+        fallback={
+          <div className="flex flex-col space-y-8 adaptive-margin text-center">
+            <h3 className="bg-teal text-white rounded-2xl px-2 py-1">
+              Loading Data from Server...
+            </h3>
+          </div>
+        }
+      >
+        <CardGrid
+          title={`Found Entries (Page ${paginationData.currentPage})`}
+          data={filtersData}
+          DetailComponent={ContentDetail}
+        />
+        <Pagination data={paginationData} onChangeEvent={updateSearchParams} />
+      </Suspense>
     </div>
   );
 }

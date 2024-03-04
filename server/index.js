@@ -4,8 +4,8 @@ const express = require("express");
 const path = require("path");
 const mariadb = require("mariadb");
 const loginRouter = require("./auth/login");
-const registerRouter = require("./auth/register"); 
-const changePasswordRouter = require("./auth/change_password"); 
+const registerRouter = require("./auth/register");
+const changePasswordRouter = require("./auth/change_password");
 
 const app = express();
 const port = 8000;
@@ -15,6 +15,12 @@ app.use(express.json());
 app.use("/auth", loginRouter);
 app.use("/auth", registerRouter);
 app.use("/auth", changePasswordRouter);
+
+// TEMP(noah): just hacked to test server-serving content list + get card detail page work started
+//             will remove/refactor this once it works well enough...
+const serveContent = require("./serve_content");
+app.use(serveContent.router);
+serveContent.setupContentData();
 
 async function asyncFunction() {
   let conn;
