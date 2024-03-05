@@ -15,6 +15,8 @@ import Footer from "./partials/footer.jsx";
 // Pages
 import Home from "./pages/home.jsx";
 import ContentIndex from "./pages/content_index.jsx";
+import ContentPublishingForm from "./pages/ContentPostPublishFormV2.jsx";
+import ContentReviewForm from "./pages/ContentReviewFormV2.jsx";
 import Account from "./pages/account.jsx";
 import Login from "./pages/login.jsx";
 import Register from "./pages/register.jsx";
