@@ -31,10 +31,14 @@ router.get("/data/content/page/:id/", (req, res) => {
     return;
   }
 
-  res.json({
-    maxPages: contentMaxPages,
-    data: contentData.slice((page - 1) * MAX_PER_PAGE, page * MAX_PER_PAGE),
-  });
+  // TEMP(noah): remove artificial timeout once tested enough
+  setTimeout(() => {
+    res.json({
+      currentPage: page,
+      maxPages: contentMaxPages,
+      data: contentData.slice((page - 1) * MAX_PER_PAGE, page * MAX_PER_PAGE),
+    });
+  }, 1000);
 });
 
 router.get("/data/content/:id/", (req, res) => {

@@ -3,14 +3,18 @@ import { Link } from "react-router-dom";
 import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from "@heroicons/react/20/solid";
 
 export default function Pagination({ data, onChangeEvent }) {
-  let [pageIndex, setPageIndex] = useState();
-
+  const [pageIndex, setPageIndex] = useState();
   const updatePageIndex = (e, index) => {
+    if (pageIndex == index) {
+      return;
+    }
+
+    console.log(index);
     data.currentPage = index;
 
-    onChangeEvent(e);
-
     setPageIndex(index);
+
+    onChangeEvent(e);
   };
 
   let buttons = [];

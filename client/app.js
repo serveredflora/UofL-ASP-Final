@@ -41,16 +41,7 @@ function App({}) {
   let routes = createRoutesFromElements(
     <Route element={<PageTemplate />}>
       <Route path="/" element={<Home />} />
-      <Route
-        path="/content/"
-        loader={({ request }) => {
-          let params = new URLSearchParams(document.location.search);
-
-          let pageIndex = params.has("page") ? params.get("page") : "1";
-          return fetch(`/data/content/page/${pageIndex}/`);
-        }}
-        element={<ContentIndex />}
-      />
+      <Route path="/content/" element={<ContentIndex />} />
       <Route path="/account/" element={<Account />} />
       <Route path="/login/" element={<Login />} />
       <Route

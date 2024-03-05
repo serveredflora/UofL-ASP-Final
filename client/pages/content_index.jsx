@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useState } from "react";
-import { Link, useLoaderData, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useLoaderData, useSearchParams } from "react-router-dom";
 import Dropdown from "../components/dropdown.jsx";
 import CardGrid from "../components/card_grid.jsx";
 import Pagination from "../components/pagination.jsx";
@@ -24,6 +24,9 @@ let paginationData = {
 let searchParams;
 let setSearchParams;
 
+let contentData;
+let setContentData;
+
 let navigate;
 
 let todayDate = new Date();
@@ -31,7 +34,7 @@ export let todayInDays = dateStringInDays(
   `${todayDate.getFullYear()}-${todayDate.getMonth()}-${todayDate.getDate()}`
 );
 
-function updateSearchParams(_e) {
+function updateSearchParams(_e, forceDontUpdateContentData = false) {
   let params = {
     page: paginationData.currentPage,
   };
@@ -57,6 +60,9 @@ function updateSearchParams(_e) {
   });
 
   setSearchParams(params);
+  if (!forceDontUpdateContentData && Object.keys(contentData).length > 0) {
+    updateContentData();
+  }
 }
 
 function Filters({}) {
@@ -187,17 +193,24 @@ function ContentDetail({ data }) {
   );
 }
 
-function getRequest(url, response_func) {
-  return fetch(url, {
-    method: "get",
-    json: true,
-  });
+function fetchContentData() {
+  return fetch(`/data/content/page/${paginationData.currentPage}/`);
+}
+
+function updateContentData() {
+  fetchContentData()
+    .then((response) => response.json())
+    .then((json) => {
+      setContentData(json);
+    });
 }
 
 export default function ContentIndex({}) {
-  const loaderData = useLoaderData();
   [searchParams, setSearchParams] = useSearchParams();
-  navigate = useNavigate();
+  [contentData, setContentData] = useState({});
+
+  console.log("Page load!");
+  const contentDataReady = Object.keys(contentData).length > 0;
 
   // Load search params into filter
   const filterCategories = Object.keys(filters);
@@ -218,68 +231,78 @@ export default function ContentIndex({}) {
     });
   });
 
-  let filteredData = loaderData.data.filter((entry) => {
-    for (let i = 0; i < filterCategories.length; i++) {
-      let filterCategory = filters[filterCategories[i]];
-      if ("activeCheck" in filterCategory && !filterCategory.activeCheck(filters)) {
-        continue;
-      }
-
-      let filterKeys = Object.keys(filterCategory.filters);
-      for (let j = 0; j < filterKeys.length; j++) {
-        let filter = filterCategory.filters[filterKeys[j]];
-        if ("activeCheck" in filter && !filter.activeCheck(filters)) {
+  let filteredData;
+  if (contentDataReady) {
+    filteredData = contentData.data.filter((entry) => {
+      for (let i = 0; i < filterCategories.length; i++) {
+        let filterCategory = filters[filterCategories[i]];
+        if ("activeCheck" in filterCategory && !filterCategory.activeCheck(filters)) {
           continue;
         }
 
-        if (!filter.applyToEntry(entry, filter.selection)) {
-          return false;
+        let filterKeys = Object.keys(filterCategory.filters);
+        for (let j = 0; j < filterKeys.length; j++) {
+          let filter = filterCategory.filters[filterKeys[j]];
+          if ("activeCheck" in filter && !filter.activeCheck(filters)) {
+            continue;
+          }
+
+          if (!filter.applyToEntry(entry, filter.selection)) {
+            return false;
+          }
         }
       }
-    }
 
-    return true;
-  });
+      return true;
+    });
 
-  let pageValueFromSearchParams = searchParams.get("page");
-  if (pageValueFromSearchParams != null) {
-    paginationData.currentPage = Number(pageValueFromSearchParams);
+    paginationData.maxPages = contentData.maxPages;
   }
 
-  paginationData.maxPages = loaderData.maxPages;
+  useEffect(() => {
+    if (!contentDataReady) {
+      updateContentData();
+    }
+  }, [contentDataReady]);
 
   // Source: https://stackoverflow.com/a/71913925
   // Ensure search params are applied if not yet present
   let pageIndex = searchParams.get("page");
   useEffect(() => {
     if (!pageIndex) {
-      updateSearchParams(null);
+      updateSearchParams(null, !contentDataReady);
     }
-  }, [navigate, pageIndex]);
+  }, [pageIndex, contentDataReady]);
 
   if (!pageIndex) {
+    // Will be re-rendered due to above effect
     return null;
   }
 
-  return (
-    <div className="flex flex-col space-y-16">
-      <Filters />
-      <Suspense
-        fallback={
-          <div className="flex flex-col space-y-8 adaptive-margin text-center">
-            <h3 className="bg-teal text-white rounded-2xl px-2 py-1">
-              Loading Data from Server...
-            </h3>
-          </div>
-        }
-      >
+  paginationData.currentPage = Number(pageIndex);
+
+  if (contentDataReady) {
+    return (
+      <div className="flex flex-col space-y-16">
+        <Filters />
         <CardGrid
           title={`Found Entries (Page ${paginationData.currentPage})`}
           data={filteredData}
           DetailComponent={ContentDetail}
         />
         <Pagination data={paginationData} onChangeEvent={updateSearchParams} />
-      </Suspense>
-    </div>
-  );
+      </div>
+    );
+  } else {
+    return (
+      <div className="flex flex-col space-y-16">
+        <Filters />
+        <div className="flex flex-col space-y-8 adaptive-margin text-center">
+          <h3 className="bg-teal text-white rounded-2xl px-2 py-1">
+            Loading Data from Server...
+          </h3>
+        </div>
+      </div>
+    );
+  }
 }

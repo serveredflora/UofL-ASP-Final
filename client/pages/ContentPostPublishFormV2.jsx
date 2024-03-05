@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SelectOptions from './SelectOptions'; 
+import SelectOptions from '../components/SelectOptions.jsx'; 
 
 // Example data 
 const contentTypes = {
