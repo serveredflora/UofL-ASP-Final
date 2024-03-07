@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useUser } from "../context/UserContext.jsx";
+
 
 export default function Account() {
   // State management
@@ -9,6 +11,7 @@ export default function Account() {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
+  const { updateUserState } = useUser();
 
   // Locate the location state
   const location = useLocation();
@@ -46,8 +49,12 @@ export default function Account() {
         console.log("Login successful", data);
         localStorage.setItem("userToken", data.token); // Save token to localStorage
         localStorage.setItem("username", data.user.username); // Save Username to localStorage
+        localStorage.setItem("userRole", data.user.role); // Set user role to local storage
         setIsLoggedIn(true);
         setError("");
+        // window.dispatchEvent(new CustomEvent('accountChanged'));
+        updateUserState();
+
       } else {
         setError(data.error || "An error occurred");
       }

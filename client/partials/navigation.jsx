@@ -1,36 +1,37 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { UserIcon } from "@heroicons/react/20/solid";
 import IconText from "../components/icon_text.jsx";
+import { useUser } from "../context/UserContext.jsx";
 
-const navigation = [
-  { key: "home", text: "Home", url: "/" },
-  { key: "content_index", text: "Content Index", url: "/content/" },
-  { key: "about", text: "About", url: "/about/" },
-  {
-    key: "account",
-    text: "Account",
-    url: "/account/",
-    icon: { Component: UserIcon, includeText: false },
-  },
-];
 
-// TODO(noah): make the navigation bar sticky to the viewport
-
+// Assuming NavigationTemplate is part of this file and not imported from elsewhere
 function NavigationTemplate({ navigationData }) {
-  const navigate = useNavigate();
+  const { updateUserState } = useUser();
 
-  const isLoggedIn = Boolean(localStorage.getItem("userToken"));
+  const navigate = useNavigate();
+  const { user, setUser } = useUser();
+  // const isLoggedIn = Boolean(localStorage.getItem("userToken"));
 
   const handleLogout = () => {
     localStorage.removeItem("userToken");
+    localStorage.removeItem("username");
+    localStorage.removeItem("userRole");
+    // setUser({ isLoggedIn: false, role: "" });
+    updateUserState();
+
     navigate("/login");
   };
 
+
   return (
     <div className="flex flex-row justify-end space-x-8 adaptive-margin mt-8 -mb-8">
-      {/* TODO(noah): replace placeholder with logo */}
       <Link to="/" className="mr-auto -mt-3 rounded-2xl">
-        <img src="https://placehold.co/144x48/DEEFEC/154752/svg" className="rounded-2xl"></img>
+        <img
+          src="https://placehold.co/144x48/DEEFEC/154752/svg"
+          alt="Logo"
+          className="rounded-2xl"
+        />
       </Link>
       {navigationData.map((option) => (
         <NavLink
@@ -41,17 +42,12 @@ function NavigationTemplate({ navigationData }) {
           <IconText data={option} />
         </NavLink>
       ))}
-      {isLoggedIn && (
+      {user.isLoggedIn && (
         <button onClick={handleLogout} className="logout-button -mt-3 md:block">
           Logout
         </button>
       )}
-      <button
-        onClick={() => {
-          // TODO(noah): toggle vertical dropdown list for mobile navigation
-        }}
-        className="button w-12 h-12 -mt-3 md:hidden"
-      >
+      <button onClick={() => {}} className="button w-12 h-12 -mt-3 md:hidden">
         ::
       </button>
     </div>
@@ -59,5 +55,26 @@ function NavigationTemplate({ navigationData }) {
 }
 
 export default function Navigation() {
-  return <NavigationTemplate navigationData={navigation} />;
+  const { user } = useUser(); // Use context to access user state
+
+  let navigationData = [
+    { key: "home", text: "Home", url: "/" },
+    { key: "content_index", text: "Content Index", url: "/content/" },
+    { key: "about", text: "About", url: "/about/" },
+    {
+      key: "account",
+      text: "Account",
+      url: "/account/",
+      icon: { Component: UserIcon, includeText: false },
+    },
+  ];
+
+  if (user.role === "member") {
+    navigationData = [
+      ...navigationData,
+      { key: "create_posts", text: "Create Posts", url: "/posts/create/" },
+    ];
+  }
+
+  return <NavigationTemplate navigationData={navigationData} />;
 }

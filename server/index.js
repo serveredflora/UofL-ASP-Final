@@ -55,6 +55,15 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 });
 
+app.get('/api/user/role', (req, res) => {
+  const username = req.query.username;
+  getUserRoleByUsername(username).then(role => {
+    res.json({role});
+  }).catch(error => {
+    res.status(500).json({error: 'Internal server error'});
+  });
+});
+
 app.listen(port, async () => {
   console.log(`Server listening on port ${port}`);
   try {

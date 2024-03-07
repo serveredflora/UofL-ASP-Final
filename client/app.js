@@ -9,6 +9,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
+import { UserProvider } from "./context/UserContext.jsx";
 // Partials
 import Navigation from "./partials/navigation.jsx";
 import Footer from "./partials/footer.jsx";
@@ -56,7 +57,11 @@ function App({}) {
     </Route>
   );
 
-  return <RouterProvider router={createBrowserRouter(routes)} />;
+  return (
+    <UserProvider>
+      <RouterProvider router={createBrowserRouter(routes)} />
+    </UserProvider>
+  );
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
