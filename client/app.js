@@ -45,6 +45,7 @@ function App({}) {
       <Route path="/content/" element={<ContentIndex />} />
       <Route path="/account/" element={<Account />} />
       <Route path="/login/" element={<Login />} />
+      <Route path="/create-posts/" element={<ContentPublishingForm />} />
       <Route
         path="/register/"
         element={
