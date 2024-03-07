@@ -214,12 +214,14 @@ function AboutCard({ data }) {
 }
 
 export default function Home() {
+  // TODO(noah): dynamically populate the home-page with content data (pre-cache the data on the server side?)
   return (
     <div className="flex flex-col space-y-16">
       <Header data={header} />
       <EventHighlights data={events} />
       <BlogPostCards data={blogs} />
       <AppsBanner data={apps} />
+      {/* TODO(noah): add some video section (reuse event highlight list) */}
       <AboutCard data={about} />
     </div>
   );

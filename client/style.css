@@ -32,8 +32,11 @@
     @apply opacity-75;
   }
 
-  input {
+  input,
+  select,
+  textarea {
     @apply !text-teal;
+    @apply placeholder:!text-teal-mid;
     @apply !border-teal;
     @apply !border-2;
     @apply !rounded-2xl;
@@ -48,7 +51,8 @@
   }
 
   [type="text"],
-  [type="password"] {
+  [type="password"],
+  [type="file"] {
     @apply px-4;
     @apply py-2;
   }

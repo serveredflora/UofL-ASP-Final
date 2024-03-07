@@ -16,7 +16,7 @@ import Footer from "./partials/footer.jsx";
 // Pages
 import Home from "./pages/home.jsx";
 import ContentIndex from "./pages/content_index.jsx";
-import ContentPublishingForm from "./pages/ContentPostPublishFormV2.jsx";
+import ContentPostSubmission from "./pages/content_post_submission.jsx";
 import ContentReviewForm from "./pages/ContentReviewFormV2.jsx";
 import Account from "./pages/account.jsx";
 import Login from "./pages/login.jsx";
@@ -45,7 +45,7 @@ function App({}) {
       <Route path="/content/" element={<ContentIndex />} />
       <Route path="/account/" element={<Account />} />
       <Route path="/login/" element={<Login />} />
-      <Route path="/create-posts/" element={<ContentPublishingForm />} />
+      <Route path="/create-posts/" element={<ContentPostSubmission />} />
       <Route
         path="/register/"
         element={
