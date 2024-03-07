@@ -4,7 +4,6 @@ import { UserIcon } from "@heroicons/react/20/solid";
 import IconText from "../components/icon_text.jsx";
 import { useUser } from "../context/UserContext.jsx";
 
-
 // Assuming NavigationTemplate is part of this file and not imported from elsewhere
 function NavigationTemplate({ navigationData }) {
   const { updateUserState } = useUser();
@@ -22,7 +21,6 @@ function NavigationTemplate({ navigationData }) {
 
     navigate("/login");
   };
-
 
   return (
     <div className="flex flex-row justify-end space-x-8 adaptive-margin mt-8 -mb-8">
@@ -70,10 +68,13 @@ export default function Navigation() {
   ];
 
   if (user.role === "member") {
-    navigationData = [
-      ...navigationData,
-      { key: "create_posts", text: "Create Posts", url: "/posts/create/" },
-    ];
+    const createPostsItem = {
+      key: "create_posts",
+      text: "Create Posts",
+      url: "/posts/create/",
+    };
+    const insertPosition = navigationData.length - 1;
+    navigationData.splice(insertPosition, 0, createPostsItem);
   }
 
   return <NavigationTemplate navigationData={navigationData} />;
