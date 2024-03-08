@@ -18,7 +18,9 @@ import {
   MegaphoneIcon,
   TvIcon,
 } from "@heroicons/react/20/solid";
-import { todayInDays } from "../pages/content_index.jsx";
+// import { todayInDays } from "../pages/content_index.jsx";
+import { todayInDays } from '../utils';
+
 
 // TODO(noah): add some small info text before options for each dropdown to inform the user what
 //             the filter does
