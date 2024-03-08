@@ -10,12 +10,13 @@ exports.up = function(knex) {
     table.string('type').notNullable();
     table.string('language').notNullable();
     table.string('image_path').notNullable();
-    table.text('description').notNullable(); 
+    table.text('description').notNullable();
+    table.integer('user_id').unsigned().notNullable();
+    table.foreign('user_id').references('users.id').onDelete('CASCADE');
     table.timestamps(true, true);
   });
 };
 
-
 exports.down = function(knex) {
-  return knex.schema.dropTable('uscontenters');
+  return knex.schema.dropTable('content');
 };
