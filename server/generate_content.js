@@ -196,7 +196,7 @@ function generateFakeContent(amount) {
   }
 
   // Preview content (since not all info is presented via UI)
-  console.log(results);
+  // console.log(results);
   return results;
 }
 

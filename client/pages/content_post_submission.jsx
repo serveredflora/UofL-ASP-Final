@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import SelectOptions from "../components/SelectOptions.jsx";
-import { Navigate } from 'react-router-dom';
-
+import { Navigate, useNavigate } from "react-router-dom";
 
 // Example data
 const contentTypes = {
@@ -58,10 +57,39 @@ const ContentPostSubmission = () => {
     setFormData((prevState) => ({ ...prevState, tags: value }));
   };
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    // Process and submit formData to your API/server here
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("type", formData.contentType);
+    formDataToSend.append("language", formData.language);
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("coverImage", formData.coverImage);
+
+    try {
+      const response = await fetch("submit", {
+        // const response = await fetch("http://127.0.0.1:8000/posts/create/submit", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+          Username: localStorage.getItem("username"),
+        },
+        body: formDataToSend,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Content submitted:", result);
+      navigate("/success-page");
+    } catch (error) {
+      console.error("There was an error submitting the form:", error.message);
+    }
   };
 
   return (

@@ -46,7 +46,7 @@ export default function Account() {
       });
       const data = await response.json();
       if (response.ok) {
-        console.log("Login successful", data);
+        // console.log("Login successful", data);
         localStorage.setItem("userToken", data.token); // Save token to localStorage
         localStorage.setItem("username", data.user.username); // Save Username to localStorage
         localStorage.setItem("userRole", data.user.role); // Set user role to local storage

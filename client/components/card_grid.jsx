@@ -11,6 +11,7 @@ export default function CardGrid({ title, data, DetailComponent }) {
           >
             <img
               src={entry.image_path}
+              // src="/assets/content/uploads/1709918837608.png"
               className="w-full h-48 object-cover" 
             />
             <div className="p-4 text-center w-full h-2/3 bg-teal text-teal-light rounded-b-2xl">

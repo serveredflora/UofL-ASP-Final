@@ -9,20 +9,30 @@ const loginRouter = require("./auth/login");
 const registerRouter = require("./auth/register");
 const changePasswordRouter = require("./auth/change_password");
 const serveContentRouter = require("./serve_content");
-// const contents = require("./generic/contents");
+const submitContentRouter = require("./generic/submit_content");
 
 const app = express();
 const port = 8000;
+
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    allowedHeaders: ['Authorization', 'Content-Type', 'Username'], 
+    origin: '*', 
+  })
+);
+
+app.use((req, res, next) => {
+  // console.log(req.headers);
+  next();
+});
 
 // Use authRouter for authentication routes
 app.use("/auth", loginRouter);
 app.use("/auth", registerRouter);
 app.use("/auth", changePasswordRouter);
-app.use("/generic", serveContentRouter); 
-
-// serveContent.setupContentData();
+app.use("/generic", serveContentRouter);
+app.use("/", submitContentRouter);
 
 async function asyncFunction() {
   let conn;
@@ -51,35 +61,15 @@ async function asyncFunction() {
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Something broke!" });
+});
+
 // Route all other requests to React app
 app.get("*", (req, res) => {
   console.log("Wildcard route hit:", req.url);
   res.sendFile(path.join(__dirname, "..", "public", "index.html"));
-});
-
-// Query contents table
-app.get("/api/content/page/:pageNum", async (req, res) => {
-  console.log(`Request received for page: ${req.params.pageNum}`);
-  try {
-    const page = parseInt(req.params.pageNum, 10) || 1;
-    const limit = 15;
-    const offset = (page - 1) * limit;
-
-    const contents = await knex("content").select("*").offset(offset).limit(limit);
-    const totalCountResult = await knex("content").count("id as count");
-    const totalCount = parseInt(totalCountResult[0].count, 10);
-
-    console.log({ page, limit, offset, totalCount });
-
-    res.json({
-      data: contents,
-      currentPage: page,
-      maxPages: Math.ceil(totalCount / limit),
-    });
-  } catch (error) {
-    console.error("Error fetching content data", error);
-    res.status(500).json({ message: "Error fetching content data" });
-  }
 });
 
 app.listen(port, async () => {
