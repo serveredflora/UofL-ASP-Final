@@ -1,5 +1,5 @@
-import { Suspense, useEffect, useState } from "react";
-import { Link, useLoaderData, useSearchParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import Dropdown from "../components/dropdown.jsx";
 import CardGrid from "../components/card_grid.jsx";
 import Pagination from "../components/pagination.jsx";
@@ -13,59 +13,53 @@ import {
 } from "@heroicons/react/20/solid";
 import IconText from "../components/icon_text.jsx";
 import { filters } from "../config/content_index_filters.js";
-import { dateStringInDays, dateToString } from "../utils.js";
+import { dateStringInDays, dateToString, todayInDays } from "../utils";
 
-let paginationData = {
-  currentPage: 1,
-  maxPages: 15,
-  optionsRange: 2,
-};
+export default function ContentIndex() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [contentData, setContentData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page") || "1"));
+  const [maxPages, setMaxPages] = useState(0);
 
-let searchParams;
-let setSearchParams;
+  useEffect(() => {
+    const fetchContentData = async (page) => {
+      try {
+        const response = await fetch(`/generic/data/contents/page/${page}`);
+        if (!response.ok) throw new Error("Network response was not ok");
+        const paginatedData = await response.json();
+        setContentData(paginatedData.data);
+        setCurrentPage(paginatedData.currentPage);
+        setMaxPages(paginatedData.maxPages);
+      } catch (error) {
+        console.error("There was a problem with your fetch operation:", error);
+      }
+    };
 
-let contentData;
-let setContentData;
+    fetchContentData(currentPage);
+  }, [currentPage]);
 
-let navigate;
-
-let todayDate = new Date();
-export let todayInDays = dateStringInDays(
-  `${todayDate.getFullYear()}-${todayDate.getMonth()}-${todayDate.getDate()}`
-);
-
-function updateSearchParams(_e, forceDontUpdateContentData = false) {
-  let params = {
-    page: paginationData.currentPage,
+  const handlePageChange = (newPage) => {
+    setSearchParams({ page: newPage.toString() });
   };
 
-  Object.keys(filters).forEach((category_key) => {
-    let filterCategory = filters[category_key];
-    if ("activeCheck" in filterCategory && !filterCategory.activeCheck(filters)) {
-      return;
-    }
+  const updateSearchParams = (newFilters) => {
+    setSearchParams(newFilters);
+  };
 
-    Object.keys(filterCategory.filters).forEach((key) => {
-      let filter = filterCategory.filters[key];
-      if ("activeCheck" in filter && !filter.activeCheck(filters)) {
-        return;
-      }
-
-      if (filter.allowMultipleSelections) {
-        params[key] = filter.selection.join(",");
-      } else {
-        params[key] = filter.selection;
-      }
-    });
-  });
-
-  setSearchParams(params);
-  if (!forceDontUpdateContentData && Object.keys(contentData).length > 0) {
-    updateContentData();
-  }
+  return (
+    <div className="flex flex-col space-y-16">
+      <Filters updateSearchParams={updateSearchParams} />
+      <CardGrid
+        title={`Found Entries (Page ${currentPage})`}
+        data={contentData}
+        DetailComponent={ContentDetail}
+      />
+      <Pagination currentPage={currentPage} maxPages={maxPages} onChange={handlePageChange} />
+    </div>
+  );
 }
 
-function Filters({}) {
+function Filters({ updateSearchParams }) {
   // TODO(noah): only allow one dropdown to be open at a time?
   let [categoriesExpand, setCategoriesExpand] = useState(false);
 
@@ -113,7 +107,6 @@ function Filters({}) {
         {Object.keys(filters).map((category_key) => {
           let isAgnosticCategory = category_key == "agnostic";
           if (!isAgnosticCategory && !categoriesExpand) {
-            // Skip if not expanded...
             return;
           }
 
@@ -145,164 +138,62 @@ function Filters({}) {
     </div>
   );
 }
-
 function ContentDetail({ data }) {
-  const iconData = {
-    app: { text: "App", icon: { Component: DevicePhoneMobileIcon, includeText: true } },
-    article: { text: "Article", icon: { Component: NewspaperIcon, includeText: true } },
-    event: { text: "Event", icon: { Component: CalendarIcon, includeText: true } },
-    video: { text: "Video", icon: { Component: VideoCameraIcon, includeText: true } },
-  };
-
-  return (
+  return data ? (
     <div className="flex flex-col space-y-2 w-full h-full">
-      <div className="flex flex-row justify-between">
-        <div className="bg-teal-light px-2 py-1 rounded-full capitalize text-teal">
-          <IconText data={iconData[data.type]} />
-        </div>
-        <p className="my-auto text-teal-mid">Published: {data.publishDate}</p>
-      </div>
-      <h3 className="capitalize">{data.name}</h3>
-      <p>{data.summary}</p>
-      {/* TODO(noah): currently just listing the type data here, will eventually make this more pretty... */}
-      <div className="text-[12px]">
-        {Object.keys(data.typeData).map((key) => {
-          return <p key={key}>{`"${key}": "${data.typeData[key]}"`}</p>;
-        })}
-      </div>
-      <div className="flex flex-col space-y-2 !mt-auto">
-        <div className="flex flex-row flex-wrap justify-center space-x-2">
-          <p className="text-teal-mid">Tags: </p>
-          {data.tags.map((tag, index) => (
-            // TODO(noah): make clickable to (append or set) tag as a filter option...
-            <p key={tag} className="underline">
-              #{index != data.tags.length - 1 ? tag + "," : tag}
-            </p>
-          ))}
-        </div>
-        <div className="flex flex-row space-x-4 self-center">
-          <Link to={`/content/${data.id}/`} className="button button-subtle w-max">
-            View Details
-          </Link>
-          <Link to={data.url} className="self-center button button-light w-max">
-            Visit
-          </Link>
-        </div>
-      </div>
+      <h3 className="text-lg">{data.title}</h3>
+      <p>Type: {data.type}</p>
+      <p>Language: {data.language}</p>
+      <p>{data.description}</p>
     </div>
+  ) : (
+    <p>No content found.</p>
   );
 }
 
-function fetchContentData() {
-  return fetch(`/data/content/page/${paginationData.currentPage}/`);
-}
+// function ContentDetail({ data }) {
+//   const iconData = {
+//     app: { text: "App", icon: { Component: DevicePhoneMobileIcon, includeText: true } },
+//     article: { text: "Article", icon: { Component: NewspaperIcon, includeText: true } },
+//     event: { text: "Event", icon: { Component: CalendarIcon, includeText: true } },
+//     video: { text: "Video", icon: { Component: VideoCameraIcon, includeText: true } },
+//   };
 
-function updateContentData() {
-  fetchContentData()
-    .then((response) => response.json())
-    .then((json) => {
-      setContentData(json);
-    });
-}
-
-export default function ContentIndex({}) {
-  [searchParams, setSearchParams] = useSearchParams();
-  [contentData, setContentData] = useState({});
-
-  console.log("Page load!");
-  const contentDataReady = Object.keys(contentData).length > 0;
-
-  // Load search params into filter
-  const filterCategories = Object.keys(filters);
-  filterCategories.forEach((category_key) => {
-    Object.keys(filters[category_key].filters).map((key) => {
-      let filter = filters[category_key].filters[key];
-      let value = searchParams.get(key);
-
-      if (value == null) {
-        return;
-      }
-
-      if (filter.allowMultipleSelections) {
-        filter.selection = value.split(",");
-      } else {
-        filter.selection = value;
-      }
-    });
-  });
-
-  let filteredData;
-  if (contentDataReady) {
-    filteredData = contentData.data.filter((entry) => {
-      for (let i = 0; i < filterCategories.length; i++) {
-        let filterCategory = filters[filterCategories[i]];
-        if ("activeCheck" in filterCategory && !filterCategory.activeCheck(filters)) {
-          continue;
-        }
-
-        let filterKeys = Object.keys(filterCategory.filters);
-        for (let j = 0; j < filterKeys.length; j++) {
-          let filter = filterCategory.filters[filterKeys[j]];
-          if ("activeCheck" in filter && !filter.activeCheck(filters)) {
-            continue;
-          }
-
-          if (!filter.applyToEntry(entry, filter.selection)) {
-            return false;
-          }
-        }
-      }
-
-      return true;
-    });
-
-    paginationData.maxPages = contentData.maxPages;
-  }
-
-  useEffect(() => {
-    if (!contentDataReady) {
-      updateContentData();
-    }
-  }, [contentDataReady]);
-
-  // Source: https://stackoverflow.com/a/71913925
-  // Ensure search params are applied if not yet present
-  let pageIndex = searchParams.get("page");
-  useEffect(() => {
-    if (!pageIndex) {
-      updateSearchParams(null, !contentDataReady);
-    }
-  }, [pageIndex, contentDataReady]);
-
-  if (!pageIndex) {
-    // Will be re-rendered due to above effect
-    return null;
-  }
-
-  paginationData.currentPage = Number(pageIndex);
-
-  if (contentDataReady) {
-    return (
-      <div className="flex flex-col space-y-16">
-        <Filters />
-        <CardGrid
-          title={`Found Entries (Page ${paginationData.currentPage})`}
-          data={filteredData}
-          DetailComponent={ContentDetail}
-        />
-        <Pagination data={paginationData} onChangeEvent={updateSearchParams} />
-      </div>
-    );
-  } else {
-    return (
-      <div className="flex flex-col space-y-16">
-        <Filters />
-        <div className="flex flex-col space-y-8 adaptive-margin text-center">
-          <h3 className="bg-teal text-white rounded-2xl px-2 py-1">
-            Loading Data from Server...
-          </h3>
-        </div>
-      </div>
-    );
-  }
-}
+//   return (
+//     <div className="flex flex-col space-y-2 w-full h-full">
+//       <div className="flex flex-row justify-between">
+//         <div className="bg-teal-light px-2 py-1 rounded-full capitalize text-teal">
+//           <IconText data={iconData[data.type]} />
+//         </div>
+//         <p className="my-auto text-teal-mid">Published: {data.publishDate}</p>
+//       </div>
+//       <h3 className="capitalize">{data.name}</h3>
+//       <p>{data.summary}</p>
+//       {/* TODO(noah): currently just listing the type data here, will eventually make this more pretty... */}
+//       <div className="text-[12px]">
+//         {Object.keys(data.typeData).map((key) => {
+//           return <p key={key}>{`"${key}": "${data.typeData[key]}"`}</p>;
+//         })}
+//       </div>
+//       <div className="flex flex-col space-y-2 !mt-auto">
+//         <div className="flex flex-row flex-wrap justify-center space-x-2">
+//           <p className="text-teal-mid">Tags: </p>
+//           {data.tags.map((tag, index) => (
+//             // TODO(noah): make clickable to (append or set) tag as a filter option...
+//             <p key={tag} className="underline">
+//               #{index != data.tags.length - 1 ? tag + "," : tag}
+//             </p>
+//           ))}
+//         </div>
+//         <div className="flex flex-row space-x-4 self-center">
+//           <Link to={`/content/${data.id}/`} className="button button-subtle w-max">
+//             View Details
+//           </Link>
+//           <Link to={data.url} className="self-center button button-light w-max">
+//             Visit
+//           </Link>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }

@@ -2,25 +2,19 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from "@heroicons/react/20/solid";
 
-export default function Pagination({ data, onChangeEvent }) {
-  const [pageIndex, setPageIndex] = useState();
+export default function Pagination({ currentPage = 1, maxPages = 1, onChange, optionsRange = 2 }) {
   const updatePageIndex = (e, index) => {
-    if (pageIndex == index) {
+    e.preventDefault();
+    if (currentPage === index) {
       return;
     }
-
-    console.log(index);
-    data.currentPage = index;
-
-    setPageIndex(index);
-
-    onChangeEvent(e);
+    onChange(index);
   };
 
   let buttons = [];
   buttons.push(
     <button
-      key={0}
+      key="first"
       onClick={(e) => updatePageIndex(e, 1)}
       className="button button-light p-2 w-12 h-12 leading-8"
     >
@@ -28,23 +22,22 @@ export default function Pagination({ data, onChangeEvent }) {
     </button>
   );
 
-  // TODO(noah): this needs a refactor to be clearer what this is doing...
-  const maxDiff = data.maxPages - data.optionsRange;
+  const maxDiff = maxPages - optionsRange;
   const optionsStartIndex = Math.max(
-    maxDiff <= data.currentPage
-      ? data.currentPage - data.optionsRange - (data.currentPage - maxDiff)
-      : data.currentPage - data.optionsRange,
+    maxDiff <= currentPage
+      ? currentPage - optionsRange - (currentPage - maxDiff)
+      : currentPage - optionsRange,
     1
   );
-  const optionsEndIndex = Math.min(optionsStartIndex + data.optionsRange * 2, data.maxPages);
+  const optionsEndIndex = Math.min(optionsStartIndex + optionsRange * 2, maxPages);
 
   for (let i = optionsStartIndex; i <= optionsEndIndex; i++) {
     buttons.push(
       <button
         key={i}
         onClick={(e) => updatePageIndex(e, i)}
-        className={`button w-12 h-12 leading-8 ${i != data.currentPage ? "button-light" : ""} ${
-          Math.abs(i - data.currentPage) >= 2 ? "hidden md:block" : ""
+        className={`button w-12 h-12 leading-8 ${i !== currentPage ? "button-light" : ""} ${
+          Math.abs(i - currentPage) >= 2 ? "hidden md:block" : ""
         }`}
       >
         {i}
@@ -54,8 +47,8 @@ export default function Pagination({ data, onChangeEvent }) {
 
   buttons.push(
     <button
-      key={999}
-      onClick={(e) => updatePageIndex(e, data.maxPages)}
+      key="last"
+      onClick={(e) => updatePageIndex(e, maxPages)}
       className="button button-light p-2 w-12 h-12 leading-8"
     >
       <ChevronDoubleRightIcon className="m-1.5 w-5 h-5" />

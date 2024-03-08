@@ -22,3 +22,7 @@ export function dateToString(date) {
     2
   )}-${prefixPadString(String(date.getDate()), "0", 2)}`;
 }
+
+export const todayInDays = dateStringInDays(
+  `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
+);

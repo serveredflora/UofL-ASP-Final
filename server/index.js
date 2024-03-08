@@ -1,26 +1,28 @@
+const express = require("express");
+const cors = require("cors");
+
 require("dotenv").config();
 
-const express = require("express");
 const path = require("path");
 const mariadb = require("mariadb");
 const loginRouter = require("./auth/login");
 const registerRouter = require("./auth/register");
 const changePasswordRouter = require("./auth/change_password");
+const serveContentRouter = require("./serve_content");
+// const contents = require("./generic/contents");
 
 const app = express();
 const port = 8000;
 app.use(express.json());
+app.use(cors());
 
 // Use authRouter for authentication routes
 app.use("/auth", loginRouter);
 app.use("/auth", registerRouter);
 app.use("/auth", changePasswordRouter);
+app.use("/generic", serveContentRouter); 
 
-// TEMP(noah): just hacked to test server-serving content list + get card detail page work started
-//             will remove/refactor this once it works well enough...
-const serveContent = require("./serve_content");
-app.use(serveContent.router);
-serveContent.setupContentData();
+// serveContent.setupContentData();
 
 async function asyncFunction() {
   let conn;
@@ -55,19 +57,35 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 });
 
-app.get('/api/user/role', (req, res) => {
-  const username = req.query.username;
-  getUserRoleByUsername(username).then(role => {
-    res.json({role});
-  }).catch(error => {
-    res.status(500).json({error: 'Internal server error'});
-  });
+// Query contents table
+app.get("/api/content/page/:pageNum", async (req, res) => {
+  console.log(`Request received for page: ${req.params.pageNum}`);
+  try {
+    const page = parseInt(req.params.pageNum, 10) || 1;
+    const limit = 15;
+    const offset = (page - 1) * limit;
+
+    const contents = await knex("content").select("*").offset(offset).limit(limit);
+    const totalCountResult = await knex("content").count("id as count");
+    const totalCount = parseInt(totalCountResult[0].count, 10);
+
+    console.log({ page, limit, offset, totalCount });
+
+    res.json({
+      data: contents,
+      currentPage: page,
+      maxPages: Math.ceil(totalCount / limit),
+    });
+  } catch (error) {
+    console.error("Error fetching content data", error);
+    res.status(500).json({ message: "Error fetching content data" });
+  }
 });
 
 app.listen(port, async () => {
   console.log(`Server listening on port ${port}`);
   try {
-    await asyncFunction(); // Debug db connect
+    await asyncFunction();
   } catch (err) {
     console.error("Error during database connection test", err);
   }

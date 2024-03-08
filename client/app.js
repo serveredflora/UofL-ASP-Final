@@ -29,6 +29,9 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 // Components
 import OnlyGuestUsers from "./components/OnlyGuestUsers.jsx";
 
+// Debug
+import Debug from "./pages/debug_page.jsx";
+
 function PageTemplate({}) {
   return (
     <div className="flex flex-col min-h-screen">
@@ -48,6 +51,8 @@ function App({}) {
       <Route path="/content/" element={<ContentIndex />} />
       <Route path="/account/" element={<Account />} />
       <Route path="/login/" element={<Login />} />
+      <Route path="/debug/" element={<Debug/>} />
+
       <Route
         path="/posts/create"
         element={
