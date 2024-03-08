@@ -1,8 +1,12 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const db = require('../db.js');
+const db = require("../db.js");
+const jwt = require("jsonwebtoken");
 
 const router = express.Router();
+
+// Secret key for JWT signing
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Login route
 router.post("/login", async (req, res) => {
@@ -24,7 +28,17 @@ router.post("/login", async (req, res) => {
     }
 
     // Authentication successful
-    return res.status(200).json({ message: "Login successful", user });
+    const token = jwt.sign(
+      { username: user.username, role: user.role },
+      JWT_SECRET,
+      { expiresIn: "1h" } // Token expires in 1 hour
+    );
+
+    return res.status(200).json({
+      message: "Login successful",
+      user: { username: user.username, role: user.role },
+      token,
+    });
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({ error: "Internal server error" });

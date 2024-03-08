@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import SelectOptions from "../components/SelectOptions.jsx";
+import { Navigate } from 'react-router-dom';
+
 
 // Example data
 const contentTypes = {

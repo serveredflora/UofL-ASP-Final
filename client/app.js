@@ -23,6 +23,9 @@ import Login from "./pages/login.jsx";
 import Register from "./pages/register.jsx";
 import PageNotFound from "./pages/page_not_found.jsx";
 
+// Guard
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+
 // Components
 import OnlyGuestUsers from "./components/OnlyGuestUsers.jsx";
 
@@ -45,7 +48,14 @@ function App({}) {
       <Route path="/content/" element={<ContentIndex />} />
       <Route path="/account/" element={<Account />} />
       <Route path="/login/" element={<Login />} />
-      <Route path="/posts/create" element={<ContentPostSubmission />} />
+      <Route
+        path="/posts/create"
+        element={
+          <ProtectedRoute>
+            <ContentPostSubmission />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/register/"
         element={
