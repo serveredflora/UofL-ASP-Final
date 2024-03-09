@@ -1,9 +1,8 @@
 const knex = require("knex");
-const mariadb = require("knex-mariadb");
 
 // Centralized Knex connection
 const db = knex({
-  client: mariadb,
+  client: "mysql",
   connection: {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
