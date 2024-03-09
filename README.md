@@ -5,11 +5,11 @@
 > Ensure MariaDB is installed!
 
 1. Run `npm install` to ensure all the required packages are downloaded + installed
-2. Ensure the database server is running and setup (the following are MariaDB queries):
+2. Ensure the database server is running, connect to the server via a client and run the following queries:
    1. `CREATE DATABASE uol_agile_db;`
    2. `CREATE USER 'uol_admin'@'localhost' IDENTIFIED BY 'DCQ2vrc2zmx';`
    3. `GRANT ALL PRIVILEGES ON uol_agile_db.* TO 'uol_admin'@'localhost';`
-3. Fill the following entries into the root `.env` file:
+3. Create a `.env` file in the root of the project and fill it with the following:
    ```
    DB_HOST='localhost'
    DB_USER='uol_admin'
