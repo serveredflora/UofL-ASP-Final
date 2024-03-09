@@ -1,4 +1,3 @@
-
 export default function CardGrid({ title, data, DetailComponent }) {
   return (
     <div className="flex flex-col space-y-8 adaptive-margin">
@@ -9,11 +8,7 @@ export default function CardGrid({ title, data, DetailComponent }) {
             key={entry.id || index}
             className="flex flex-col bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
           >
-            <img
-              src={entry.image_path}
-              // src="/assets/content/uploads/1709918837608.png"
-              className="w-full h-48 object-cover" 
-            />
+            <img src={entry.image_path} className="w-full h-48 object-cover" />
             <div className="p-4 text-center w-full h-2/3 bg-teal text-teal-light rounded-b-2xl">
               <DetailComponent data={entry} />
             </div>

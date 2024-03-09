@@ -59,7 +59,6 @@ export default function Dropdown({ data, onChangeEvent }) {
           onChange={data.allowMultipleSelections ? updateChecked : updateSelection}
           className="my-auto"
         />
-        {/* <label htmlFor={option.key}>{option.text}</label> */}
         <IconText data={option} />
       </div>
     );

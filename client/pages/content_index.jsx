@@ -21,6 +21,17 @@ export default function ContentIndex() {
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page") || "1"));
   const [maxPages, setMaxPages] = useState(0);
 
+  const handlePageChange = (newPage) => {
+    let params = Object.fromEntries(searchParams);
+    params.page = newPage.toString();
+    setCurrentPage(newPage);
+    setSearchParams(params);
+  };
+
+  const handleFilterChange = (_e) => {
+    updateSearchParams(searchParams, setSearchParams);
+  };
+
   useEffect(() => {
     const fetchContentData = async (page) => {
       try {
@@ -30,6 +41,7 @@ export default function ContentIndex() {
         setContentData(paginatedData.data);
         setCurrentPage(paginatedData.currentPage);
         setMaxPages(paginatedData.maxPages);
+        updateSearchParams(searchParams, setSearchParams);
       } catch (error) {
         console.error("There was a problem with your fetch operation:", error);
       }
@@ -38,20 +50,14 @@ export default function ContentIndex() {
     fetchContentData(currentPage);
   }, [currentPage]);
 
-  const handlePageChange = (newPage) => {
-    setSearchParams({ page: newPage.toString() });
-  };
-
-  const updateSearchParams = (newFilters) => {
-    setSearchParams(newFilters);
-  };
+  let filteredContentData = applyFiltersToContentData(contentData);
 
   return (
     <div className="flex flex-col space-y-16">
-      <Filters updateSearchParams={updateSearchParams} />
+      <Filters onChange={handleFilterChange} />
       <CardGrid
         title={`Found Entries (Page ${currentPage})`}
-        data={contentData}
+        data={filteredContentData}
         DetailComponent={ContentDetail}
       />
       <Pagination currentPage={currentPage} maxPages={maxPages} onChange={handlePageChange} />
@@ -59,7 +65,46 @@ export default function ContentIndex() {
   );
 }
 
-function Filters({ updateSearchParams }) {
+function updateSearchParams(searchParams, setSearchParams) {
+  let params = {};
+
+  // Only copy page value if it exists in the current search params
+  if (searchParams.has("page")) {
+    params.page = searchParams.get("page");
+  } else {
+    params.page = 1;
+  }
+
+  Object.keys(filters).forEach((category_key) => {
+    let filterCategory = filters[category_key];
+    if ("activeCheck" in filterCategory && !filterCategory.activeCheck(filters)) {
+      return;
+    }
+
+    Object.keys(filterCategory.filters).forEach((key) => {
+      let filter = filterCategory.filters[key];
+      if ("activeCheck" in filter && !filter.activeCheck(filters)) {
+        return;
+      }
+
+      params[key] = filter.allowMultipleSelections
+        ? filter.selection.join(",")
+        : filter.selection;
+    });
+  });
+
+  setSearchParams(params);
+  // if (!forceDontUpdateContentData && Object.keys(contentData).length > 0) {
+  //   updateContentData();
+  // }
+}
+
+function applyFiltersToContentData(contentData) {
+  // TODO(noah): apply filters!
+  return contentData;
+}
+
+function Filters({ onChange }) {
   // TODO(noah): only allow one dropdown to be open at a time?
   let [categoriesExpand, setCategoriesExpand] = useState(false);
 
@@ -125,9 +170,7 @@ function Filters({ updateSearchParams }) {
                     return;
                   }
 
-                  return (
-                    <Dropdown key={key} data={filter} onChangeEvent={updateSearchParams} />
-                  );
+                  return <Dropdown key={key} data={filter} onChangeEvent={onChange} />;
                 })}
               </div>
             </div>
@@ -138,62 +181,34 @@ function Filters({ updateSearchParams }) {
     </div>
   );
 }
+
 function ContentDetail({ data }) {
-  return data ? (
+  const iconData = {
+    app: { text: "App", icon: { Component: DevicePhoneMobileIcon, includeText: true } },
+    article: { text: "Article", icon: { Component: NewspaperIcon, includeText: true } },
+    event: { text: "Event", icon: { Component: CalendarIcon, includeText: true } },
+    video: { text: "Video", icon: { Component: VideoCameraIcon, includeText: true } },
+  };
+
+  return (
     <div className="flex flex-col space-y-2 w-full h-full">
-      <h3 className="text-lg">{data.title}</h3>
-      <p>Type: {data.type}</p>
-      <p>Language: {data.language}</p>
-      <p>{data.description}</p>
+      <div className="flex flex-row space-x-4 justify-center">
+        <div className="bg-teal-light px-2 py-1 rounded-full capitalize text-teal">
+          <IconText data={iconData[data.type]} />
+        </div>
+        <h3 className="my-auto">{data.title}</h3>
+      </div>
+      <p className="pb-4">{data.description}</p>
+      <div className="flex flex-col space-y-2 !mt-auto">
+        <div className="flex flex-row space-x-4 self-center">
+          <Link to={`/content/${data.id}/`} className="button button-subtle w-max">
+            View Details
+          </Link>
+          <Link to={data.url} className="self-center button button-light w-max">
+            Visit
+          </Link>
+        </div>
+      </div>
     </div>
-  ) : (
-    <p>No content found.</p>
   );
 }
-
-// function ContentDetail({ data }) {
-//   const iconData = {
-//     app: { text: "App", icon: { Component: DevicePhoneMobileIcon, includeText: true } },
-//     article: { text: "Article", icon: { Component: NewspaperIcon, includeText: true } },
-//     event: { text: "Event", icon: { Component: CalendarIcon, includeText: true } },
-//     video: { text: "Video", icon: { Component: VideoCameraIcon, includeText: true } },
-//   };
-
-//   return (
-//     <div className="flex flex-col space-y-2 w-full h-full">
-//       <div className="flex flex-row justify-between">
-//         <div className="bg-teal-light px-2 py-1 rounded-full capitalize text-teal">
-//           <IconText data={iconData[data.type]} />
-//         </div>
-//         <p className="my-auto text-teal-mid">Published: {data.publishDate}</p>
-//       </div>
-//       <h3 className="capitalize">{data.name}</h3>
-//       <p>{data.summary}</p>
-//       {/* TODO(noah): currently just listing the type data here, will eventually make this more pretty... */}
-//       <div className="text-[12px]">
-//         {Object.keys(data.typeData).map((key) => {
-//           return <p key={key}>{`"${key}": "${data.typeData[key]}"`}</p>;
-//         })}
-//       </div>
-//       <div className="flex flex-col space-y-2 !mt-auto">
-//         <div className="flex flex-row flex-wrap justify-center space-x-2">
-//           <p className="text-teal-mid">Tags: </p>
-//           {data.tags.map((tag, index) => (
-//             // TODO(noah): make clickable to (append or set) tag as a filter option...
-//             <p key={tag} className="underline">
-//               #{index != data.tags.length - 1 ? tag + "," : tag}
-//             </p>
-//           ))}
-//         </div>
-//         <div className="flex flex-row space-x-4 self-center">
-//           <Link to={`/content/${data.id}/`} className="button button-subtle w-max">
-//             View Details
-//           </Link>
-//           <Link to={data.url} className="self-center button button-light w-max">
-//             Visit
-//           </Link>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
