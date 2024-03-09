@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styles from './ContentReviewFormV2.module.css';
 
 const ContentReviewForm = () => {
   const [formData, setFormData] = useState({
@@ -58,32 +59,56 @@ const ContentReviewForm = () => {
   };
 
   return (
-    <form className="content-review-form" onSubmit={handleSubmit}>
+   <form className={styles.contentReviewForm} onSubmit={handleSubmit}>
       <div>
         <label htmlFor="contentType">Content Type:</label>
-        <select name="contentType" id="contentType" value={formData.contentType} onChange={handleChange} required>
+        <select
+          name="contentType"
+          id="contentType"
+          value={formData.contentType}
+          onChange={handleChange}
+          required
+          className={styles.inputFocus}
+        >
           <option value="">Select Type</option>
           <option value="app">App</option>
           <option value="article">Article/Blog Post</option>
           <option value="event">Event</option>
           <option value="video">Video</option>
         </select>
-        {errors.contentType && <p className="error">{errors.contentType}</p>}
+        {errors.contentType && <p className={`${styles.error} ${styles.errorAnimation}`}>{errors.contentType}</p>}
       </div>
 
       <div>
         <label htmlFor="contentLink">Content Link:</label>
-        <input type="url" id="contentLink" name="contentLink" value={formData.contentLink} onChange={handleChange} placeholder="http://example.com" required />
-        {errors.contentLink && <p className="error">{errors.contentLink}</p>}
+        <input
+          type="url"
+          id="contentLink"
+          name="contentLink"
+          value={formData.contentLink}
+          onChange={handleChange}
+          placeholder="http://example.com"
+          required
+          className={styles.inputFocus}
+        />
+        {errors.contentLink && <p className={`${styles.error} ${styles.errorAnimation}`}>{errors.contentLink}</p>}
       </div>
 
       <div>
         <label htmlFor="description">Description:</label>
-        <textarea id="description" name="description" value={formData.description} onChange={handleChange} placeholder="Brief description..." required></textarea>
-        {errors.description && <p className="error">{errors.description}</p>}
+        <textarea
+          id="description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Brief description..."
+          required
+          className={styles.inputFocus}
+        ></textarea>
+        {errors.description && <p className={`${styles.error} ${styles.errorAnimation}`}>{errors.description}</p>}
       </div>
 
-      <button type="submit">Submit for Review</button>
+      <button type="submit" className={styles.submitButton}>Submit for Review</button>
     </form>
   );
 };
