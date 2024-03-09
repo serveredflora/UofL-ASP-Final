@@ -10,12 +10,13 @@
    2. `CREATE USER 'uol_admin'@'localhost' IDENTIFIED BY 'DCQ2vrc2zmx';`
    3. `GRANT ALL PRIVILEGES ON uol_agile_db.* TO 'uol_admin'@'localhost';`
 3. Fill the following entries into the root `.env` file:
-    ```
-    DB_HOST='localhost'
-    DB_USER='uol_admin'
-    DB_PASS='DCQ2vrc2zmx'
-    DB_NAME='uol_agile_db'
-    ```
+   ```
+   DB_HOST='localhost'
+   DB_USER='uol_admin'
+   DB_PASS='DCQ2vrc2zmx'
+   DB_NAME='uol_agile_db'
+   JWT_SECRET='6c4075eb4c09b4349d295d3d5121406dd273b85bd1124a521c98293bf12ef9a0'
+   ```
 4. Prepare the database with the correct structure + example data:
    - `npm run prepare-db`
 5. Use one of the following npm scripts:
