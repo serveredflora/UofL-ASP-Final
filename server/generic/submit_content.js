@@ -6,7 +6,7 @@ const db = require("../db.js");
 const fs = require("fs");
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
-const uploadDirectory = path.join(__dirname,"..","..", "public", "assets", "content", "uploads");
+const uploadDirectory = path.join(__dirname, "..", "..", "public", "assets", "content", "uploads");
 
 // Ensure the upload directory exists
 if (!fs.existsSync(uploadDirectory)) {
@@ -27,20 +27,18 @@ const verifyToken = (req, res, next) => {
     const token = authHeader.split(" ")[1];
     jwt.verify(token, JWT_SECRET, (err, decoded) => {
       if (err) {
-
         return res.status(403).json({ error: "Token is invalid or expired" });
       }
       req.user = decoded;
       next();
     });
   } else {
-
     return res.status(401).json({ error: "Authorization header is required" });
   }
 };
 
 router.post("/posts/create/submit", verifyToken, (req, res) => {
-  console.log('arrived');
+  console.log("arrived");
   upload(req, res, async (err) => {
     if (err) {
       // Handle upload errors
@@ -49,26 +47,25 @@ router.post("/posts/create/submit", verifyToken, (req, res) => {
 
     // Extract the user ID from the verified token information
     const username = req.headers.username;
-    const user = await db('users').where({ username }).first();
+    const user = await db("users").where({ username }).first();
     const userId = user.id;
 
     // Extract post data from the request body
-    const { title, type, language, description } = req.body;
-    if (!title || !type || !language || !description || !req.file) {
+    const { title, type, languages, description } = req.body;
+    if (!title || !type || !languages || !description || !req.file) {
       return res.status(400).json({ error: "Missing required fields" });
     }
     const imagePath = `/assets/content/uploads/${req.file.filename}`;
     try {
       // Insert the new content entry into the database
-      const [contentId] = await db("contents")
-        .insert({
-          title,
-          type,
-          language,
-          description,
-          image_path: imagePath,
-          user_id: userId,
-        })
+      const [contentId] = await db("contents").insert({
+        title,
+        type,
+        languages,
+        description,
+        image_path: imagePath,
+        user_id: userId,
+      });
 
       // Respond with success message and content ID
       res.status(201).json({

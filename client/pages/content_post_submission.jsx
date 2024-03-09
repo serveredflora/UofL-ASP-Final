@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import SelectOptions from "../components/SelectOptions.jsx";
 import { Navigate, useNavigate } from "react-router-dom";
+import Dropdown from "../components/dropdown.jsx";
+import { filters } from "../config/content_index_filters.js";
+
+// TODO: add missing meta-data inputs to form...
 
 // Example data
 const contentTypes = {
@@ -8,15 +12,6 @@ const contentTypes = {
   article: "Article/Blog Post",
   event: "Event",
   video: "Video",
-};
-
-const languages = {
-  english: "English",
-  spanish: "Spanish",
-  mandarin: "Mandarin",
-  french: "French",
-  german: "German",
-  italian: "Italian",
 };
 
 // For multi-select, adjust as needed
@@ -27,12 +22,15 @@ const tagsOptions = {
   // Add more as needed
 };
 
+let languagesOption = { ...filters.agnostic.filters.language };
+languagesOption.selection = [];
+
 const ContentPostSubmission = () => {
   const [formData, setFormData] = useState({
     title: "",
     contentType: "",
     tags: [],
-    language: "",
+    languages: [],
     coverImage: null,
     description: "",
   });
@@ -40,6 +38,10 @@ const ContentPostSubmission = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const handleDropdownChange = (e, key, filter) => {
+    setFormData((prevState) => ({ ...prevState, [key]: filter.selection }));
   };
 
   const handleFileChange = (e) => {
@@ -65,9 +67,15 @@ const ContentPostSubmission = () => {
     const formDataToSend = new FormData();
     formDataToSend.append("title", formData.title);
     formDataToSend.append("type", formData.contentType);
-    formDataToSend.append("language", formData.language);
+    // formDataToSend.append("tags", formData.tags);
+    formDataToSend.append("languages", formData.languages);
+    // formDataToSend.append("app_platforms", formData.app_platforms);
+    // formDataToSend.append("app_pricing_models", formData.app_pricing_models);
     formDataToSend.append("description", formData.description);
     formDataToSend.append("coverImage", formData.coverImage);
+
+    // console.log(formData);
+    // console.log(formDataToSend);
 
     try {
       const response = await fetch("submit", {
@@ -120,14 +128,12 @@ const ContentPostSubmission = () => {
 
         {/* Tags Select - Adjust this in the way you like */}
         {/* Language Select */}
-        <label htmlFor="language">Language:</label>
-        <SelectOptions
-          name="language"
-          value={formData.language}
-          onChange={handleInputChange}
-          options={languages}
-          defaultOption="Select Language"
-        />
+        <div className="w-max mx-auto">
+          <Dropdown
+            data={languagesOption}
+            onChangeEvent={(e) => handleDropdownChange(e, "languages", languagesOption)}
+          />
+        </div>
 
         {/* Cover Image Input */}
         <label htmlFor="coverImage">Cover Image:</label>

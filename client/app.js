@@ -51,7 +51,7 @@ function App({}) {
       <Route path="/content/" element={<ContentIndex />} />
       <Route path="/account/" element={<Account />} />
       <Route path="/login/" element={<Login />} />
-      <Route path="/debug/" element={<Debug/>} />
+      <Route path="/debug/" element={<Debug />} />
 
       <Route
         path="/posts/create"
@@ -61,6 +61,7 @@ function App({}) {
           </ProtectedRoute>
         }
       />
+      <Route path="/posts/review" element={<ContentReviewForm />} />
       <Route
         path="/register/"
         element={
