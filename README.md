@@ -12,7 +12,6 @@
 3. Fill the following entries into the root `.env` file:
    ```
    DB_HOST='localhost'
-   DB_PORT='3306'
    DB_USER='uol_admin'
    DB_PASS='DCQ2vrc2zmx'
    DB_NAME='uol_agile_db'
