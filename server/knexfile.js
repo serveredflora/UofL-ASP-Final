@@ -1,8 +1,9 @@
 require("dotenv").config({ path: "../.env" });
+const mariadb = require("knex-mariadb");
 
 module.exports = {
   development: {
-    client: "mysql",
+    client: mariadb,
     connection: {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
