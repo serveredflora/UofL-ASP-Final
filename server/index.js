@@ -4,7 +4,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const path = require("path");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const loginRouter = require("./auth/login");
 const registerRouter = require("./auth/register");
 const changePasswordRouter = require("./auth/change_password");
@@ -17,8 +17,8 @@ const port = 8000;
 app.use(express.json());
 app.use(
   cors({
-    allowedHeaders: ["Authorization", "Content-Type", "Username"],
-    origin: "*",
+    allowedHeaders: ['Authorization', 'Content-Type', 'Username'], 
+    origin: '*', 
   })
 );
 
@@ -37,7 +37,7 @@ app.use("/", submitContentRouter);
 async function asyncFunction() {
   let conn;
   try {
-    conn = mysql.createConnection({
+    conn = await mariadb.createConnection({
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
