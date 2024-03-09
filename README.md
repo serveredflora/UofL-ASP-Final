@@ -12,6 +12,7 @@
 3. Create a `.env` file in the root of the project and fill it with the following:
    ```
    DB_HOST='localhost'
+   DB_PORT='3306'
    DB_USER='uol_admin'
    DB_PASS='DCQ2vrc2zmx'
    DB_NAME='uol_agile_db'
