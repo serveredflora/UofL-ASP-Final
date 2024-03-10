@@ -86,13 +86,13 @@ export default function Dropdown({ data, onChangeEvent }) {
   return (
     <div className="relative">
       {/* Button to allow toggling the dropdown's collapsed state */}
-      <button
+      <a
         onClick={toggleOptionsVisibility}
         className="flex flex-row space-x-4 justify-between border-teal border-2 px-4 py-2 rounded-2xl"
       >
         <IconText data={data} />
         <OptionsIcon />
-      </button>
+      </a>
       {showOptions && optionsContainer}
     </div>
   );

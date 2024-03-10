@@ -55,17 +55,72 @@ router.post("/posts/create/submit", verifyToken, (req, res) => {
     if (!title || !type || !languages || !description || !req.file) {
       return res.status(400).json({ error: "Missing required fields" });
     }
+
     const imagePath = `/assets/content/uploads/${req.file.filename}`;
     try {
-      // Insert the new content entry into the database
-      const [contentId] = await db("contents").insert({
+      let rowData = {
         title,
         type,
         languages,
         description,
         image_path: imagePath,
         user_id: userId,
-      });
+      };
+
+      switch (type) {
+        case "app": {
+          const { price, appPlatforms, appPricingModel } = req.body;
+          if (!price || !appPlatforms || !appPricingModel) {
+            return res.status(400).json({ error: "Missing required fields" });
+          }
+
+          rowData.price = price;
+          rowData.app_platforms = appPlatforms;
+          rowData.app_pricing_model = appPricingModel;
+          break;
+        }
+        case "article": {
+          const { articlePublisherType, articleReadingTime } = req.body;
+          if (!articlePublisherType || !articleReadingTime) {
+            return res.status(400).json({ error: "Missing required fields" });
+          }
+
+          rowData.article_publisher_type = articlePublisherType;
+          rowData.article_reading_time = articleReadingTime;
+          break;
+        }
+        case "event": {
+          const { price, eventFormat, eventType, eventStartDate, eventEndDate, eventParticipantLimit } = req.body;
+          if (!price || !eventFormat || !eventType || !eventStartDate || !eventEndDate || !eventParticipantLimit) {
+            return res.status(400).json({ error: "Missing required fields" });
+          }
+
+          rowData.price = price;
+          rowData.event_format = eventFormat;
+          rowData.event_type = eventType;
+          rowData.event_start_date = eventStartDate;
+          rowData.event_end_date = eventEndDate;
+          rowData.event_participant_limit = eventParticipantLimit;
+
+          // TODO(noah): calculate the duration from the start and end dates...
+          rowData.event_duration = 3;
+          break;
+        }
+
+        case "video": {
+          const { videoPlatforms, videoTypes } = req.body;
+          if (!videoPlatforms || !videoTypes) {
+            return res.status(400).json({ error: "Missing required fields" });
+          }
+
+          rowData.video_platforms = videoPlatforms;
+          rowData.video_types = videoTypes;
+          break;
+        }
+      }
+
+      // Insert the new content entry into the database
+      const [contentId] = await db("contents").insert(rowData);
 
       // Respond with success message and content ID
       res.status(201).json({

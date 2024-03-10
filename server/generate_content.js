@@ -30,19 +30,13 @@ function randomExclusiveSelection(arr, count) {
 }
 
 function dateToString(date) {
-  return `${date.getFullYear()}-${prefixPadString(
-    String(date.getMonth() + 1),
-    "0",
-    2
-  )}-${prefixPadString(String(date.getDate()), "0", 2)}`;
+  return `${date.getFullYear()}-${prefixPadString(String(date.getMonth() + 1), "0", 2)}-${prefixPadString(String(date.getDate()), "0", 2)}`;
 }
 
 function generateFakeDate() {
   // Source: https://stackoverflow.com/a/9035732
   var earliestDate = new Date(2020, 0, 1);
-  return new Date(
-    earliestDate.getTime() + Math.random() * (new Date().getTime() - earliestDate.getTime())
-  );
+  return new Date(earliestDate.getTime() + Math.random() * (new Date().getTime() - earliestDate.getTime()));
 }
 
 function generateFakeDateString() {
@@ -165,20 +159,11 @@ function generateFakeContent(amount) {
         break;
 
       case "video":
-        const videoPlatforms = [
-          "youtube",
-          "netflix",
-          "amazon_prime",
-          "apple_tv",
-          "tiktok",
-          "instagram",
-        ];
+        const videoPlatforms = ["youtube", "netflix", "amazon_prime", "apple_tv", "tiktok", "instagram"];
         const videoTypes = ["documentary", "informational", "guide"];
-        const videoPricingModels = ["free", "purchase", "rental", "subscription"];
 
         result.video_platforms = randomExclusiveSelection(videoPlatforms, randIntRange(1, 3)).join(",");
-        result.video_type = randomExclusiveSelection(videoTypes, randIntRange(1, 2)).join(",");
-        result.video_pricing_model = pickRandomInArray(videoPricingModels);
+        result.video_types = randomExclusiveSelection(videoTypes, randIntRange(1, 2)).join(",");
         break;
     }
 

@@ -21,6 +21,7 @@ export default function ContentIndex() {
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page") || "1"));
   const [maxPages, setMaxPages] = useState(0);
 
+  // TODO(noah): load filter state from url params
   console.log(contentData);
 
   const handlePageChange = (newPage) => {
@@ -153,7 +154,7 @@ function Filters({ onChange }) {
   }
 
   let expandDivider;
-  if (Object.keys(filters).length > 1 && filters.agnostic.filters.type.selection.length > 1) {
+  if (Object.keys(filters).length > 1 && filters.agnostic.filters.type.selection.length >= 1) {
     expandDivider = (
       <div className="flex flex-row space-x-4">
         <div className="flex-grow h-0.5 my-auto bg-teal"></div>

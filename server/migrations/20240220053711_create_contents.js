@@ -24,8 +24,7 @@ exports.up = function (knex) {
     table.string("event_duration").defaultTo(null);
     table.integer("event_participant_limit").defaultTo(null);
     table.string("video_platforms").defaultTo(null);
-    table.string("video_type").defaultTo(null);
-    table.string("video_pricing_model").defaultTo(null);
+    table.string("video_types").defaultTo(null);
 
     table.boolean("approved").notNullable().defaultTo(false);
     table.integer("user_id").unsigned().notNullable();
