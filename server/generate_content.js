@@ -17,7 +17,12 @@ function prefixPadString(str, char, targetLength) {
   return str;
 }
 
+// Selects a given amount of elements randomly from the array (exclusive, no repeats)
 function randomExclusiveSelection(arr, count) {
+  if (arr.length < count) {
+    throw new Error("Count exceeds array size, repeats will occur...");
+  }
+
   let results = [];
   let remaining = [...arr];
   for (let i = 0; i < count; i++) {
@@ -29,10 +34,12 @@ function randomExclusiveSelection(arr, count) {
   return results;
 }
 
+// Format a date to a string (YYYY-MM-DD) with zero padding to remain consistent
 function dateToString(date) {
   return `${date.getFullYear()}-${prefixPadString(String(date.getMonth() + 1), "0", 2)}-${prefixPadString(String(date.getDate()), "0", 2)}`;
 }
 
+// Randomly generates a date between the fixed "earliest date" and today
 function generateFakeDate() {
   // Source: https://stackoverflow.com/a/9035732
   var earliestDate = new Date(2020, 0, 1);
@@ -49,6 +56,7 @@ function dateStringInDays(str) {
 
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   // Source: https://stackoverflow.com/a/2627493
+  // Uses unix epoch date as day 0
   return Math.round((date - new Date(1970, 0, 1)) / ONE_DAY_IN_MS);
 }
 
@@ -111,18 +119,17 @@ function generateFakeContent(amount) {
 
     result.languages = randomExclusiveSelection(language, randIntRange(1, 4)).join(",");
 
-    // result.publishDate = generateFakeDateString(); // when the content was added to the DB
-    // result.tags = randomExclusiveSelection(tags, randIntRange(2, 4)); // tags for filtering
-
     result.title = randomExclusiveSelection(nameWords, randIntRange(2, 4)).join(" ");
     result.description = 'crazy "hot of the press" info right here!'; // brief info about the content
 
-    // result.url = "/"; // link to content externally, for now just the homepage...
+    // result.url = "/"; // link to content which exists externally. for now, just the homepage...
     result.image_path = "https://placehold.co/300x150/DEEFEC/154752/svg"; // cover image
 
+    // Assign to random seed users
     result.user_id = randIntRange(1, 5);
     result.approved = randIntRange(0, 1) == 1;
 
+    // Add additional meta-data based on content type
     switch (result.type) {
       case "app":
         const appPlatforms = ["android", "ios", "web"];
@@ -166,13 +173,12 @@ function generateFakeContent(amount) {
         result.video_types = randomExclusiveSelection(videoTypes, randIntRange(1, 2)).join(",");
         break;
     }
-
-    results.push(result);
   }
 
   return results;
 }
 
+// Generate and save the fake content to a JSON file (so that we can all seed the database
+// with the same content)
 let fakeContent = generateFakeContent(randIntRange(120, 240));
-
 fs.writeFileSync("./fake_content.json", JSON.stringify(fakeContent), "utf-8");
