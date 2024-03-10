@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import CardGrid from "../components/card_grid.jsx";
 
+// TODO(noah): dynamically populate the home-page with content data (pre-cache the data on the server side?)
+
 const events = [
   {
     name: "Recycling Bins",
@@ -112,7 +114,7 @@ function Header({ data }) {
 
 function EventHighlights({ data }) {
   return (
-    <div className="flex flex-col space-y-8 adaptive-margin">
+    <div className="component-container-8">
       <h2>Event Highlights</h2>
       <div className="flex flex-col space-y-16">
         {data.map((data, i) => (
@@ -149,8 +151,6 @@ function BlogPostCardDetail({ data }) {
   );
 }
 
-// TODO(noah): Instead of blog posts, this should be the first 3
-//             un-filtered entries of the content index
 function BlogPostCards({ data }) {
   return <CardGrid title="Latest Blog Posts" data={data} DetailComponent={BlogPostCardDetail} />;
 }
@@ -182,7 +182,7 @@ function AppsBanner({ data }) {
 
 function AboutCard({ data }) {
   return (
-    <div className="flex flex-col space-y-4 adaptive-margin">
+    <div className="component-container-4">
       <h2>About Us</h2>
       <div className="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-8">
         <img src={data.imgSrc} className="rounded-2xl"></img>
@@ -198,7 +198,6 @@ function AboutCard({ data }) {
 }
 
 export default function Home() {
-  // TODO(noah): dynamically populate the home-page with content data (pre-cache the data on the server side?)
   return (
     <div className="flex flex-col space-y-16">
       <Header data={header} />

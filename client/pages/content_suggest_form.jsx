@@ -59,7 +59,7 @@ const ContentSuggestForm = () => {
   };
 
   return (
-    <div className="flex flex-col space-y-4 adaptive-margin">
+    <div className="component-container-4">
       <h2>Submit Content Suggestion</h2>
       <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
         <div className="flex flex-col space-y-2">

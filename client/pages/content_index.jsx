@@ -3,14 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import Dropdown from "../components/dropdown.jsx";
 import CardGrid from "../components/card_grid.jsx";
 import Pagination from "../components/pagination.jsx";
-import {
-  DevicePhoneMobileIcon,
-  NewspaperIcon,
-  VideoCameraIcon,
-  CalendarIcon,
-  ChevronUpIcon,
-  ChevronDownIcon,
-} from "@heroicons/react/20/solid";
+import { DevicePhoneMobileIcon, NewspaperIcon, VideoCameraIcon, CalendarIcon, ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import IconText from "../components/icon_text.jsx";
 import { filters } from "../config/content_index_filters.js";
 import { dateStringInDays, dateToString, todayInDays } from "../utils";
@@ -58,11 +51,7 @@ export default function ContentIndex() {
   return (
     <div className="flex flex-col space-y-16">
       <Filters onChange={handleFilterChange} />
-      <CardGrid
-        title={`Found Entries (Page ${currentPage})`}
-        data={filteredContentData}
-        DetailComponent={ContentDetail}
-      />
+      <CardGrid title={`Found Entries (Page ${currentPage})`} data={filteredContentData} DetailComponent={ContentDetail} />
       <Pagination currentPage={currentPage} maxPages={maxPages} onChange={handlePageChange} />
     </div>
   );
@@ -90,9 +79,7 @@ function updateSearchParams(searchParams, setSearchParams) {
         return;
       }
 
-      params[key] = filter.allowMultipleSelections
-        ? filter.selection.join(",")
-        : filter.selection;
+      params[key] = filter.allowMultipleSelections ? filter.selection.join(",") : filter.selection;
     });
   });
 
@@ -172,7 +159,7 @@ function Filters({ onChange }) {
   }
 
   return (
-    <div className="flex flex-col space-y-8 adaptive-margin">
+    <div className="component-container-8">
       <h2>Filters</h2>
       <form className="flex flex-col space-y-4" onSubmit={(e) => e.preventDefault()}>
         {Object.keys(filters).map((category_key) => {

@@ -313,7 +313,7 @@ const ContentPostSubmission = () => {
   }
 
   return (
-    <div className="flex flex-col space-y-4 adaptive-margin">
+    <div className="component-container-4">
       <h2>Create Content Post</h2>
       <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
         {/* Title Input */}
