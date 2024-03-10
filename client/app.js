@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, RouterProvider, Routes, Outlet, createBrowserRouter, createRoutesFromElements } from "react-router-dom";
-import { UserProvider } from "./context/UserContext.jsx";
+import { UserProvider } from "./context/user_context.jsx";
 // Partials
 import Navigation from "./partials/navigation.jsx";
 import Footer from "./partials/footer.jsx";
@@ -16,10 +16,10 @@ import Register from "./pages/register.jsx";
 import PageNotFound from "./pages/page_not_found.jsx";
 
 // Guard
-import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import ProtectedRoute from "./components/protected_route.jsx";
 
 // Components
-import OnlyGuestUsers from "./components/OnlyGuestUsers.jsx";
+import OnlyGuestUsers from "./components/only_guest_users.jsx";
 
 // Debug
 import Debug from "./pages/debug_page.jsx";

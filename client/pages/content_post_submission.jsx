@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SelectOptions from "../components/SelectOptions.jsx";
+import SelectOptions from "../components/select_options.jsx";
 import { Navigate, useNavigate } from "react-router-dom";
 import Dropdown from "../components/dropdown.jsx";
 import { filters } from "../config/content_index_filters.js";

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { useUser } from "../context/UserContext.jsx";
-
+import { useUser } from "../context/user_context.jsx";
 
 export default function Account() {
   // State management
@@ -54,7 +53,6 @@ export default function Account() {
         setError("");
         // window.dispatchEvent(new CustomEvent('accountChanged'));
         updateUserState();
-
       } else {
         setError(data.error || "An error occurred");
       }
@@ -74,10 +72,7 @@ export default function Account() {
   return (
     <div className="flex flex-col space-y-8 items-center">
       {successMessage && (
-        <div
-          className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
-          role="alert"
-        >
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
           <span className="block sm:inline">{successMessage}</span>
         </div>
       )}
@@ -108,10 +103,7 @@ export default function Account() {
           value={password}
           onChange={handlePasswordChange}
         />
-        <button
-          type="submit"
-          className="bg-white text-black px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-        >
+        <button type="submit" className="bg-white text-black px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
           Login
         </button>
       </form>
