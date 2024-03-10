@@ -33,6 +33,7 @@
   }
 
   input,
+  a.dropdown,
   select,
   textarea {
     @apply !text-teal;
@@ -40,6 +41,13 @@
     @apply !border-teal;
     @apply !border-2;
     @apply !rounded-2xl;
+    @apply transition-colors;
+    @apply duration-200;
+    @apply ease-in-out;
+  }
+
+  .input-error {
+    @apply text-red-500;
   }
 
   [type="checkbox"] {
@@ -51,8 +59,18 @@
   }
 
   [type="text"],
+  [type="url"],
+  [type="number"],
   [type="password"],
-  [type="file"] {
+  [type="file"],
+  a.dropdown,
+  select,
+  textarea {
+    @apply !ring-0;
+    @apply hover:!bg-teal-light;
+    @apply hover:!bg-opacity-25;
+    @apply focus:!bg-opacity-50;
+    @apply focus:!bg-teal-light;
     @apply px-4;
     @apply py-2;
   }
@@ -102,4 +120,17 @@
     @apply text-teal;
     @apply hover:bg-teal-mid;
   }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.input-error {
+  animation: fadeIn 0.5s;
 }

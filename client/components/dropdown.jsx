@@ -83,14 +83,17 @@ export default function Dropdown({ data, onChangeEvent }) {
     }
   };
 
+  // Append current selection count to text (only for checkbox dropdowns)
+  let data_copy = { text: data.text, icon: { ...data.icon } };
+  if (data.allowMultipleSelections) {
+    data_copy.text = `${data.text} (${data.selection.length})`;
+  }
+
   return (
     <div className="relative">
       {/* Button to allow toggling the dropdown's collapsed state */}
-      <a
-        onClick={toggleOptionsVisibility}
-        className="flex flex-row space-x-4 justify-between border-teal border-2 px-4 py-2 rounded-2xl"
-      >
-        <IconText data={data} />
+      <a onClick={toggleOptionsVisibility} className="flex flex-row space-x-4 justify-between dropdown">
+        <IconText data={data_copy} />
         <OptionsIcon />
       </a>
       {showOptions && optionsContainer}

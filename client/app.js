@@ -1,14 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-  BrowserRouter,
-  Route,
-  RouterProvider,
-  Routes,
-  Outlet,
-  createBrowserRouter,
-  createRoutesFromElements,
-} from "react-router-dom";
+import { BrowserRouter, Route, RouterProvider, Routes, Outlet, createBrowserRouter, createRoutesFromElements } from "react-router-dom";
 import { UserProvider } from "./context/UserContext.jsx";
 // Partials
 import Navigation from "./partials/navigation.jsx";
@@ -17,7 +9,7 @@ import Footer from "./partials/footer.jsx";
 import Home from "./pages/home.jsx";
 import ContentIndex from "./pages/content_index.jsx";
 import ContentPostSubmission from "./pages/content_post_submission.jsx";
-// import ContentReviewForm from "./pages/ContentReviewFormV2.jsx";
+import ContentSuggestForm from "./pages/content_suggest_form.jsx";
 import Account from "./pages/account.jsx";
 import Login from "./pages/login.jsx";
 import Register from "./pages/register.jsx";
@@ -54,14 +46,14 @@ function App({}) {
       <Route path="/debug/" element={<Debug />} />
 
       <Route
-        path="/posts/create"
+        path="/posts/create/"
         element={
           <ProtectedRoute>
             <ContentPostSubmission />
           </ProtectedRoute>
         }
       />
-      {/* <Route path="/posts/review" element={<ContentReviewForm />} /> */}
+      <Route path="/posts/suggest/" element={<ContentSuggestForm />} />
       <Route
         path="/register/"
         element={
