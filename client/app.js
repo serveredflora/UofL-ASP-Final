@@ -17,7 +17,7 @@ import Footer from "./partials/footer.jsx";
 import Home from "./pages/home.jsx";
 import ContentIndex from "./pages/content_index.jsx";
 import ContentPostSubmission from "./pages/content_post_submission.jsx";
-import ContentReviewForm from "./pages/ContentReviewFormV2.jsx";
+// import ContentReviewForm from "./pages/ContentReviewFormV2.jsx";
 import Account from "./pages/account.jsx";
 import Login from "./pages/login.jsx";
 import Register from "./pages/register.jsx";
@@ -61,7 +61,7 @@ function App({}) {
           </ProtectedRoute>
         }
       />
-      <Route path="/posts/review" element={<ContentReviewForm />} />
+      {/* <Route path="/posts/review" element={<ContentReviewForm />} /> */}
       <Route
         path="/register/"
         element={
