@@ -268,7 +268,7 @@ exports.seed = async function (knex) {
       title: "Volunteer1 Event",
       type: "event",
       languages: "english",
-      image_path: "/pic/blog.jpg",
+      image_path: "/pic/blog0.jpg",
       description: "A charitable event by volunteer1",
       user_id: 4,
       approved: true,
