@@ -1,20 +1,20 @@
 import { Link } from "react-router-dom";
 import CardGrid from "../components/card_grid.jsx";
 
-// TODO(noah): dynamically populate the home-page with content data (pre-cache the data on the server side?)
+// TODO - dynamically populate the home-page with content data (pre-cache the data on the server side?)
 
 const events = [
   {
     name: "Recycling Bins",
-    summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    url: "/events/recycling-bins/",
-    imgSrc: "/pic/home.jpg",
+    summary: "The effects of junk mail are far-reaching. Register for email billing for your electric bill, student loan payments, water bills, and anything else currently flooding your mailbox. ",
+    url: "https://www.treehugger.com/how-to-opt-out-junk-mail-why-you-should-5215233",
+    imgSrc: "/pic/event.jpg",
   },
   {
     name: "Green Fashion",
-    summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    url: "/events/green-fashion/",
-    imgSrc: "pic/home.jpg",
+    summary: "Learn how design can be used to create a greener world, from sustainable architecture and tiny homes to eco-friendly remodeling and urban planning.",
+    url: "https://www.treehugger.com/design-4846024",
+    imgSrc: "pic/event0.jpg",
   },
 ];
 
@@ -22,27 +22,27 @@ const header = {
   title: "Environmental Living Guide",
   url: "/content/",
   linkText: "Start Today >>",
-  imgSrc: "https://placehold.co/400x400/154752/DEEFEC/svg",
+  imgSrc: "pic/home.jpg",
 };
 
 const blogs = [
   {
     name: "Plant Pots",
-    summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    summary: "Do You Suffer From 'Scope Creep' in Your Garden?",
     url: "/blog/plant-plots/",
-    image_path: "https://placehold.co/300x150/DEEFEC/154752/svg",
+    image_path: "pic/blog0.jpg",
   },
   {
-    name: "Rent a Plot",
-    summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    name: "Eat the dandelion greens",
+    summary: "Though they can ruthlessly invade flower beds and vegetable gardens, weeds are wonderful in other ways.",
     url: "/blog/rent-a-plot/",
-    image_path: "https://placehold.co/300x150/DEEFEC/154752/svg",
+    image_path: "pic/blog2.jpg",
   },
   {
     name: "Plastic Fashion",
-    summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    summary: "Green clothing is taking over the runways worldwide—not only as a fashion statement but as a way of life. ",
     url: "/events/plastic-fashion/",
-    image_path: "https://placehold.co/300x150/DEEFEC/154752/svg",
+    image_path: "pic/blog1.jpg",
   },
 ];
 
@@ -52,19 +52,19 @@ const apps = {
       name: "iOS",
       elements: [
         {
-          name: "ios-1",
+          name: "Olio",
           iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
-          url: "/apps/ios-1/",
+          url: "https://olioapp.com/en/",
         },
         {
-          name: "ios-2",
+          name: "Refill",
           iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
-          url: "/apps/ios-2/",
+          url: "https://www.refill.org.uk/",
         },
         {
-          name: "ios-3",
+          name: "ailuna",
           iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
-          url: "/apps/ios-3/",
+          url: "https://ailuna.com/",
         },
       ],
     },
@@ -72,19 +72,19 @@ const apps = {
       name: "Android",
       elements: [
         {
-          name: "android-1",
+          name: "Olio",
           iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
-          url: "/apps/android-1/",
+          url: "https://olioapp.com/en/",
         },
         {
-          name: "android-2",
+          name: "Karma",
           iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
-          url: "/apps/android-2/",
+          url: "https://www.karma.life/en",
         },
         {
-          name: "android-3",
+          name: "Reco",
           iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
-          url: "/apps/android-3/",
+          url: "https://www.reco.shop/blogs/reco-blog/green-apps-for-an-eco-friendly-lifestyle",
         },
       ],
     },
@@ -95,7 +95,7 @@ const apps = {
 const about = {
   summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
   url: "/about/",
-  imgSrc: "https://placehold.co/250x150/154752/DEEFEC/svg",
+  imgSrc: "/pic/about us.jpg",
 };
 
 function Header({ data }) {
