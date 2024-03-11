@@ -102,6 +102,13 @@ exports.seed = async function (knex) {
       user_id: 4,
       approved: true,
       checked_by: 4,
+      event_start_date :"2023-07-25",
+      event_end_date : "2023-07-26",
+      event_duration : 1,
+      event_formats : "online",
+      event_type : "volunteering",
+      price : 2.99,
+      event_participant_limit: 50,
     },
     {
       title: "Volunteer1 Video",
