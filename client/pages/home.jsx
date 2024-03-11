@@ -100,7 +100,7 @@ const about = {
 
 function Header({ data }) {
   return (
-    <div className="flex flex-col-reverse md:flex-row md:justify-end space-y-8 space-y-reverse md:space-y-0 md:space-x-16 adaptive-margin">
+    <div className="flex flex-col-reverse md:flex-row md:justify-end space-y-8 space-y-reverse md:space-y-0 md:space-x-16 adaptive-margin object-fill h-48 w-96">
       <div className="flex flex-col justify-center md:items-end space-y-2 md:text-right object-fill h-48 w-96">
         <h1>{data.title}</h1>
         <Link to={data.url} className="w-max">
@@ -166,7 +166,7 @@ function AppsBanner({ data }) {
             <div className="flex flex-row justify-center space-x-4">
               {platform.elements.map((data) => (
                 <Link key={`${platform.name}-${data.name}`} to={data.url} className="rounded-full">
-                  <img src={data.iconSrc} className="rounded-full" alt={`App icon for ${data.name}`} />
+                  <img src={data.iconSrc} className="rounded-full object-scale-down h-16 w-16" alt={`App icon for ${data.name}`} />
                 </Link>
               ))}
             </div>
