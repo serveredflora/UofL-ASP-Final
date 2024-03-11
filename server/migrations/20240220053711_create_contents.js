@@ -17,7 +17,7 @@ exports.up = function (knex) {
     table.string("app_pricing_model").defaultTo(null);
     table.string("article_publisher_type").defaultTo(null);
     table.integer("article_reading_time").defaultTo(null);
-    table.string("event_format").defaultTo(null);
+    table.string("event_formats").defaultTo(null);
     table.string("event_type").defaultTo(null);
     table.string("event_start_date").defaultTo(null);
     table.string("event_end_date").defaultTo(null);

@@ -96,7 +96,7 @@ router.post("/posts/create/submit", verifyToken, (req, res) => {
           }
 
           rowData.price = price;
-          rowData.event_format = eventFormat;
+          rowData.event_formats = eventFormats;
           rowData.event_type = eventType;
           rowData.event_start_date = eventStartDate;
           rowData.event_end_date = eventEndDate;

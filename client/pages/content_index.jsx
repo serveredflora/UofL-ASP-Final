@@ -33,8 +33,6 @@ export default function ContentIndex() {
     });
   });
 
-  console.log(contentData);
-
   const handlePageChange = (newPage) => {
     let params = Object.fromEntries(searchParams);
     params.page = newPage.toString();
@@ -109,7 +107,6 @@ function updateSearchParams(searchParams, setSearchParams) {
 
 function applyFiltersToContentData(contentData) {
   // TODO(noah): apply filters!
-  console.log(contentData);
   const filterCategories = Object.keys(filters);
   return contentData.filter((entry) => {
     for (let i = 0; i < filterCategories.length; i++) {
@@ -230,6 +227,14 @@ function ContentDetail({ data }) {
         <h3 className="my-auto capitalize">{data.title}</h3>
       </div>
       <p className="pb-4">{data.description}</p>
+      <div className="text-[12px]">
+        {Object.keys(data).map((key) => {
+          if (!key.includes(data.type)) {
+            return;
+          }
+          return <p key={key}>{`"${key}": "${data[key]}"`}</p>;
+        })}
+      </div>
       <div className="flex flex-col space-y-2 !mt-auto">
         <div className="flex flex-row space-x-4 self-center">
           <Link to={`/content/${data.id}/`} className="button button-subtle w-max">

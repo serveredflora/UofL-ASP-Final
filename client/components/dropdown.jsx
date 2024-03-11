@@ -86,7 +86,13 @@ export default function Dropdown({ data, onChangeEvent }) {
   // Append current selection count to text (only for checkbox dropdowns)
   let data_copy = { text: data.text, icon: { ...data.icon } };
   if (data.allowMultipleSelections) {
-    data_copy.text = `${data.text} (${data.selection.length})`;
+    let data_count = data.selection.length;
+    // Empty element shouldn't count...
+    if (data.selection.includes("")) {
+      data_count -= 1;
+    }
+
+    data_copy.text = `${data.text} (${data_count})`;
   }
 
   return (
