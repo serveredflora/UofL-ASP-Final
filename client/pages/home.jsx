@@ -6,13 +6,13 @@ const events = [
     name: "Recycling Bins",
     summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     url: "/events/recycling-bins/",
-    imgSrc: "https://placehold.co/300x150/154752/DEEFEC/svg",
+    imgSrc: "/pic/home.jpg",
   },
   {
     name: "Green Fashion",
     summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     url: "/events/green-fashion/",
-    imgSrc: "https://placehold.co/300x150/154752/DEEFEC/svg",
+    imgSrc: "pic/home.jpg",
   },
 ];
 
