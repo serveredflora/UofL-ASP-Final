@@ -2,20 +2,18 @@ import { Link } from "react-router-dom";
 
 const footer = [
   {
-    name: "Column 1",
+    name: "Environmental Friendly Living",
     elements: [
       { name: "Home", url: "/" },
-      { name: "Events", url: "/events/" },
-      { name: "Blogs", url: "/blogs/" },
       { name: "Apps", url: "/apps/" },
+      { name: "Blogs", url: "/blogs/" },
+      { name: "Events", url: "/events/" },
+      { name: "Videos", url: "/videos/" },
     ],
   },
   {
-    name: "Column 2",
-    elements: [
-      { name: "About", url: "/about/" },
-      { name: "Contact", url: "/contact/" },
-    ],
+    name: "Contact",
+    elements: [{ name: "About", url: "/about/" }],
   },
 ];
 
