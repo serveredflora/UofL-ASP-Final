@@ -6,15 +6,17 @@ import CardGrid from "../components/card_grid.jsx";
 const events = [
   {
     name: "Recycling Bins",
-    summary: "The effects of junk mail are far-reaching. Register for email billing for your electric bill, student loan payments, water bills, and anything else currently flooding your mailbox. ",
+    summary:
+      "The effects of junk mail are far-reaching. Register for email billing for your electric bill, student loan payments, water bills, and anything else currently flooding your mailbox. ",
     url: "https://www.treehugger.com/how-to-opt-out-junk-mail-why-you-should-5215233",
     imgSrc: "/pic/event.jpg",
   },
   {
     name: "Green Fashion",
-    summary: "Learn how design can be used to create a greener world, from sustainable architecture and tiny homes to eco-friendly remodeling and urban planning.",
+    summary:
+      "Learn how design can be used to create a greener world, from sustainable architecture and tiny homes to eco-friendly remodeling and urban planning.",
     url: "https://www.treehugger.com/design-4846024",
-    imgSrc: "pic/event0.jpg",
+    imgSrc: "/pic/event0.jpg",
   },
 ];
 
@@ -22,7 +24,7 @@ const header = {
   title: "Environmental Living Guide",
   url: "/content/",
   linkText: "Start Today >>",
-  imgSrc: "pic/home.jpg",
+  imgSrc: "/pic/home.jpg",
 };
 
 const blogs = [
@@ -30,19 +32,19 @@ const blogs = [
     name: "Plant Pots",
     summary: "Do You Suffer From 'Scope Creep' in Your Garden?",
     url: "https://www.treehugger.com/scope-creep-in-your-garden-7967724",
-    image_path: "pic/blog0.jpg",
+    image_path: "/pic/blog0.jpg",
   },
   {
     name: "Eat the dandelion greens",
     summary: "Though they can ruthlessly invade flower beds and vegetable gardens, weeds are wonderful in other ways.",
     url: "https://www.treehugger.com/eat-dandelions-edible-garden-weeds-4858806",
-    image_path: "pic/blog2.jpg",
+    image_path: "/pic/blog2.jpg",
   },
   {
     name: "Plastic Fashion",
     summary: "Green clothing is taking over the runways worldwide—not only as a fashion statement but as a way of life. ",
     url: "https://velvety.com.au/blogs/blog/what-is-green-fashion-1",
-    image_path: "pic/blog1.jpg",
+    image_path: "/pic/blog1.jpg",
   },
 ];
 
@@ -93,21 +95,22 @@ const apps = {
 };
 
 const about = {
-  summary: "We are a socially responsible company driven to provide everyone with actionable information and services so that everyone can live a sustainable life.",
+  summary:
+    "We are a socially responsible company driven to provide everyone with actionable information and services so that everyone can live a sustainable life.",
   url: "/about/",
   imgSrc: "/pic/about us.jpg",
 };
 
 function Header({ data }) {
   return (
-    <div className="flex flex-col-reverse md:flex-row md:justify-end space-y-8 space-y-reverse md:space-y-0 md:space-x-16 adaptive-margin object-fill h-48 w-96">
-      <div className="flex flex-col justify-center md:items-end space-y-2 md:text-right object-fill h-48 w-96">
+    <div className="flex flex-col-reverse lg:flex-row lg:justify-end space-y-8 space-y-reverse lg:space-y-0 lg:space-x-16 adaptive-margin">
+      <div className="flex flex-col justify-center lg:items-end space-y-2 lg:text-right">
         <h1>{data.title}</h1>
         <Link to={data.url} className="w-max">
           {data.linkText}
         </Link>
       </div>
-      <img src={data.imgSrc} className="rounded-2xl"></img>
+      <img src={data.imgSrc} className="lg:max-w-[600px] rounded-2xl" />
     </div>
   );
 }
@@ -131,7 +134,7 @@ function EventHighlights({ data }) {
                 View More >>
               </Link>
             </div>
-            <img src={data.imgSrc} className="rounded-2xl"></img>
+            <img src={data.imgSrc} className="rounded-2xl md:w-[350px] md:h-[150px] object-cover" />
           </div>
         ))}
       </div>
