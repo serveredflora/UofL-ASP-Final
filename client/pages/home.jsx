@@ -53,17 +53,17 @@ const apps = {
       elements: [
         {
           name: "Olio",
-          iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
+          iconSrc: "/pic/oilo.png",
           url: "https://olioapp.com/en/",
         },
         {
           name: "Refill",
-          iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
+          iconSrc: "/pic/refill.png",
           url: "https://www.refill.org.uk/",
         },
         {
           name: "ailuna",
-          iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
+          iconSrc: "/pic/icon.png",
           url: "https://ailuna.com/",
         },
       ],
@@ -73,17 +73,17 @@ const apps = {
       elements: [
         {
           name: "Olio",
-          iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
+          iconSrc: "/pic/oilo.png",
           url: "https://olioapp.com/en/",
         },
         {
           name: "Karma",
-          iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
+          iconSrc: "/pic/icon2.png",
           url: "https://www.karma.life/en",
         },
         {
           name: "Reco",
-          iconSrc: "https://placehold.co/64x64/131313/E1E1E1/svg",
+          iconSrc: "/pic/icon1.png",
           url: "https://www.reco.shop/blogs/reco-blog/green-apps-for-an-eco-friendly-lifestyle",
         },
       ],
@@ -100,8 +100,8 @@ const about = {
 
 function Header({ data }) {
   return (
-    <div className="flex flex-col-reverse md:flex-row md:justify-end space-y-8 space-y-reverse md:space-y-0 md:space-x-16 adaptive-margin object-fill h-48 w-96">
-      <div className="flex flex-col justify-center md:items-end space-y-2 md:text-right">
+    <div className="flex flex-col-reverse md:flex-row md:justify-end space-y-8 space-y-reverse md:space-y-0 md:space-x-16 adaptive-margin">
+      <div className="flex flex-col justify-center md:items-end space-y-2 md:text-right object-fill h-48 w-96">
         <h1>{data.title}</h1>
         <Link to={data.url} className="w-max">
           {data.linkText}
