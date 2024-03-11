@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Route, RouterProvider, Routes, Outlet, createBrowserRouter, createRoutesFromElements } from "react-router-dom";
+import { BrowserRouter, Route, RouterProvider, Routes, Outlet, createBrowserRouter, createRoutesFromElements, Navigate } from "react-router-dom";
 import { UserProvider } from "./context/user_context.jsx";
 // Partials
 import Navigation from "./partials/navigation.jsx";
@@ -41,6 +41,13 @@ function App({}) {
     <Route element={<PageTemplate />}>
       <Route path="/" element={<Home />} />
       <Route path="/content/" element={<ContentIndex />} />
+
+      {/* Short-cuts to view specific content types in the content index */}
+      <Route path="/apps/*" element={<Navigate to="/content/?type=app" />} />
+      <Route path="/blogs/*" element={<Navigate to="/content/?type=article" />} />
+      <Route path="/events/*" element={<Navigate to="/content/?type=event" />} />
+      <Route path="/videos/*" element={<Navigate to="/content/?type=video" />} />
+
       <Route path="/account/" element={<Account />} />
       <Route path="/login/" element={<Login />} />
       <Route path="/debug/" element={<Debug />} />
