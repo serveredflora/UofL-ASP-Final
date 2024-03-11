@@ -148,7 +148,7 @@ function generateFakeContent(amount) {
         break;
 
       case "event":
-        const eventFormat = ["online_only", "hybrid", "in_person"];
+        const eventFormat = ["online", "in_person"];
         const eventTypes = ["volunteering", "educational", "networking"];
 
         let startDate = generateFakeDate();
@@ -159,10 +159,10 @@ function generateFakeContent(amount) {
         result.event_start_date = dateToString(startDate);
         result.event_end_date = dateToString(endDate);
         result.event_duration = durationInDays;
-        result.event_format = pickRandomInArray(eventFormat);
+        result.event_formats = randomExclusiveSelection(eventFormat, randIntRange(1, 2)).join(",");
         result.event_type = pickRandomInArray(eventTypes);
         result.price = randIntRange(0, 2) == 0 ? randIntRange(5, 100) + 0.99 : 0;
-        result.event_participant_limit = result.event_type != "online-only" ? randIntRange(10, 3000) : -1;
+        result.event_participant_limit = result.event_type != "online-only" ? randIntRange(10, 1500) : -1;
         break;
 
       case "video":
@@ -173,6 +173,8 @@ function generateFakeContent(amount) {
         result.video_types = randomExclusiveSelection(videoTypes, randIntRange(1, 2)).join(",");
         break;
     }
+
+    results.push(result);
   }
 
   return results;

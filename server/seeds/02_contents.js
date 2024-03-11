@@ -2,12 +2,13 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
+const path = require("path");
 const fs = require("fs");
 
 exports.seed = async function (knex) {
   await knex("contents").del();
 
-  const data = fs.readFileSync("./fake_content.json");
+  const data = fs.readFileSync(path.join(__dirname, "..", "fake_content.json"));
   contentData = JSON.parse(data);
 
   return knex("contents").insert(contentData);

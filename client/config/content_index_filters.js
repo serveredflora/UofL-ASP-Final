@@ -217,7 +217,7 @@ export let filters = {
           { key: "in_person", text: "In-Person" },
         ],
         applyToEntry: (entry, selection) => {
-          return entry.type != "event" || selection.includes(entry.event_format);
+          return entry.type != "event" || selection.some((s) => entry.event_formats.split(",").includes(s));
         },
       },
       event_participant_limit: {

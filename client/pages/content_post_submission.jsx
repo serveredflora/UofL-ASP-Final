@@ -57,7 +57,7 @@ const ContentPostSubmission = () => {
     appPricingModel: "",
     articlePublisherType: "",
     articleReadingTime: 0,
-    eventFormat: "",
+    eventFormats: "",
     eventType: "",
     eventStartDate: "",
     eventEndDate: "",
@@ -65,33 +65,6 @@ const ContentPostSubmission = () => {
     videoPlatforms: [],
     videoTypes: [],
   });
-
-  // const clearAppData = () => {
-  //   formData.appPlatforms = null;
-  //   formData.appPricingModel = null;
-  // };
-
-  // const clearArticleData = () => {
-  //   formData.price = 0.0;
-  //   formData.articlePublisherType = null;
-  //   formData.articleReadingTime = null;
-  // };
-
-  // const clearEventData = () => {
-  //   formData.eventFormat = null;
-  //   formData.eventType = null;
-  //   formData.eventStartDate = null;
-  //   formData.eventEndDate = null;
-  //   formData.eventDuration = null;
-  //   formData.eventParticipationLimit = null;
-  // };
-
-  // const clearVideoData = () => {
-  //   formData.price = 0.0;
-  //   formData.videoPlatforms = null;
-  //   formData.videoType = null;
-  //   formData.videoPricingModel = null;
-  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -124,20 +97,6 @@ const ContentPostSubmission = () => {
 
     // TODO: somehow check that dropdowns are filled...
 
-    // Clear metadata
-    // if (formData.contentType != contentTypes.app) {
-    //   clearAppData();
-    // }
-    // if (formData.contentType != contentTypes.article) {
-    //   clearArticleData();
-    // }
-    // if (formData.contentType != contentTypes.event) {
-    //   clearEventData();
-    // }
-    // if (formData.contentType != contentTypes.video) {
-    //   clearVideoData();
-    // }
-
     const formDataToSend = new FormData();
     formDataToSend.append("title", formData.title);
     formDataToSend.append("type", formData.contentType);
@@ -160,7 +119,7 @@ const ContentPostSubmission = () => {
       }
       case "event": {
         formDataToSend.append("price", formData.price);
-        formDataToSend.append("eventFormat", formData.eventFormat);
+        formDataToSend.append("eventFormats", formData.eventFormats);
         formDataToSend.append("eventType", formData.eventType);
         formDataToSend.append("eventStartDate", formData.eventStartDate);
         formDataToSend.append("eventEndDate", formData.eventEndDate);
@@ -173,9 +132,6 @@ const ContentPostSubmission = () => {
         break;
       }
     }
-
-    console.log(formData);
-    console.log(formDataToSend);
 
     try {
       const response = await fetch("submit", {
@@ -248,7 +204,7 @@ const ContentPostSubmission = () => {
     case "event": {
       contentTypeSpecificOptions.push(priceOptions(0));
       contentTypeSpecificOptions.push(
-        <Dropdown key={1} data={eventFormatOptions} onChangeEvent={(e) => handleDropdownChange(e, "eventFormat", eventFormatOptions)} />
+        <Dropdown key={1} data={eventFormatOptions} onChangeEvent={(e) => handleDropdownChange(e, "eventFormats", eventFormatOptions)} />
       );
       contentTypeSpecificOptions.push(
         <Dropdown key={2} data={eventTypeOptions} onChangeEvent={(e) => handleDropdownChange(e, "eventType", eventTypeOptions)} />
