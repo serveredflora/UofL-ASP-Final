@@ -227,19 +227,12 @@ function ContentDetail({ data }) {
         <h3 className="my-auto capitalize">{data.title}</h3>
       </div>
       <p className="pb-4">{data.description}</p>
-      <div className="text-[12px]">
-        {Object.keys(data).map((key) => {
-          if (!key.includes(data.type)) {
-            return;
-          }
-          return <p key={key}>{`"${key}": "${data[key]}"`}</p>;
-        })}
-      </div>
       <div className="flex flex-col space-y-2 !mt-auto">
         <div className="flex flex-row space-x-4 self-center">
-          <Link to={`/content/${data.id}/`} className="button button-subtle w-max">
+          {/* TODO: re-add once implemented */}
+          {/* <Link to={`/content/${data.id}/`} className="button button-subtle w-max">
             View Details
-          </Link>
+          </Link> */}
           <Link to={data.url} className="self-center button button-light w-max">
             Visit
           </Link>
