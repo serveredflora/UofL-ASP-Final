@@ -14,7 +14,25 @@ export default function ContentIndex() {
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page") || "1"));
   const [maxPages, setMaxPages] = useState(0);
 
-  // TODO(noah): load filter state from url params
+  // Load search params state into filter
+  const filterCategories = Object.keys(filters);
+  filterCategories.forEach((category_key) => {
+    Object.keys(filters[category_key].filters).map((key) => {
+      let filter = filters[category_key].filters[key];
+      let value = searchParams.get(key);
+
+      if (value == null) {
+        return;
+      }
+
+      if (filter.allowMultipleSelections) {
+        filter.selection = value.split(",");
+      } else {
+        filter.selection = value;
+      }
+    });
+  });
+
   console.log(contentData);
 
   const handlePageChange = (newPage) => {
