@@ -3,14 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import Dropdown from "../components/dropdown.jsx";
 import CardGrid from "../components/card_grid.jsx";
 import Pagination from "../components/pagination.jsx";
-import {
-  DevicePhoneMobileIcon,
-  NewspaperIcon,
-  VideoCameraIcon,
-  CalendarIcon,
-  ChevronUpIcon,
-  ChevronDownIcon,
-} from "@heroicons/react/20/solid";
+import { DevicePhoneMobileIcon, NewspaperIcon, VideoCameraIcon, CalendarIcon, ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import IconText from "../components/icon_text.jsx";
 import { filters } from "../config/content_index_filters.js";
 import { dateStringInDays, dateToString, todayInDays } from "../utils";
@@ -20,6 +13,9 @@ export default function ContentIndex() {
   const [contentData, setContentData] = useState([]);
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page") || "1"));
   const [maxPages, setMaxPages] = useState(0);
+
+  // TODO(noah): load filter state from url params
+  console.log(contentData);
 
   const handlePageChange = (newPage) => {
     let params = Object.fromEntries(searchParams);
@@ -55,11 +51,7 @@ export default function ContentIndex() {
   return (
     <div className="flex flex-col space-y-16">
       <Filters onChange={handleFilterChange} />
-      <CardGrid
-        title={`Found Entries (Page ${currentPage})`}
-        data={filteredContentData}
-        DetailComponent={ContentDetail}
-      />
+      <CardGrid title={`Found Entries (Page ${currentPage})`} data={filteredContentData} DetailComponent={ContentDetail} />
       <Pagination currentPage={currentPage} maxPages={maxPages} onChange={handlePageChange} />
     </div>
   );
@@ -87,9 +79,7 @@ function updateSearchParams(searchParams, setSearchParams) {
         return;
       }
 
-      params[key] = filter.allowMultipleSelections
-        ? filter.selection.join(",")
-        : filter.selection;
+      params[key] = filter.allowMultipleSelections ? filter.selection.join(",") : filter.selection;
     });
   });
 
@@ -101,7 +91,30 @@ function updateSearchParams(searchParams, setSearchParams) {
 
 function applyFiltersToContentData(contentData) {
   // TODO(noah): apply filters!
-  return contentData;
+  console.log(contentData);
+  const filterCategories = Object.keys(filters);
+  return contentData.filter((entry) => {
+    for (let i = 0; i < filterCategories.length; i++) {
+      let filterCategory = filters[filterCategories[i]];
+      if ("activeCheck" in filterCategory && !filterCategory.activeCheck(filters)) {
+        continue;
+      }
+
+      let filterKeys = Object.keys(filterCategory.filters);
+      for (let j = 0; j < filterKeys.length; j++) {
+        let filter = filterCategory.filters[filterKeys[j]];
+        if ("activeCheck" in filter && !filter.activeCheck(filters)) {
+          continue;
+        }
+
+        if (!filter.applyToEntry(entry, filter.selection)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  });
 }
 
 function Filters({ onChange }) {
@@ -128,7 +141,7 @@ function Filters({ onChange }) {
   }
 
   let expandDivider;
-  if (filters.agnostic.filters.type.selection.length > 1) {
+  if (Object.keys(filters).length > 1 && filters.agnostic.filters.type.selection.length >= 1) {
     expandDivider = (
       <div className="flex flex-row space-x-4">
         <div className="flex-grow h-0.5 my-auto bg-teal"></div>
@@ -146,7 +159,7 @@ function Filters({ onChange }) {
   }
 
   return (
-    <div className="flex flex-col space-y-8 adaptive-margin">
+    <div className="component-container-8">
       <h2>Filters</h2>
       <form className="flex flex-col space-y-4" onSubmit={(e) => e.preventDefault()}>
         {Object.keys(filters).map((category_key) => {
@@ -193,10 +206,10 @@ function ContentDetail({ data }) {
   return (
     <div className="flex flex-col space-y-2 w-full h-full">
       <div className="flex flex-row space-x-4 justify-center">
-        <div className="bg-teal-light px-2 py-1 rounded-full capitalize text-teal">
+        <div className="bg-teal-light px-2 py-1 rounded-full h-min capitalize text-teal">
           <IconText data={iconData[data.type]} />
         </div>
-        <h3 className="my-auto">{data.title}</h3>
+        <h3 className="my-auto capitalize">{data.title}</h3>
       </div>
       <p className="pb-4">{data.description}</p>
       <div className="flex flex-col space-y-2 !mt-auto">

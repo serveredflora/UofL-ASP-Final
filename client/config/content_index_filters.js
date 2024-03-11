@@ -18,9 +18,7 @@ import {
   MegaphoneIcon,
   TvIcon,
 } from "@heroicons/react/20/solid";
-// import { todayInDays } from "../pages/content_index.jsx";
-import { todayInDays } from '../utils';
-
+import { todayInDays } from "../utils";
 
 // TODO(noah): add some small info text before options for each dropdown to inform the user what
 //             the filter does
@@ -65,29 +63,6 @@ export let filters = {
           return selection.includes(entry.type);
         },
       },
-      publish_age: {
-        text: "Published Age",
-        icon: { Component: ClockIcon, includeText: true },
-        allowMultipleSelections: false,
-        selection: -1,
-        options: [
-          { key: 7, text: "Last Week" },
-          { key: 30, text: "Last Month" },
-          { key: 90, text: "Last 3 Months" },
-          { key: 365, text: "Last Year" },
-          { key: 730, text: "Last 2 Years" },
-          { key: -1, text: "Everything" },
-        ],
-        applyToEntry: (entry, selection) => {
-          return (
-            selection == -1 ||
-            todayInDays - dateStringInDays(entry.publishDate) <= Number(selection)
-          );
-        },
-      },
-      // [type-agnostic] tags
-      // TODO(noah): ...
-
       language: {
         text: "Language",
         icon: { Component: LanguageIcon, includeText: true },
@@ -102,7 +77,7 @@ export let filters = {
           { key: "italian", text: "Italian" },
         ],
         applyToEntry: (entry, selection) => {
-          return selection.some((s) => entry.language.includes(s));
+          return selection.some((s) => entry.languages.includes(s));
         },
       },
       pricing_range: {
@@ -120,11 +95,7 @@ export let filters = {
           { key: -1, text: "Unlimited" },
         ],
         applyToEntry: (entry, selection) => {
-          return (
-            selection == -1 ||
-            ["article", "video"].includes(entry.type) ||
-            entry.typeData.price <= Number(selection)
-          );
+          return selection == -1 || ["article", "video"].includes(entry.type) || entry.price <= Number(selection);
         },
       },
     },
@@ -147,9 +118,7 @@ export let filters = {
           { key: "ios", text: "iOS" },
         ],
         applyToEntry: (entry, selection) => {
-          return (
-            entry.type != "app" || selection.some((s) => entry.typeData.platform.includes(s))
-          );
+          return entry.type != "app" || selection.some((s) => entry.app_platforms.split(",").includes(s));
         },
       },
       app_pricing_model: {
@@ -166,7 +135,7 @@ export let filters = {
           { key: "subscription", text: "Subscription" },
         ],
         applyToEntry: (entry, selection) => {
-          return entry.type != "app" || selection.includes(entry.typeData.pricingModel);
+          return entry.type != "app" || selection.includes(entry.app_pricing_model);
         },
       },
     },
@@ -190,7 +159,7 @@ export let filters = {
           { key: "government", text: "Government" },
         ],
         applyToEntry: (entry, selection) => {
-          return entry.type != "article" || selection.includes(entry.typeData.publisherType);
+          return entry.type != "article" || selection.includes(entry.article_publisher_type);
         },
       },
       article_reading_time: {
@@ -207,11 +176,7 @@ export let filters = {
           { key: -1, text: "Unlimited" },
         ],
         applyToEntry: (entry, selection) => {
-          return (
-            selection == -1 ||
-            entry.type != "article" ||
-            entry.typeData.readingTimeInMinutes <= Number(selection)
-          );
+          return selection == -1 || entry.type != "article" || parseInt(entry.article_reading_time) <= parseInt(selection);
         },
       },
     },
@@ -237,11 +202,9 @@ export let filters = {
           { key: -1, text: "Unlimited" },
         ],
         applyToEntry: (entry, selection) => {
-          return (
-            selection == -1 ||
-            entry.type != "event" ||
-            todayInDays - dateStringInDays(entry.typeData.startDate) <= Number(selection)
-          );
+          // TODO(noah): FIX THIS!
+          return true;
+          // return selection == -1 || entry.type != "event" || todayInDays - dateStringInDays(entry.typeData.startDate) <= Number(selection);
         },
       },
       event_format: {
@@ -254,33 +217,7 @@ export let filters = {
           { key: "in_person", text: "In-Person" },
         ],
         applyToEntry: (entry, selection) => {
-          return entry.type != "event" || selection.includes(entry.typeData.format);
-        },
-      },
-      event_location_distance: {
-        text: "Event Location Distance",
-        icon: { Component: MapIcon, includeText: true },
-        activeCheck: (f) => {
-          return f.event.filters.event_format.selection.includes("in_person");
-        },
-        allowMultipleSelections: false,
-        selection: -1,
-        options: [
-          { key: 3, text: "<= 3km" },
-          { key: 10, text: "<= 10km" },
-          { key: 25, text: "<= 25km" },
-          { key: 50, text: "<= 50km" },
-          { key: 100, text: "<= 100km" },
-          { key: -1, text: "Unlimited" },
-        ],
-        applyToEntry: (entry, selection) => {
-          return true;
-
-          // TODO: calculate location of client, calculate distance and BOOM
-          // let locationDistance = entry.typeData.location;
-          // return (
-          //   selection == -1 || entry.type != "event" || locationDistance <= Number(selection)
-          // );
+          return entry.type != "event" || selection.includes(entry.event_format);
         },
       },
       event_participant_limit: {
@@ -298,11 +235,7 @@ export let filters = {
           { key: -1, text: "Unlimited" },
         ],
         applyToEntry: (entry, selection) => {
-          return (
-            selection == -1 ||
-            entry.type != "event" ||
-            entry.typeData.participantLimit <= Number(selection)
-          );
+          return selection == -1 || entry.type != "event" || parseInt(entry.event_participant_limit) <= parseInt(selection);
         },
       },
       event_type: {
@@ -316,7 +249,7 @@ export let filters = {
           { key: "networking", text: "Networking" },
         ],
         applyToEntry: (entry, selection) => {
-          return entry.type != "event" || selection.includes(entry.typeData.type);
+          return entry.type != "event" || selection.includes(entry.event_type);
         },
       },
     },
@@ -332,19 +265,17 @@ export let filters = {
         text: "Video Platform",
         icon: { Component: TvIcon, includeText: true },
         allowMultipleSelections: true,
-        selection: ["youtube", "netflix", "amazon prime", "apple tv", "tiktok", "instagram"],
+        selection: ["youtube", "netflix", "amazon_prime", "apple_tv", "tiktok", "instagram"],
         options: [
           { key: "youtube", text: "YouTube" },
           { key: "netflix", text: "Netflix" },
-          { key: "amazon prime", text: "Amazon Prime" },
-          { key: "apple tv", text: "Apple TV" },
+          { key: "amazon_prime", text: "Amazon Prime" },
+          { key: "apple_tv", text: "Apple TV" },
           { key: "tiktok", text: "TikTok" },
           { key: "instagram", text: "Instagram" },
         ],
         applyToEntry: (entry, selection) => {
-          return (
-            entry.type != "video" || selection.some((s) => entry.typeData.platform.includes(s))
-          );
+          return entry.type != "video" || selection.some((s) => entry.video_platforms.split(",").includes(s));
         },
       },
       video_type: {
@@ -358,39 +289,9 @@ export let filters = {
           { key: "guide", text: "Guide" },
         ],
         applyToEntry: (entry, selection) => {
-          return (
-            entry.type != "video" || selection.some((s) => entry.typeData.type.includes(s))
-          );
-        },
-      },
-      video_pricing_model: {
-        text: "Video Pricing Model",
-        activeCheck: (f) => {
-          return f.agnostic.filters.pricing_range.selection != "free";
-        },
-        icon: { Component: CurrencyDollarIcon, includeText: true },
-        allowMultipleSelections: true,
-        selection: ["free", "purchase", "rental", "subscription"],
-        options: [
-          { key: "free", text: "Free" },
-          { key: "purchase", text: "Purchase" },
-          { key: "rental", text: "Rental" },
-          { key: "subscription", text: "Subscription" },
-        ],
-        applyToEntry: (entry, selection) => {
-          return entry.type != "video" || selection.includes(entry.typeData.pricingModel);
+          return entry.type != "video" || selection.some((s) => entry.video_types.split(",").includes(s));
         },
       },
     },
   },
-  // template: {
-  //   text: "Template",
-  //   icon: { Component: CogIcon, includeText: true },
-  //   allowMultipleSelections: true,
-  //   selection: ["option"],
-  //   options: [{ key: "option", text: "Option" }],
-  //   applyToEntry: (entry, selection) => {
-  //     return true;
-  //   },
-  // },
 };

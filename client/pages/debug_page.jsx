@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 export default function Debug() {
   const [contents, setContents] = useState([]);
@@ -11,8 +11,8 @@ export default function Debug() {
       try {
         // Fetch data from the updated endpoint with pagination support
         const response = await fetch(`/generic/data/contents/page/${currentPage}`);
-        if (!response.ok) throw new Error('Network response was not ok');
-        const {data, currentPage: page, maxPages: max} = await response.json();
+        if (!response.ok) throw new Error("Network response was not ok");
+        const { data, currentPage: page, maxPages: max } = await response.json();
         setContents(data);
         setCurrentPage(page);
         setMaxPages(max);
@@ -30,7 +30,7 @@ export default function Debug() {
   };
 
   return (
-    <div className="flex flex-col space-y-8 adaptive-margin">
+    <div className="component-container-8">
       <h1>Debug Page</h1>
       {contents.length > 0 ? (
         <>
@@ -55,9 +55,15 @@ export default function Debug() {
             </tbody>
           </table>
           <div className="pagination">
-            <button onClick={() => handlePageChange(Math.max(1, currentPage - 1))} disabled={currentPage <= 1}>Prev</button>
-            <span>Page {currentPage} of {maxPages}</span>
-            <button onClick={() => handlePageChange(Math.min(maxPages, currentPage + 1))} disabled={currentPage >= maxPages}>Next</button>
+            <button onClick={() => handlePageChange(Math.max(1, currentPage - 1))} disabled={currentPage <= 1}>
+              Prev
+            </button>
+            <span>
+              Page {currentPage} of {maxPages}
+            </span>
+            <button onClick={() => handlePageChange(Math.min(maxPages, currentPage + 1))} disabled={currentPage >= maxPages}>
+              Next
+            </button>
           </div>
         </>
       ) : (

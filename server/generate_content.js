@@ -17,7 +17,12 @@ function prefixPadString(str, char, targetLength) {
   return str;
 }
 
+// Selects a given amount of elements randomly from the array (exclusive, no repeats)
 function randomExclusiveSelection(arr, count) {
+  if (arr.length < count) {
+    throw new Error("Count exceeds array size, repeats will occur...");
+  }
+
   let results = [];
   let remaining = [...arr];
   for (let i = 0; i < count; i++) {
@@ -29,20 +34,16 @@ function randomExclusiveSelection(arr, count) {
   return results;
 }
 
+// Format a date to a string (YYYY-MM-DD) with zero padding to remain consistent
 function dateToString(date) {
-  return `${date.getFullYear()}-${prefixPadString(
-    String(date.getMonth() + 1),
-    "0",
-    2
-  )}-${prefixPadString(String(date.getDate()), "0", 2)}`;
+  return `${date.getFullYear()}-${prefixPadString(String(date.getMonth() + 1), "0", 2)}-${prefixPadString(String(date.getDate()), "0", 2)}`;
 }
 
+// Randomly generates a date between the fixed "earliest date" and today
 function generateFakeDate() {
   // Source: https://stackoverflow.com/a/9035732
   var earliestDate = new Date(2020, 0, 1);
-  return new Date(
-    earliestDate.getTime() + Math.random() * (new Date().getTime() - earliestDate.getTime())
-  );
+  return new Date(earliestDate.getTime() + Math.random() * (new Date().getTime() - earliestDate.getTime()));
 }
 
 function generateFakeDateString() {
@@ -55,6 +56,7 @@ function dateStringInDays(str) {
 
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   // Source: https://stackoverflow.com/a/2627493
+  // Uses unix epoch date as day 0
   return Math.round((date - new Date(1970, 0, 1)) / ONE_DAY_IN_MS);
 }
 
@@ -112,46 +114,40 @@ function generateFakeContent(amount) {
   let results = [];
   for (let i = 0; i < amount; i++) {
     let result = {};
-    result.id = i;
+
     result.type = pickRandomInArray(contentTypes);
 
-    result.language = randomExclusiveSelection(language, randIntRange(1, 4));
+    result.languages = randomExclusiveSelection(language, randIntRange(1, 4)).join(",");
 
-    result.publishDate = generateFakeDateString(); // when the content was added to the DB
-    result.tags = randomExclusiveSelection(tags, randIntRange(2, 4)); // tags for filtering
+    result.title = randomExclusiveSelection(nameWords, randIntRange(2, 4)).join(" ");
+    result.description = 'crazy "hot of the press" info right here!'; // brief info about the content
 
-    result.name = randomExclusiveSelection(nameWords, randIntRange(2, 4)).join(" ");
-    result.summary = 'crazy "hot of the press" info right here!'; // brief info about the content
+    // result.url = "/"; // link to content which exists externally. for now, just the homepage...
+    result.image_path = "https://placehold.co/300x150/DEEFEC/154752/svg"; // cover image
 
-    result.url = "/"; // link to content externally, for now just the homepage...
-    result.imgSrc = "https://placehold.co/300x150/DEEFEC/154752/svg"; // cover image
+    // Assign to random seed users
+    result.user_id = randIntRange(1, 5);
+    result.approved = randIntRange(0, 1) == 1;
 
-    // holds unique data depending on content type
-    result.typeData = {};
+    // Add additional meta-data based on content type
     switch (result.type) {
       case "app":
         const appPlatforms = ["android", "ios", "web"];
         const appPricingModels = ["free", "one_time_fee", "subscription"];
 
-        result.typeData.platform = randomExclusiveSelection(appPlatforms, randIntRange(1, 3));
-        result.typeData.pricingModel = pickRandomInArray(appPricingModels);
-        result.typeData.price =
-          result.typeData.pricingModel != "free" ? randIntRange(1, 4) + 0.99 : 0.0;
+        result.app_platforms = randomExclusiveSelection(appPlatforms, randIntRange(1, 3)).join(",");
+        result.app_pricing_model = pickRandomInArray(appPricingModels);
+        result.price = result.app_pricing_model != "free" ? randIntRange(1, 4) + 0.99 : 0.0;
         break;
 
       case "article":
         const articlePublisherType = ["personal", "media", "non_profit", "government"];
 
-        result.typeData.publisherType = pickRandomInArray(articlePublisherType);
-        result.typeData.readingTimeInMinutes = randIntRange(2, 25);
+        result.article_publisher_type = pickRandomInArray(articlePublisherType);
+        result.article_reading_time = randIntRange(2, 25);
         break;
 
       case "event":
-        // TODO(noah): find what sort of location info we need to provide to be able to include a Google Maps/Open Street Maps link/embed
-        // TODO(noah): also need info to allow for user-defined distance filtering (eg. <50km within selected location)
-        const eventLocations = [
-          { countryCode: "gb", city: "London", address: "", lat: -1, lon: -1 },
-        ];
         const eventFormat = ["online_only", "hybrid", "in_person"];
         const eventTypes = ["volunteering", "educational", "networking"];
 
@@ -160,46 +156,29 @@ function generateFakeContent(amount) {
         let durationInDays = randIntRange(1, 7);
         endDate.setDate(endDate.getDate() + durationInDays - 1);
 
-        result.typeData.startDate = dateToString(startDate);
-        result.typeData.endDate = dateToString(endDate);
-        result.typeData.durationInDays = durationInDays;
-        result.typeData.format = pickRandomInArray(eventFormat);
-        result.typeData.type = pickRandomInArray(eventTypes);
-        result.typeData.price = randIntRange(0, 2) == 0 ? randIntRange(5, 100) : 0;
-        result.typeData.participantLimit =
-          result.typeData.eventType != "online-only" ? randIntRange(10, 3000) : -1;
-        result.typeData.location =
-          result.typeData.eventType != "online-only" ? pickRandomInArray(eventLocations) : null;
+        result.event_start_date = dateToString(startDate);
+        result.event_end_date = dateToString(endDate);
+        result.event_duration = durationInDays;
+        result.event_format = pickRandomInArray(eventFormat);
+        result.event_type = pickRandomInArray(eventTypes);
+        result.price = randIntRange(0, 2) == 0 ? randIntRange(5, 100) + 0.99 : 0;
+        result.event_participant_limit = result.event_type != "online-only" ? randIntRange(10, 3000) : -1;
         break;
 
       case "video":
-        const videoPlatforms = [
-          "youtube",
-          "netflix",
-          "amazon prime",
-          "apple tv",
-          "tiktok",
-          "instagram",
-        ];
+        const videoPlatforms = ["youtube", "netflix", "amazon_prime", "apple_tv", "tiktok", "instagram"];
         const videoTypes = ["documentary", "informational", "guide"];
-        const videoPricingModels = ["free", "purchase", "rental", "subscription"];
 
-        result.typeData.platform = randomExclusiveSelection(videoPlatforms, randIntRange(1, 3));
-        result.typeData.type = randomExclusiveSelection(videoTypes, randIntRange(1, 2));
-        result.typeData.pricingModel = pickRandomInArray(videoPricingModels);
-        result.typeData.episodeCount = randIntRange(1, 25);
-        result.typeData.episodeWatchTime = randIntRange(1, 150);
+        result.video_platforms = randomExclusiveSelection(videoPlatforms, randIntRange(1, 3)).join(",");
+        result.video_types = randomExclusiveSelection(videoTypes, randIntRange(1, 2)).join(",");
         break;
     }
-
-    results.push(result);
   }
 
-  // Preview content (since not all info is presented via UI)
-  // console.log(results);
   return results;
 }
 
+// Generate and save the fake content to a JSON file (so that we can all seed the database
+// with the same content)
 let fakeContent = generateFakeContent(randIntRange(120, 240));
-
 fs.writeFileSync("./fake_content.json", JSON.stringify(fakeContent), "utf-8");

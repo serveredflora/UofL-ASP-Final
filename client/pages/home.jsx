@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import CardGrid from "../components/card_grid.jsx";
 
+// TODO(noah): dynamically populate the home-page with content data (pre-cache the data on the server side?)
+
 const events = [
   {
     name: "Recycling Bins",
@@ -18,7 +20,7 @@ const events = [
 
 const header = {
   title: "Environmental Living Guide",
-  url: "/guide/",
+  url: "/content/",
   linkText: "Start Today >>",
   imgSrc: "https://placehold.co/400x400/154752/DEEFEC/svg",
 };
@@ -28,19 +30,19 @@ const blogs = [
     name: "Plant Pots",
     summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     url: "/blog/plant-plots/",
-    imgSrc: "https://placehold.co/300x150/DEEFEC/154752/svg",
+    image_path: "https://placehold.co/300x150/DEEFEC/154752/svg",
   },
   {
     name: "Rent a Plot",
     summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     url: "/blog/rent-a-plot/",
-    imgSrc: "https://placehold.co/300x150/DEEFEC/154752/svg",
+    image_path: "https://placehold.co/300x150/DEEFEC/154752/svg",
   },
   {
     name: "Plastic Fashion",
     summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     url: "/events/plastic-fashion/",
-    imgSrc: "https://placehold.co/300x150/DEEFEC/154752/svg",
+    image_path: "https://placehold.co/300x150/DEEFEC/154752/svg",
   },
 ];
 
@@ -112,23 +114,17 @@ function Header({ data }) {
 
 function EventHighlights({ data }) {
   return (
-    <div className="flex flex-col space-y-8 adaptive-margin">
+    <div className="component-container-8">
       <h2>Event Highlights</h2>
       <div className="flex flex-col space-y-16">
         {data.map((data, i) => (
           <div
             key={data.name}
             className={
-              (i % 2 ? "md:flex-row " : "md:flex-row-reverse md:space-x-reverse ") +
-              "flex-col-reverse flex space-y-8 space-y-reverse md:space-y-0 md:space-x-8"
+              (i % 2 ? "md:flex-row " : "md:flex-row-reverse md:space-x-reverse ") + "flex-col-reverse flex space-y-8 space-y-reverse md:space-y-0 md:space-x-8"
             }
           >
-            <div
-              className={
-                (i % 2 ? "md:items-end md:text-right " : "md:text-left ") +
-                "flex flex-col space-y-2 my-auto w-full"
-              }
-            >
+            <div className={(i % 2 ? "md:items-end md:text-right " : "md:text-left ") + "flex flex-col space-y-2 my-auto w-full"}>
               <h1>{data.name}</h1>
               <p>{data.summary}</p>
               <Link to={data.url} className="w-max">
@@ -155,12 +151,8 @@ function BlogPostCardDetail({ data }) {
   );
 }
 
-// TODO(noah): Instead of blog posts, this should be the first 3
-//             un-filtered entries of the content index
 function BlogPostCards({ data }) {
-  return (
-    <CardGrid title="Latest Blog Posts" data={data} DetailComponent={BlogPostCardDetail} />
-  );
+  return <CardGrid title="Latest Blog Posts" data={data} DetailComponent={BlogPostCardDetail} />;
 }
 
 function AppsBanner({ data }) {
@@ -173,16 +165,8 @@ function AppsBanner({ data }) {
             <h3 className="text-center">{platform.name}</h3>
             <div className="flex flex-row justify-center space-x-4">
               {platform.elements.map((data) => (
-                <Link
-                  key={`${platform.name}-${data.name}`}
-                  to={data.url}
-                  className="rounded-full"
-                >
-                  <img
-                    src={data.iconSrc}
-                    className="rounded-full"
-                    alt={`App icon for ${data.name}`}
-                  />
+                <Link key={`${platform.name}-${data.name}`} to={data.url} className="rounded-full">
+                  <img src={data.iconSrc} className="rounded-full" alt={`App icon for ${data.name}`} />
                 </Link>
               ))}
             </div>
@@ -198,7 +182,7 @@ function AppsBanner({ data }) {
 
 function AboutCard({ data }) {
   return (
-    <div className="flex flex-col space-y-4 adaptive-margin">
+    <div className="component-container-4">
       <h2>About Us</h2>
       <div className="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-8">
         <img src={data.imgSrc} className="rounded-2xl"></img>
@@ -214,7 +198,6 @@ function AboutCard({ data }) {
 }
 
 export default function Home() {
-  // TODO(noah): dynamically populate the home-page with content data (pre-cache the data on the server side?)
   return (
     <div className="flex flex-col space-y-16">
       <Header data={header} />
